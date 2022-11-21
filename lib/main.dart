@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,12 +15,12 @@ final assetsAudioPlayer = AssetsAudioPlayer();
 Future main() async {
   await dotenv.load(fileName: ".env");
   var test = await storage.read(key: 'access_token');
-  try {
-    if (test != null) {
-      api.getOffset();
+  if (test != null) {
+    if (!await api.tryToken()) {
+      auth.refresh();
     }
-  } catch (e) {
-    auth.refresh();
+  } else {
+    auth.login();
   }
   runApp(const MyApp());
 }

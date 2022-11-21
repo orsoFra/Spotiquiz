@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ffi';
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -43,8 +44,27 @@ class API {
     //print(JsonEncoder().convert(decodedResponse));
     var numOfTracks = decodedResponse['total'];
     var offset = Random().nextInt(numOfTracks);
-    //print(offset);
     return offset;
+  }
+
+  Future<bool> tryToken() async {
+    final _storage = new FlutterSecureStorage();
+    String? value = await _storage.read(key: 'access_token');
+    var url = Uri.https('api.spotify.com', '/v1/me/tracks');
+    try {
+      var response = await http.get(url, headers: {
+        'Authorization': 'Bearer ' + value!,
+        'Content-Type': 'application/json'
+      });
+      printWrapped(response.toString());
+      if (response.statusCode == 200)
+        return true;
+      else
+        return false;
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 
   //retrievs the track'l URI

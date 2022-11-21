@@ -14,6 +14,11 @@ class Auth {
   final redirect_uri = dotenv.get('REDIRECT_URI');
   final callback_scheme = dotenv.get('CALLBACK_URL_SCHEME');
 
+  void printWrapped(String text) {
+    final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  }
+
   Future<String?> getCode() async {
     // Present the dialog to the user
     await dotenv.load(fileName: ".env");
@@ -55,16 +60,18 @@ class Auth {
 
   //refershes the expired token token
   void refresh() async {
-    var refreshToken = await storage.read(key: 'refersh_token');
+    var refreshToken = await storage.read(key: 'refresh_token');
+    print(refreshToken);
     var url = Uri.https('accounts.spotify.com', '/api/token');
     var response = await http.post(url, body: {
-      'rerfesh_token': refreshToken,
+      'refresh_token': refreshToken,
       'grant_type': 'refresh_token'
     }, headers: {
       'Authorization': 'Basic ' +
           (base64.encode(utf8.encode(client_id + ':' + client_secret)))
     });
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    print(decodedResponse.toString());
     var accessToken = decodedResponse['access_token'];
     await storage.write(key: 'access_token', value: accessToken);
   }
