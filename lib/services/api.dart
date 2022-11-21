@@ -50,13 +50,12 @@ class API {
   Future<bool> tryToken() async {
     final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
-    var url = Uri.https('api.spotify.com', '/v1/me/tracks');
+    var url = Uri.https('api.spotify.com', '/v1/me');
     try {
       var response = await http.get(url, headers: {
         'Authorization': 'Bearer ' + value!,
         'Content-Type': 'application/json'
       });
-      printWrapped(response.toString());
       if (response.statusCode == 200)
         return true;
       else
@@ -68,7 +67,7 @@ class API {
   }
 
   //retrievs the track'l URI
-  Future<String> getRandomSongFromLibrary() async {
+  Future<Map<String, dynamic>> getRandomSongFromLibrary() async {
     final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
     var offset = await getOffset();
@@ -86,18 +85,27 @@ class API {
     );
     var decodedResponse = jsonDecode(utf8.decode(newresponse.bodyBytes)) as Map;
     //printWrapped(decodedResponse.toString());
-    if (decodedResponse['items'][0]['track']['preview_url'] == null)
-      return getRandomSongFromLibrary(); //in case of null preview, returns another song
-    return decodedResponse['items'][0]['track']['preview_url'];
+    var previewUrl = decodedResponse['items'][0]['track']['preview_url'];
+    //print(decodedResponse['items'][0]['track']['id']);
+    //var infoOnTrack = getInfoTrack(decodedResponse['items'][0]['track']['id']);
+    //printWrapped(infoOnTrack);
+    if (previewUrl != null) {
+      var infoOnTrack =
+          getInfoTrack(decodedResponse['items'][0]['track']['id']);
+      return infoOnTrack;
+    }
+    return getRandomSongFromLibrary(); //in case of null preview, returns another song;
   }
 
 //pass a track ID and return some info
-  Future<Map<dynamic, dynamic>> getInfoTrack(String track) async {
+  Future<Map<String, dynamic>> getInfoTrack(String track) async {
     final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
     var offset = await getOffset();
-    var newurl = Uri.https('api.spotify.com', '/v1/me/tracks/',
-        {"id": track}.map((key, value) => MapEntry(key, value.toString())));
+    var newurl = Uri.https(
+      'api.spotify.com',
+      '/v1/tracks/${track}',
+    );
     var response = await http.get(
       newurl,
       headers: {
@@ -106,6 +114,13 @@ class API {
       },
     );
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    return decodedResponse;
+    Map<dynamic, dynamic> data = new Map();
+    data.addAll(decodedResponse);
+    data.remove('available_markets');
+    data['album'].remove('available_markets');
+    data['album']['artists'][0].remove('external_urls');
+    data['album']['artists'][0].remove('type');
+    //printWrapped(data.entries.toString());
+    return data.map((key, value) => MapEntry(key, value.toString()));
   }
 }
