@@ -121,6 +121,7 @@ class API {
     data['album']['artists'][0].remove('type');
     //printWrapped(data.entries.toString());
     getRandomTracksFromArtist(data['album']['artists'][0]['name']);
+    getRandomAlbumsFromArtist(data['album']['artists'][0]['name']);
     return data.map((key, value) => MapEntry(key, value.toString()));
   }
 
@@ -168,14 +169,63 @@ class API {
         'Content-Type': 'application/json'
       },
     );
-    print('Searching for artist:' + artist);
+    //print('Searching for artist:' + artist);
     List<String> result = [];
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     if (decodedResponse['tracks']['total'] < offset)
       return getRandomTracksFromArtist(artist, 0);
-    print(url);
+    //print(url);
     for (int i = 0; i < 4; i++) {
       result.add(decodedResponse['tracks']['items'][i]['name']);
+    }
+    //print(result);
+    return result;
+  } //getRandomTracks
+
+  Future<List<String>> getRandomAlbumsFromArtist(String artist,
+      [int? off]) async {
+    final _storage = new FlutterSecureStorage();
+    String? value = await _storage.read(key: 'access_token');
+    //get offset for the query
+    var url = Uri.https(
+        'api.spotify.com',
+        '/v1/search/',
+        {'q': 'artist:' + artist, "offset": 0, 'limit': 4, 'type': 'album'}
+            .map((key, value) => MapEntry(key, value.toString())));
+    var response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer ' + value!,
+        'Content-Type': 'application/json'
+      },
+    );
+    //print('Searching for artist:' + artist);
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+    var offset = Random().nextInt(decodedResponse['albums']
+        ['total']); //only get from the response the maximum number of items
+
+    if (off != null) offset = off; //pick offset from the param
+    url = Uri.https(
+        'api.spotify.com',
+        '/v1/search/',
+        {'q': 'artist:' + artist, "offset": offset, 'limit': 4, 'type': 'album'}
+            .map((key, value) => MapEntry(key, value.toString())));
+    response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer ' + value!,
+        'Content-Type': 'application/json'
+      },
+    );
+    print('Searching for artist:' + artist);
+    List<String> result = [];
+    decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    if (decodedResponse['albums']['total'] < offset)
+      return getRandomTracksFromArtist(artist, 0);
+    print(url);
+    for (int i = 0; i < 4; i++) {
+      result.add(decodedResponse['albums']['items'][i]['name']);
     }
     print(result);
     return result;
