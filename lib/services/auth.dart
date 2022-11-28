@@ -71,7 +71,7 @@ class Auth {
           (base64.encode(utf8.encode(client_id + ':' + client_secret)))
     });
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    print(decodedResponse.toString());
+    //print(decodedResponse.toString());
     var accessToken = decodedResponse['access_token'];
     await storage.write(key: 'access_token', value: accessToken);
   }

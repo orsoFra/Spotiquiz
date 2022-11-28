@@ -11,6 +11,7 @@ final storage = new FlutterSecureStorage();
 final api = API();
 final auth = Auth();
 var accesstoken;
+Map<String, dynamic> a = Map();
 final assetsAudioPlayer = AssetsAudioPlayer();
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -29,7 +30,7 @@ Future main() async {
 }
 
 void playAudioNetwork() async {
-  Map<String, dynamic> a = await api.getRandomSongFromLibrary();
+  a = await api.getRandomSongFromLibrary();
   try {
     await assetsAudioPlayer.open(Audio.network(a['preview_url']),
         autoStart: false, showNotification: true);
@@ -37,6 +38,11 @@ void playAudioNetwork() async {
   } catch (t) {
     print(t);
   }
+}
+
+void infoTrack() async {
+  Map<String, dynamic> info = await api.getFeaturesTrack(a['id']);
+  print(info.keys);
 }
 
 void login() async {
@@ -116,10 +122,17 @@ class _MyHomePageState extends State<MyHomePage> {
             MaterialButton(
               onPressed: playAudioNetwork,
               color: Colors.amber,
+              child: Text("PLAY"),
             ),
             MaterialButton(
               onPressed: assetsAudioPlayer.pause,
               color: Colors.blue,
+              child: Text("PAUSE"),
+            ),
+            MaterialButton(
+              onPressed: infoTrack,
+              color: Colors.green[600],
+              child: Text("INFO ON SONG"),
             ),
           ],
         ),

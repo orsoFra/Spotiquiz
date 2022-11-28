@@ -97,11 +97,10 @@ class API {
     return getRandomSongFromLibrary(); //in case of null preview, returns another song;
   }
 
-//pass a track ID and return some info
+//pass a track ID and return some info: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track
   Future<Map<String, dynamic>> getInfoTrack(String track) async {
     final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
-    var offset = await getOffset();
     var newurl = Uri.https(
       'api.spotify.com',
       '/v1/tracks/${track}',
@@ -121,6 +120,64 @@ class API {
     data['album']['artists'][0].remove('external_urls');
     data['album']['artists'][0].remove('type');
     //printWrapped(data.entries.toString());
+    getRandomTracksFromArtist(data['album']['artists'][0]['name']);
     return data.map((key, value) => MapEntry(key, value.toString()));
   }
+
+//get audio features from a track: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features
+//$track contains the track id
+  Future<Map<String, dynamic>> getFeaturesTrack(String track) async {
+    //https://api.spotify.com/v1/audio-features/id
+    final _storage = new FlutterSecureStorage();
+    String? value = await _storage.read(key: 'access_token');
+    var url = Uri.https(
+      'api.spotify.com',
+      '/v1/audio-features/${track}',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer ' + value!,
+        'Content-Type': 'application/json'
+      },
+    );
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    Map<dynamic, dynamic> data = new Map();
+    data.addAll(decodedResponse);
+    //printWrapped(data.entries.toString());
+    return data.map((key, value) => MapEntry(key, value.toString()));
+  }
+
+  //GET 3 random titles of songs from the same artist of another track
+  Future<List<String>> getRandomTracksFromArtist(String artist,
+      [int? off]) async {
+    final _storage = new FlutterSecureStorage();
+    String? value = await _storage.read(key: 'access_token');
+    var offset = Random().nextInt(995);
+    if (off != null) offset = off; //pick offset from the param
+    //it's 995 since the offset limit is 1000
+    var url = Uri.https(
+        'api.spotify.com',
+        '/v1/search/',
+        {'q': 'artist:' + artist, "offset": offset, 'limit': 4, 'type': 'track'}
+            .map((key, value) => MapEntry(key, value.toString())));
+    var response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer ' + value!,
+        'Content-Type': 'application/json'
+      },
+    );
+    print('Searching for artist:' + artist);
+    List<String> result = [];
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    if (decodedResponse['tracks']['total'] < offset)
+      return getRandomTracksFromArtist(artist, 0);
+    print(url);
+    for (int i = 0; i < 4; i++) {
+      result.add(decodedResponse['tracks']['items'][i]['name']);
+    }
+    print(result);
+    return result;
+  } //getRandomTracks
 }
