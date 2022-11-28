@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+Notion note: https://past-summer-36c.notion.site/DIMA-d87e9ea60cde4fd6897014dd36099114
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
