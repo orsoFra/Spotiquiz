@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/services/api.dart';
+import 'package:spotiquiz/screens/userpage.dart';
 
 // Create storage
 final storage = new FlutterSecureStorage();
@@ -98,12 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -133,6 +128,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: infoTrack,
               color: Colors.green[600],
               child: Text("INFO ON SONG"),
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => UserPage()));
+              },
+              color: Colors.green[600],
+              child: Text("INFO ON USER"),
             ),
           ],
         ),

@@ -230,4 +230,29 @@ class API {
     print(result);
     return result;
   } //getRandomTracks
-}
+
+  Future<Map<String, dynamic>> getInfoUser() async {
+    final _storage = const FlutterSecureStorage();
+    String? value = await _storage.read(key: 'access_token');
+    //get offset for the query
+    var url = Uri.https(
+      'api.spotify.com',
+      '/v1/me/',
+    );
+    var response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer ' + value!,
+        'Content-Type': 'application/json'
+      },
+    );
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    //print(decodedResponse.entries);
+    Map<dynamic, dynamic> data = new Map();
+    data.addAll(decodedResponse);
+    //print(data.entries);
+    data['imageUrl'] = data['images'][0]['url'];
+    //print(data['imageUrl']);
+    return data.map((key, value) => MapEntry(key, value.toString()));
+  }
+}//auth
