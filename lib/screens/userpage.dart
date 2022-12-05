@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/main.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:spotiquiz/services/api.dart';
 
-final api = API();
+import '../models/MyStorage.dart';
+
+final sStorage = FlutterSecureStorage();
+final storage = new MyStorage(sStorage);
+final api = API(storage);
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});

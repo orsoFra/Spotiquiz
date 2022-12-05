@@ -6,10 +6,14 @@ import 'package:spotiquiz/services/auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/screens/userpage.dart';
+import 'package:http/http.dart' as http;
+
+import 'models/MyStorage.dart';
 
 // Create storage
-final storage = new FlutterSecureStorage();
-final api = API();
+final sStorage = FlutterSecureStorage();
+final storage = new MyStorage(sStorage);
+final api = API(storage);
 final auth = Auth();
 var accesstoken;
 Map<String, dynamic> a = Map();
@@ -31,7 +35,7 @@ Future main() async {
 }
 
 void playAudioNetwork() async {
-  a = await api.getRandomSongFromLibrary();
+  a = await api.getRandomSongFromLibrary(http.Client());
   try {
     await assetsAudioPlayer.open(Audio.network(a['preview_url']),
         autoStart: false, showNotification: true);
