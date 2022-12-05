@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/main.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:spotiquiz/services/api.dart';
-
+import 'package:http/http.dart' as http;
 import '../models/MyStorage.dart';
 
 final sStorage = FlutterSecureStorage();
@@ -33,7 +33,7 @@ class _UserPageState extends State<UserPage> {
         ),
         body: Column(children: [
           FutureBuilder<Map<String, dynamic>>(
-            future: api.getInfoUser(), // a Future<String> or null
+            future: api.getInfoUser(http.Client()), // a Future<String> or null
             builder: (BuildContext context,
                 AsyncSnapshot<Map<String, dynamic>> snapshot) {
               switch (snapshot.connectionState) {

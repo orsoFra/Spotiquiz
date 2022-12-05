@@ -83,6 +83,9 @@ class API {
         'Content-Type': 'application/json'
       },
     );
+    if (newresponse.statusCode != 200) {
+      throw Exception('Error in method getInfoTrack');
+    }
     var decodedResponse = jsonDecode(utf8.decode(newresponse.bodyBytes)) as Map;
     //printWrapped(decodedResponse.toString());
     var previewUrl = decodedResponse['items'][0]['track']['preview_url'];
@@ -113,6 +116,10 @@ class API {
         'Content-Type': 'application/json'
       },
     );
+    if (response.statusCode != 200) {
+      throw Exception('Error in method getInfoTrack');
+    }
+
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     Map<dynamic, dynamic> data = Map();
     data.addAll(decodedResponse);
@@ -121,14 +128,15 @@ class API {
     data['album']['artists'][0].remove('external_urls');
     data['album']['artists'][0].remove('type');
     //printWrapped(data.entries.toString());
-    getRandomTracksFromArtist(data['album']['artists'][0]['name']);
-    getRandomAlbumsFromArtist(data['album']['artists'][0]['name']);
+    getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
+    getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);
     return data.map((key, value) => MapEntry(key, value.toString()));
   }
 
 //get audio features from a track: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features
 //$track contains the track id
-  Future<Map<String, dynamic>> getFeaturesTrack(String track) async {
+  Future<Map<String, dynamic>> getFeaturesTrack(
+      String track, http.Client http) async {
     //https://api.spotify.com/v1/audio-features/id
     final _storage = FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
@@ -143,6 +151,9 @@ class API {
         'Content-Type': 'application/json'
       },
     );
+    if (response.statusCode != 200) {
+      throw Exception('Error in method getFeaturesTrack');
+    }
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     Map<dynamic, dynamic> data = Map();
     data.addAll(decodedResponse);
@@ -151,7 +162,8 @@ class API {
   }
 
   //GET 3 random titles of songs from the same artist of another track
-  Future<List<String>> getRandomTracksFromArtist(String artist,
+  Future<List<String>> getRandomTracksFromArtist(
+      String artist, http.Client http,
       [int? off]) async {
     //final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
@@ -170,11 +182,14 @@ class API {
         'Content-Type': 'application/json'
       },
     );
+    if (response.statusCode != 200) {
+      throw Exception('Error in method getRandomTracksFromArtist');
+    }
     //print('Searching for artist:' + artist);
     List<String> result = [];
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     if (decodedResponse['tracks']['total'] < offset)
-      return getRandomTracksFromArtist(artist, 0);
+      return getRandomTracksFromArtist(artist, http, 0);
     //print(url);
     for (int i = 0; i < 4; i++) {
       result.add(decodedResponse['tracks']['items'][i]['name']);
@@ -183,7 +198,8 @@ class API {
     return result;
   } //getRandomTracks
 
-  Future<List<String>> getRandomAlbumsFromArtist(String artist,
+  Future<List<String>> getRandomAlbumsFromArtist(
+      String artist, http.Client http,
       [int? off]) async {
     //final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
@@ -200,6 +216,9 @@ class API {
         'Content-Type': 'application/json'
       },
     );
+    if (response.statusCode != 200) {
+      throw Exception('Error in method getRandomAlbumsFromArtist');
+    }
     //print('Searching for artist:' + artist);
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
@@ -223,7 +242,7 @@ class API {
     List<String> result = [];
     decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     if (decodedResponse['albums']['total'] < offset)
-      return getRandomTracksFromArtist(artist, 0);
+      return getRandomTracksFromArtist(artist, http, 0);
     //print(url);
     for (int i = 0; i < 4; i++) {
       result.add(decodedResponse['albums']['items'][i]['name']);
@@ -232,8 +251,8 @@ class API {
     return result;
   } //getRandomTracks
 
-  Future<Map<String, dynamic>> getInfoUser() async {
-    final _storage = const FlutterSecureStorage();
+  Future<Map<String, dynamic>> getInfoUser(http.Client http) async {
+    //final _storage = const FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
     //get offset for the query
     var url = Uri.https(
@@ -247,6 +266,9 @@ class API {
         'Content-Type': 'application/json'
       },
     );
+    if (response.statusCode != 200) {
+      throw Exception('Error in method getInfoUser');
+    }
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     //print(decodedResponse.entries);
     Map<dynamic, dynamic> data = Map();

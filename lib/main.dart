@@ -46,7 +46,8 @@ void playAudioNetwork() async {
 }
 
 void infoTrack() async {
-  Map<String, dynamic> info = await api.getFeaturesTrack(a['id']);
+  Map<String, dynamic> info =
+      await api.getFeaturesTrack(a['id'], http.Client());
   print(info.keys);
 }
 
