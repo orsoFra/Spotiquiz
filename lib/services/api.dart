@@ -6,6 +6,21 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/MyStorage.dart';
 
+enum keys {
+  DO,
+  DO_diesis,
+  RE,
+  RE_diesis,
+  MI,
+  FA,
+  FA_diesis,
+  SOL,
+  SOL_diesis,
+  LA,
+  LA_diesis,
+  SI
+}
+
 class API {
   API(this._storage);
   final IStorage _storage;
@@ -130,6 +145,8 @@ class API {
     //printWrapped(data.entries.toString());
     getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
     getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);
+    getTempoList(track, http);
+    getKeysList(track, http);
     return data.map((key, value) => MapEntry(key, value.toString()));
   }
 
@@ -138,7 +155,7 @@ class API {
   Future<Map<String, dynamic>> getFeaturesTrack(
       String track, http.Client http) async {
     //https://api.spotify.com/v1/audio-features/id
-    final _storage = FlutterSecureStorage();
+    //final _storage = FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
     var url = Uri.https(
       'api.spotify.com',
@@ -278,5 +295,39 @@ class API {
     //print(data['imageUrl']);
     return data.map((key, value) => MapEntry(key, value.toString()));
   }
+
+  Future<List<String>> getTempoList(String track, http.Client http) async {
+    Map<dynamic, dynamic> data = await getFeaturesTrack(track, http);
+    List<String> result = [];
+    result.add(data['time_signature'] + '/4');
+    for (int i = 0; i < 4; i++) {
+      int tempo = Random().nextInt(7);
+      if (tempo.toString() != data['time_signature'] &&
+          result.indexOf(tempo.toString() + '/4') == -1) {
+        result.add(tempo.toString() + '/4');
+      }
+    }
+    print(result.toString());
+    return result;
+  }
+
+  Future<List<String>> getKeysList(String track, http.Client http) async {
+    Map<dynamic, dynamic> data = await getFeaturesTrack(track, http);
+    List<String> result = [];
+    int keyIndex = int.parse(data['key']);
+    if (keyIndex == -1)
+      return result; //in case there is no key signature detected
+    result.add(keys.values[keyIndex].toString().substring(5));
+    for (int i = 0; i < 4; i++) {
+      int rk = Random().nextInt(11);
+      if (keys.values[rk] != data['key'] &&
+          result.indexOf(keys.values[rk].toString().substring(5)) == -1) {
+        result.add(keys.values[rk].toString().substring(5));
+      }
+    }
+    print(result.toString());
+    return result;
+  }
 } //auth
+
 

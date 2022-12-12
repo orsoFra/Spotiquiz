@@ -160,7 +160,8 @@ void main() {
           .thenAnswer((invocation) => Future.value('response'));
       expect(api.getInfoTrack('11dFghVXANMlKmJXsNCbNl', mockHTTPClient),
           isA<Future<Map<String, dynamic>>>());
-      verify(() => mockStorage.read(key: 'access_token')).called(1);
+      verify(() => mockStorage.read(key: 'access_token'))
+          .called(greaterThan(0));
     });
 
     test('expect error', () async {
@@ -867,6 +868,79 @@ void main() {
       expect(api.getInfoUser(mockHTTPClient), throwsA(isA<Exception>()));
       verify(() => mockStorage.read(key: 'access_token'))
           .called(greaterThan(0));
+    });
+  });
+
+  group('test all single audio features', () {
+    test('expect a LIST of strings, from getTempoList', () async {
+      final response = {
+        "audio_features": [
+          {
+            "danceability": 0.366,
+            "energy": 0.963,
+            "key": 11,
+            "loudness": -5.301,
+            "mode": 0,
+            "speechiness": 0.142,
+            "acousticness": 0.000273,
+            "instrumentalness": 0.0122,
+            "liveness": 0.115,
+            "valence": 0.211,
+            "tempo": 137.114,
+            "type": "audio_features",
+            "id": "7ouMYWpwJ422jRcDASZB7P",
+            "uri": "spotify:track:7ouMYWpwJ422jRcDASZB7P",
+            "track_href":
+                "https://api.spotify.com/v1/tracks/7ouMYWpwJ422jRcDASZB7P",
+            "analysis_url":
+                "https://api.spotify.com/v1/audio-analysis/7ouMYWpwJ422jRcDASZB7P",
+            "duration_ms": 366213,
+            "time_signature": 4
+          }
+        ]
+      };
+      final mockHTTPClient = MockClient((request) async {
+        // Create sample response of the HTTP call //
+        return Response(jsonEncode(response), 200);
+      });
+      expect(await api.getTempoList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient),
+          isA<Future<List<String>>>());
+      verify(() => mockStorage.read(key: 'access_token'))
+          .called(greaterThan(0));
+    });
+    test('expect a LIST of strings, from getKeysList', () {
+      final response = {
+        "audio_features": [
+          {
+            "danceability": 0.366,
+            "energy": 0.963,
+            "key": 11,
+            "loudness": -5.301,
+            "mode": 0,
+            "speechiness": 0.142,
+            "acousticness": 0.000273,
+            "instrumentalness": 0.0122,
+            "liveness": 0.115,
+            "valence": 0.211,
+            "tempo": 137.114,
+            "type": "audio_features",
+            "id": "7ouMYWpwJ422jRcDASZB7P",
+            "uri": "spotify:track:7ouMYWpwJ422jRcDASZB7P",
+            "track_href":
+                "https://api.spotify.com/v1/tracks/7ouMYWpwJ422jRcDASZB7P",
+            "analysis_url":
+                "https://api.spotify.com/v1/audio-analysis/7ouMYWpwJ422jRcDASZB7P",
+            "duration_ms": 366213,
+            "time_signature": 4
+          }
+        ]
+      };
+      final mockHTTPClient = MockClient((request) async {
+        // Create sample response of the HTTP call //
+        return Response(jsonEncode(response), 200);
+      });
+      expect(api.getKeysList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient),
+          isA<Future<List<String>>>());
     });
   });
 }
