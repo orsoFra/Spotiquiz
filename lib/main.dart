@@ -2,6 +2,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:spotiquiz/screens/questionpage.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/services/api.dart';
@@ -18,6 +19,7 @@ final auth = Auth();
 var accesstoken;
 Map<String, dynamic> a = Map();
 final assetsAudioPlayer = AssetsAudioPlayer();
+
 Future main() async {
   await dotenv.load(fileName: ".env");
   var test = await storage.read(key: 'access_token');
@@ -82,6 +84,7 @@ class _MyAppState extends State<MyApp> {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -92,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? token = '';
   var song;
+
   void _seetLink() {
     setState(() async {
       // This call to setState tells the Flutter framework that something has
@@ -133,6 +137,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: infoTrack,
               color: Colors.green[600],
               child: Text("INFO ON SONG"),
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => QuestionPage()));
+              },
+              color: Colors.orange[600],
+              child: Text("RANDOM QUESTION"),
             ),
             MaterialButton(
               onPressed: () {
