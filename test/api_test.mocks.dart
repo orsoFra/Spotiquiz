@@ -6,7 +6,9 @@
 import 'dart:async' as _i3;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i2;
+import 'package:http/http.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:spotiquiz/services/api.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -295,4 +297,162 @@ class MockFlutterSecureStorage extends _i1.Mock
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
+}
+
+/// A class which mocks [API].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAPI extends _i1.Mock implements _i4.API {
+  MockAPI() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void getPlaylists() => super.noSuchMethod(
+        Invocation.method(
+          #getPlaylists,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void printWrapped(String? text) => super.noSuchMethod(
+        Invocation.method(
+          #printWrapped,
+          [text],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i3.Future<int> getOffset() => (super.noSuchMethod(
+        Invocation.method(
+          #getOffset,
+          [],
+        ),
+        returnValue: _i3.Future<int>.value(0),
+      ) as _i3.Future<int>);
+  @override
+  _i3.Future<bool> tryToken() => (super.noSuchMethod(
+        Invocation.method(
+          #tryToken,
+          [],
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+  @override
+  _i3.Future<Map<String, dynamic>> getRandomSongFromLibrary(_i5.Client? http) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getRandomSongFromLibrary,
+          [http],
+        ),
+        returnValue:
+            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i3.Future<Map<String, dynamic>>);
+  @override
+  _i3.Future<Map<String, dynamic>> getInfoTrack(
+    String? track,
+    _i5.Client? http,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getInfoTrack,
+          [
+            track,
+            http,
+          ],
+        ),
+        returnValue:
+            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i3.Future<Map<String, dynamic>>);
+  @override
+  _i3.Future<Map<String, dynamic>> getFeaturesTrack(
+    String? track,
+    _i5.Client? http,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getFeaturesTrack,
+          [
+            track,
+            http,
+          ],
+        ),
+        returnValue:
+            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i3.Future<Map<String, dynamic>>);
+  @override
+  _i3.Future<List<String>> getRandomTracksFromArtist(
+    String? artist,
+    _i5.Client? http, [
+    int? off,
+  ]) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getRandomTracksFromArtist,
+          [
+            artist,
+            http,
+            off,
+          ],
+        ),
+        returnValue: _i3.Future<List<String>>.value(<String>[]),
+      ) as _i3.Future<List<String>>);
+  @override
+  _i3.Future<List<String>> getRandomAlbumsFromArtist(
+    String? artist,
+    _i5.Client? http, [
+    int? off,
+  ]) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getRandomAlbumsFromArtist,
+          [
+            artist,
+            http,
+            off,
+          ],
+        ),
+        returnValue: _i3.Future<List<String>>.value(<String>[]),
+      ) as _i3.Future<List<String>>);
+  @override
+  _i3.Future<Map<String, dynamic>> getInfoUser(_i5.Client? http) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getInfoUser,
+          [http],
+        ),
+        returnValue:
+            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i3.Future<Map<String, dynamic>>);
+  @override
+  _i3.Future<List<String>> getTempoList(
+    String? track,
+    _i5.Client? http,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getTempoList,
+          [
+            track,
+            http,
+          ],
+        ),
+        returnValue: _i3.Future<List<String>>.value(<String>[]),
+      ) as _i3.Future<List<String>>);
+  @override
+  _i3.Future<List<String>> getKeysList(
+    String? track,
+    _i5.Client? http,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getKeysList,
+          [
+            track,
+            http,
+          ],
+        ),
+        returnValue: _i3.Future<List<String>>.value(<String>[]),
+      ) as _i3.Future<List<String>>);
 }

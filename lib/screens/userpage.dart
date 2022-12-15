@@ -92,6 +92,44 @@ class _UserPageState extends State<UserPage> {
               }
             },
           ),
+          Text('Recent Quizzes',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              )),
+          FutureBuilder<List<dynamic>>(
+            future: api.getUserQuizScores('21q4wwalokcky25op74guvjcq',
+                http.Client()), // a Future<String> or null
+            builder:
+                (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return const Text('Awaiting result...');
+                case ConnectionState.done:
+                  print(snapshot.data);
+                  print(snapshot.data?.length);
+                  var l = snapshot.data?.length;
+                  var result = snapshot.data!;
+                  return ListView.builder(
+                      itemCount: l,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: ((context, index) {
+                        return ListTile(
+                            title: Text(result[index]['points'].toString()),
+                            subtitle: Text(result[index]['date']
+                                .toString()
+                                .substring(0, 10)));
+                      }));
+
+                default:
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  else
+                    return new Text('Result: ${snapshot.data}');
+              }
+            },
+          ),
         ]));
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+//import 'dart:html';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,6 +10,8 @@ import 'package:spotiquiz/models/MyStorage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mockito/mockito.dart' as mockito;
+
+import 'api_test.mocks.dart';
 //import 'package:test/expect.dart';
 //import 'package:test/test.dart';
 
@@ -18,7 +21,10 @@ void cannotBeNull(dynamic param) {
 
 class MockStorage extends Mock implements IStorage {}
 
+class MocksAPI extends Mock implements API {}
+
 @GenerateMocks([FlutterSecureStorage])
+@GenerateMocks([API])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final mockStorage = MockStorage();
@@ -873,7 +879,7 @@ void main() {
 
   group('test all single audio features', () {
     test('expect a LIST of strings, from getTempoList', () async {
-      final response = {
+      final responseBody = {
         "audio_features": [
           {
             "danceability": 0.366,
@@ -899,14 +905,23 @@ void main() {
           }
         ]
       };
+      final Response response = Response(jsonEncode(responseBody), 200);
+      final mAPI = MocksAPI();
       final mockHTTPClient = MockClient((request) async {
         // Create sample response of the HTTP call //
-        return Response(jsonEncode(response), 200);
+        return Response(jsonEncode(responseBody), 200);
       });
+      Map<dynamic, dynamic> data =
+          jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+      ;
+      when(() =>
+              mAPI.getFeaturesTrack('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient))
+          .thenAnswer((data) => Future.value());
       expect(await api.getTempoList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient),
           isA<Future<List<String>>>());
       verify(() => mockStorage.read(key: 'access_token'))
           .called(greaterThan(0));
+      verify(() => mAPI.getFeaturesTrack(any(), any())).called(greaterThan(0));
     });
     test('expect a LIST of strings, from getKeysList', () {
       final response = {
@@ -935,10 +950,12 @@ void main() {
           }
         ]
       };
+
       final mockHTTPClient = MockClient((request) async {
         // Create sample response of the HTTP call //
         return Response(jsonEncode(response), 200);
       });
+
       expect(api.getKeysList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient),
           isA<Future<List<String>>>());
     });

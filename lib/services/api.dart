@@ -328,6 +328,26 @@ class API {
     print(result.toString());
     return result;
   }
+
+  Future<List<dynamic>> getUserQuizScores(
+      String userid, http.Client http) async {
+    String id = '21q4wwalokcky25op74guvjcq';
+    var url = Uri.https(
+        '639ad7f8d514150197412361.mockapi.io',
+        '/spotiquiz/quizzes',
+        {"user": id, 'limit': 10}
+            .map((key, value) => MapEntry(key, value.toString())));
+    var response = await http.get(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Error in method getUserQuizScores');
+    }
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+    List<Map<String, dynamic>> data = List.empty();
+    return decodedResponse;
+  }
 } //auth
 
 
