@@ -25,7 +25,7 @@ class Auth {
     //print(client_id);
     final result = await FlutterWebAuth.authenticate(
       url:
-          "https://accounts.spotify.com/authorize?client_id=${client_id}\&response_type=code&redirect_uri=${redirect_uri}&scope=user-library-read%20playlist-read-private%20user-read-private%20user-read-email%20&state=34fFs29kd09",
+          "https://accounts.spotify.com/authorize?client_id=${client_id}\&response_type=code&redirect_uri=${redirect_uri}&scope=user-library-read%20playlist-read-private%20user-read-private%20user-follow-read%20user-read-email%20&state=34fFs29kd09",
       callbackUrlScheme: callback_scheme,
     );
 
@@ -41,14 +41,9 @@ class Auth {
   void login() async {
     var code = await getCode(); // this call makes the webview appear
     var url = Uri.https('accounts.spotify.com', '/api/token');
-    var response = await http.post(url, body: {
-      'code': code,
-      'redirect_uri': redirect_uri,
-      'grant_type': 'authorization_code'
-    }, headers: {
-      'Authorization': 'Basic ' +
-          (base64.encode(utf8.encode(client_id + ':' + client_secret)))
-    });
+    var response = await http.post(url,
+        body: {'code': code, 'redirect_uri': redirect_uri, 'grant_type': 'authorization_code'},
+        headers: {'Authorization': 'Basic ' + (base64.encode(utf8.encode(client_id + ':' + client_secret)))});
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
     //obtaines the tokens and storing them in secure storage
@@ -63,13 +58,8 @@ class Auth {
     var refreshToken = await storage.read(key: 'refresh_token');
     print(refreshToken);
     var url = Uri.https('accounts.spotify.com', '/api/token');
-    var response = await http.post(url, body: {
-      'refresh_token': refreshToken,
-      'grant_type': 'refresh_token'
-    }, headers: {
-      'Authorization': 'Basic ' +
-          (base64.encode(utf8.encode(client_id + ':' + client_secret)))
-    });
+    var response = await http.post(url,
+        body: {'refresh_token': refreshToken, 'grant_type': 'refresh_token'}, headers: {'Authorization': 'Basic ' + (base64.encode(utf8.encode(client_id + ':' + client_secret)))});
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     //print(decodedResponse.toString());
     var accessToken = decodedResponse['access_token'];
