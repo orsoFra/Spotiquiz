@@ -146,10 +146,11 @@ class API {
     //printWrapped(infoOnTrack);
     if (previewUrl != null) {
       var infoOnTrack =
-      getInfoTrackJSON(decodedResponse['items'][0]['track']['id'], http);
+          getInfoTrackJSON(decodedResponse['items'][0]['track']['id'], http);
       return infoOnTrack;
     }
-    return getRandomSongFromLibraryJSON(http); //in case of null preview, returns another song;
+    return getRandomSongFromLibraryJSON(
+        http); //in case of null preview, returns another song;
   }
 
 //pass a track ID and return some info: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track
@@ -179,10 +180,10 @@ class API {
     data['album']['artists'][0].remove('external_urls');
     data['album']['artists'][0].remove('type');
     //printWrapped(data.entries.toString());
-    getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
-    getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);
-    getTempoList(track, http);
-    getKeysList(track, http);
+    //getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
+    //getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);
+    //getTempoList(track, http);
+    //getKeysList(track, http);
     return data.map((key, value) => MapEntry(key, value.toString()));
   }
 
@@ -213,8 +214,8 @@ class API {
     data['album']['artists'][0].remove('external_urls');
     data['album']['artists'][0].remove('type');
     //printWrapped(data.entries.toString());
-    getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
-    getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);
+    //getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
+    //getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);
     return data;
   }
 
@@ -363,7 +364,7 @@ class API {
     //print(data['imageUrl']);
     return data.map((key, value) => MapEntry(key, value.toString()));
   }
-  
+
   Future<List<String>> getTempoList(String track, http.Client http) async {
     Map<dynamic, dynamic> data = await getFeaturesTrack(track, http);
     List<String> result = [];
@@ -415,29 +416,6 @@ class API {
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as List;
     List<Map<String, dynamic>> data = List.empty();
     return decodedResponse;
-  }
-  Future<QuestionModel> generateRandomQuestion(http.Client http) async {
-    Map<dynamic, dynamic> song = await getRandomSongFromLibraryJSON(http);
-
-    // TODO: mettere alternative sensate
-     QuestionModel questionModel = QuestionModel(
-        'Who is the author of the song \'${song["name"]}\'?',
-        [
-          song["artists"][0]["name"],
-          "Pippo",
-          "Pluto",
-          "Fefi"
-        ],
-        0
-    );
-
-     // TODO: mischiare risposte (quindi cambiare correctAnswer di conseguenza)
-    // prima salvo risposta corretta, poi metto tutto in lista, faccio shuffle e poi faccio search di quella corretta
-
-
-    // TODO: fare altri tipi di domande
-     return questionModel;
-
   }
 } //auth
 
