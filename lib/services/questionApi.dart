@@ -35,7 +35,7 @@ class QuestionAPI {
     String artist = song['album']['artists'][0]['id'];
     List<String> options = await api.getRandomAlbumsFromArtist(artist, http);
     //print(options);
-    if (options.contains(correct_answer)) //if there is not the correct answer
+    if (!options.contains(correct_answer)) //if there is not the correct answer
       options.add(correct_answer); // add it
     while (options.indexOf(correct_answer) >
         3) //if the answer is not in the first four
@@ -55,7 +55,7 @@ class QuestionAPI {
     String URL = song['preview_url'];
     String artist = song['album']['artists'][0]['name'];
     List<String> options = await api.getRandomTracksFromArtist(artist, http);
-    if (options.contains(correct_answer)) //if there is not the correct answer
+    if (!options.contains(correct_answer)) //if there is not the correct answer
       options.add(correct_answer); // add it
     while (options.indexOf(correct_answer) >
         3) //if the answer is not in the first four

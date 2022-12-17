@@ -59,7 +59,7 @@ class _QuestionPageState extends State<QuestionPage> {
         body: Column(
           children: [
             FutureBuilder<QuestionModel>(
-                future: qApi.generateRandomQuestion_AuthorOfSong(http.Client()),
+                future: qApi.generateRandomQuestion_SongToListen(http.Client()),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuestionModel> snapshot) {
                   switch (snapshot.connectionState) {
@@ -104,15 +104,12 @@ class _QuestionPageState extends State<QuestionPage> {
                                     color: Colors.white, fontSize: 22.0),
                               ),
                             ),
-
-                            SizedBox(
-                              height: 25.0,
-                            ),
                             if (snapshot.data!.songURL != null)
                               ValueListenableBuilder(
                                   valueListenable: isPlaying,
                                   builder: (context, value, child) =>
                                       IconButton(
+                                          iconSize: 50,
                                           icon: (isPlaying.value)
                                               ? const Icon(Icons.stop)
                                               : Icon(Icons.play_arrow),
@@ -122,6 +119,10 @@ class _QuestionPageState extends State<QuestionPage> {
                                                 snapshot.data!.songURL!,
                                                 isPlaying.value);
                                           })),
+
+                            SizedBox(
+                              height: 25.0,
+                            ),
 
                             // generate 4 bottons for the answers
                             for (int i = 0;
