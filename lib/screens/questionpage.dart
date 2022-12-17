@@ -9,11 +9,27 @@ import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:spotiquiz/services/questionApi.dart';
 import '../models/MyStorage.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 final sStorage = FlutterSecureStorage();
 final storage = new MyStorage(sStorage);
 final api = API(storage);
 final qApi = QuestionAPI();
+final assetsAudioPlayer = AssetsAudioPlayer();
+//bool isPlaying = false;
+void playPauseAudioNetwork(String URL, bool doPlay) async {
+  if (!doPlay) {
+    assetsAudioPlayer.pause();
+  } else {
+    try {
+      await assetsAudioPlayer.open(Audio.network(URL),
+          autoStart: false, showNotification: true);
+      assetsAudioPlayer.play();
+    } catch (t) {
+      print(t);
+    }
+  }
+}
 
 class QuestionPage extends StatefulWidget {
   const QuestionPage({Key? key}) : super(key: key);
@@ -23,6 +39,14 @@ class QuestionPage extends StatefulWidget {
 }
 
 class _QuestionPageState extends State<QuestionPage> {
+  ValueNotifier<bool> isPlaying = ValueNotifier(false);
+
+  @override
+  void initState() {
+    isPlaying = ValueNotifier<bool>(false);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // QuestionModel question = new QuestionModel("Who is the author of the song Pippo?", ["a", "b", "c", "d"], 1);
@@ -35,7 +59,7 @@ class _QuestionPageState extends State<QuestionPage> {
         body: Column(
           children: [
             FutureBuilder<QuestionModel>(
-                future: qApi.generateRandomQuestion_AlbumOfSong(http.Client()),
+                future: qApi.generateRandomQuestion_AuthorOfSong(http.Client()),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuestionModel> snapshot) {
                   switch (snapshot.connectionState) {
@@ -82,8 +106,22 @@ class _QuestionPageState extends State<QuestionPage> {
                             ),
 
                             SizedBox(
-                              height: 35.0,
+                              height: 25.0,
                             ),
+                            if (snapshot.data!.songURL != null)
+                              ValueListenableBuilder(
+                                  valueListenable: isPlaying,
+                                  builder: (context, value, child) =>
+                                      IconButton(
+                                          icon: (isPlaying.value)
+                                              ? const Icon(Icons.stop)
+                                              : Icon(Icons.play_arrow),
+                                          onPressed: () {
+                                            isPlaying.value = !isPlaying.value;
+                                            playPauseAudioNetwork(
+                                                snapshot.data!.songURL!,
+                                                isPlaying.value);
+                                          })),
 
                             // generate 4 bottons for the answers
                             for (int i = 0;

@@ -180,8 +180,8 @@ class API {
     data['album']['artists'][0].remove('external_urls');
     data['album']['artists'][0].remove('type');
     //printWrapped(data.entries.toString());
-    //getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
-    //getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);
+    getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
+    //getRandomAlbumsFromArtist(data['album']['artists'][0]['id'], http);
     //getTempoList(track, http);
     //getKeysList(track, http);
     return data.map((key, value) => MapEntry(key, value.toString()));
@@ -292,9 +292,11 @@ class API {
     //get offset for the query
     var url = Uri.https(
         'api.spotify.com',
-        '/v1/search/',
-        {'q': 'artist:' + artist, "offset": 0, 'limit': 4, 'type': 'album'}
-            .map((key, value) => MapEntry(key, value.toString())));
+        '/v1/artists/' + artist + '/albums',
+        {
+          "offset": 0,
+          'limit': 4,
+        }.map((key, value) => MapEntry(key, value.toString())));
     var response = await http.get(
       url,
       headers: {
@@ -308,15 +310,17 @@ class API {
     //print('Searching for artist:' + artist);
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
-    var offset = Random().nextInt(decodedResponse['albums']
-        ['total']); //only get from the response the maximum number of items
+    var offset = Random().nextInt(decodedResponse[
+        'total']); //only get from the response the maximum number of items
 
     if (off != null) offset = off; //pick offset from the param
     url = Uri.https(
         'api.spotify.com',
-        '/v1/search/',
-        {'q': 'artist:' + artist, "offset": offset, 'limit': 4, 'type': 'album'}
-            .map((key, value) => MapEntry(key, value.toString())));
+        '/v1/artists/' + artist + '/albums',
+        {
+          "offset": 0,
+          'limit': 4,
+        }.map((key, value) => MapEntry(key, value.toString())));
     response = await http.get(
       url,
       headers: {
@@ -327,11 +331,11 @@ class API {
     //print('Searching for artist:' + artist);
     List<String> result = [];
     decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    if (decodedResponse['albums']['total'] < offset)
+    if (decodedResponse['total'] < offset)
       return getRandomTracksFromArtist(artist, http, 0);
     //print(url);
     for (int i = 0; i < 4; i++) {
-      result.add(decodedResponse['albums']['items'][i]['name']);
+      result.add(decodedResponse['items'][i]['name']);
     }
     //print(result);
     return result;
