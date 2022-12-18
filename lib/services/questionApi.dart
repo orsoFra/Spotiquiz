@@ -12,6 +12,21 @@ final storage = MyStorage(sStorage);
 
 class QuestionAPI {
   final api = API(storage);
+
+  Future<QuestionModel> generateRandomQuestion(http.Client http) async {
+    var questionGenerators = [
+      // generateRandomQuestion_AuthorOfSong,
+      generateRandomQuestion_AlbumOfSong,
+      generateRandomQuestion_SongToListen,
+      generateRandomQuestion_AlbumToListen,
+      // generateRandomQuestion_AuthorToListen,
+      generateRandomQuestion_YearOfSong
+    ];
+    int chosenGenerator = Random().nextInt(questionGenerators.length);
+    var questionGenerator = questionGenerators[chosenGenerator];
+    return questionGenerator(http);
+  }
+
   Future<QuestionModel> generateRandomQuestion_AuthorOfSong(http.Client http) async {
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
     List<String> options = await api.getRandomArtistsFromUser(http);
@@ -73,7 +88,7 @@ class QuestionAPI {
     while (options.indexOf(correct_answer) > 3) //if the answer is not in the first four
       options.shuffle(); //shuffle the answers
     int ind = options.indexOf(correct_answer);
-    QuestionModel questionModel = QuestionModel('In which album there is the that song did you listen to?', [options[0], options[1], options[2], options[3]], ind, URL);
+    QuestionModel questionModel = QuestionModel('To which album does this song belong?', [options[0], options[1], options[2], options[3]], ind, URL);
     return questionModel;
   }
 
@@ -99,17 +114,14 @@ class QuestionAPI {
 
   Future<QuestionModel> generateRandomQuestion_YearOfSong(http.Client http) async {
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
-    String correct = song['album']['release_date'].toString().substring(0, 4);
-    int correct_answer = int.parse(correct);
-    List<int> options = await api.getRandomyear(http, correct);
-    if (!options.contains(correct_answer)) //if there is not the correct answer
-      options.add(correct_answer); // add it
-    while (options.indexOf(correct_answer) > 3) //if the answer is not in the first four
-      options.shuffle(); //shuffle the answers
-    int ind = options.indexOf(correct_answer);
+    int correctYear = int.parse(song['album']['release_date'].toString().substring(0, 4));
+    List<int> options = api.getRandomYears(correctYear);
+    options.insert(0, correctYear);
+    options.shuffle(); //shuffle the answers
+    int ind = options.indexOf(correctYear);
 
     QuestionModel questionModel = QuestionModel(
-        'In which year the song \'${song["name"]} was released\'?', [options[0].toString(), options[1].toString(), options[2].toString(), options[3].toString()], ind);
+        'In which year the song \'${song["name"]}\' was released?', [options[0].toString(), options[1].toString(), options[2].toString(), options[3].toString()], ind);
     return questionModel;
   }
 }

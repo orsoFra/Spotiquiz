@@ -39,7 +39,7 @@ class API {
 
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     //print(JsonEncoder().convert(decodedResponse));
-    var numOfTracks = decodedResponse['total'];
+    var numOfTracks = decodedResponse['total']; // TODO: 401 the access token expired
     var offset = Random().nextInt(numOfTracks);
     return offset;
   }
@@ -230,7 +230,7 @@ class API {
     var url = Uri.https(
         'api.spotify.com',
         '/v1/artists/' + artist + '/albums',
-        {
+        { // TODO: perché limit?in questo modo prendo solo 4 album -> meglio prenderli tutti, e poi selezionarne 4 casuali localmente
           "offset": 0,
           'limit': 4,
         }.map((key, value) => MapEntry(key, value.toString())));
@@ -349,12 +349,13 @@ class API {
     String? value = await _storage.read(key: 'access_token');
     //get offset for the query
     var url = Uri.https('api.spotify.com', '/v1/me/following', {"offset": 0, 'limit': 4, 'type': 'artist'}.map((key, value) => MapEntry(key, value.toString())));
+    // var url = Uri.https('api.spotify.com', '/v1/me/following');
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
     );
     if (response.statusCode != 200) {
-      throw Exception('Error in method getRandomAlbumsFromArtist');
+      throw Exception("Invalid response statusCode: ${response.statusCode}"); // TODO: errore 403, probabilmente questa operazione (me/following) non è autorizzata per questo token
     }
     //print('Searching for artist:' + artist);
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
@@ -379,17 +380,17 @@ class API {
     return data;
   }
 
-  Future<List<int>> getRandomyear(http.Client htt, [String? yearTrue]) async {
+  List<int> getRandomYears(int referenceYear) {
     List<int> result = [];
-    if (yearTrue != null) {
-      while (result.length < 2) {
-        var year = int.parse(yearTrue) + Random().nextInt(20) + 1;
-        if (year <= 2023) result.add(year);
+    int thisYear = DateTime.now().year;
+    int minYear = referenceYear - 10;
+    int maxYear = min(referenceYear + 10, thisYear);
+    while (result.length < 3) {
+      int randomYear = minYear + Random().nextInt(maxYear - minYear);
+      if(randomYear == referenceYear || result.contains(randomYear)) {
+        continue;
       }
-      while (result.length < 5) {
-        var year = int.parse(yearTrue) - Random().nextInt(20) + 1;
-        result.add(year);
-      }
+      result.add(randomYear);
     }
     return result;
   }

@@ -58,7 +58,7 @@ class _QuestionPageState extends State<QuestionPage> {
         body: Column(
           children: [
             FutureBuilder<QuestionModel>(
-                future: qApi.generateRandomQuestion_YearOfSong(http.Client()),
+                future: qApi.generateRandomQuestion(http.Client()),
                 builder: (BuildContext context, AsyncSnapshot<QuestionModel> snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
