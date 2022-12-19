@@ -63,7 +63,13 @@ class _QuestionPageState extends State<QuestionPage> {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                       // TODO: mettere widget che fa loading invece del text
-                      return const Text('Awaiting result...');
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Center(child: const CircularProgressIndicator()),
+                        ],
+                      );
                     case ConnectionState.done:
                       if (snapshot.data == null) print('data is null');
                       return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
