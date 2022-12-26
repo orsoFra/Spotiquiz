@@ -39,11 +39,19 @@ class QuestionPage extends StatefulWidget {
 
 class _QuestionPageState extends State<QuestionPage> {
   ValueNotifier<bool> isPlaying = ValueNotifier(false);
+  late List<Future<QuestionModel >> questions;
+  //int question_pos = 0;
+  //int score = 0;
+  //bool btnPressed = false;
+  //PageController? _controller;
+  //bool answered  = false;
 
   @override
   void initState() {
     isPlaying = ValueNotifier<bool>(false);
     super.initState();
+    //_controller = PageController(initialPage: 0);
+    this.questions = qApi.generateRandomQuestions(http.Client(), 10);
   }
 
   @override
@@ -59,7 +67,7 @@ class _QuestionPageState extends State<QuestionPage> {
           child: Column(
             children: [
               FutureBuilder<QuestionModel>(
-                  future: qApi.generateRandomQuestion(http.Client()),
+                  future: this.questions[0],
                   builder: (BuildContext context, AsyncSnapshot<QuestionModel> snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:

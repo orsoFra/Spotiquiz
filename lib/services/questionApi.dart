@@ -25,12 +25,23 @@ class QuestionAPI {
     ];
     int chosenGenerator = Random().nextInt(questionGenerators.length);
     var questionGenerator = questionGenerators[chosenGenerator];
-    return questionGenerator(http);
+    Future<QuestionModel> futureQuestion = questionGenerator(http);
+    QuestionModel question = await futureQuestion;
+    return futureQuestion;
+  }
+
+  List<Future<QuestionModel>> generateRandomQuestions(http.Client http, int numQuestions) {
+    List<Future<QuestionModel>> questions = [];
+    for(int i = 0; i < numQuestions; i++){
+      Future<QuestionModel> futureQuestion = generateRandomQuestion(http);
+      questions.add(futureQuestion);
+    }
+    return questions;
   }
 
   Future<QuestionModel> generateRandomQuestion_AuthorOfSong(http.Client http) async {
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
-    List<String> options = await api.getRandomArtistsFromUser(http);
+    List<String> options = await api.getRandomArtistsFromUser(http); // TODO: this raises an exception sometimes
     String correct_answer = song['album']['artists'][0]['name'];
     if (!options.contains(correct_answer)) //if there is not the correct answer
       options.add(correct_answer); // add it
@@ -64,6 +75,7 @@ class QuestionAPI {
 
   //generate a song and get the url
   Future<QuestionModel> generateRandomQuestion_SongToListen(http.Client http) async {
+    // TODO: sometimes answers are duplicated
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
     String correct_answer = song['name'];
     String URL = song['preview_url'];
