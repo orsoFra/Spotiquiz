@@ -144,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     .push(MaterialPageRoute(builder: (context) => QuestionPage()));
               },
               color: Colors.orange[600],
-              child: Text("RANDOM QUESTION"),
+              child: Text("RANDOM QUIZ"),
             ),
             MaterialButton(
               onPressed: () {

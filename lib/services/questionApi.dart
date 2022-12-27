@@ -6,7 +6,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'api.dart';
 import '../models/MyStorage.dart';
 import '../models/question_model.dart';
-import '../models/quiz_model.dart';
 
 final sStorage = FlutterSecureStorage();
 final storage = MyStorage(sStorage);
@@ -136,13 +135,5 @@ class QuestionAPI {
     QuestionModel questionModel = QuestionModel(
         'In which year the song \'${song["name"]}\' was released?', [options[0].toString(), options[1].toString(), options[2].toString(), options[3].toString()], ind);
     return questionModel;
-  }
-
-  Future<QuizModel> generateQuiz(String title, http.Client http) async {
-    List<QuestionModel> questions = [];
-    for (int i = 0; i < 10; i++) {
-      questions.add(await generateRandomQuestion(http));
-    }
-    return QuizModel(title, questions, DateTime.now());
   }
 }

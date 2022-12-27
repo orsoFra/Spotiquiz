@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:spotiquiz/services/questionApi.dart';
 import '../models/MyStorage.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:spotiquiz/screens/resultpage.dart';
 
 final sStorage = FlutterSecureStorage();
 final storage = new MyStorage(sStorage);
@@ -42,12 +43,8 @@ class _QuestionPageState extends State<QuestionPage> {
   ValueNotifier<bool> isPlaying = ValueNotifier(false);
   List<Future<QuestionModel>>? questions;
 
-  //int question_pos = 0;
-  //int score = 0;
-  //bool btnPressed = false;
+  int score = 0;
   PageController? _controller;
-
-  //bool answered  = false;
 
   @override
   void initState() {
@@ -92,7 +89,6 @@ class _QuestionPageState extends State<QuestionPage> {
                                   AsyncSnapshot<QuestionModel> snapshot) {
                                 switch (snapshot.connectionState) {
                                   case ConnectionState.waiting:
-                                    // TODO: mettere widget che fa loading invece del text
                                     return Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -190,22 +186,19 @@ class _QuestionPageState extends State<QuestionPage> {
                                                 onPressed: () {
 
                                                   if (_controller!.page?.toInt() == questions!.length - 1) {
-                                                    print("finito");
-                                                    // TODO: pagina result
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(
-                                                    //         builder: (context) => ResultScreen(score)));
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => ResultPage(score)));
                                                   } else {
                                                     if(i==snapshot.data!.correctAnswer){
-                                                      //TODO: incrementare score
+                                                      score++;
                                                     }
                                                     _controller!.nextPage(
                                                         duration: Duration(milliseconds: 400),
                                                         curve: Curves.easeInExpo);
 
                                                     setState(() {
-                                                      //btnPressed = false;
                                                     });
                                                   }
                                                 },
