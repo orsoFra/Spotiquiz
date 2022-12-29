@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -230,7 +229,8 @@ class API {
     var url = Uri.https(
         'api.spotify.com',
         '/v1/artists/' + artist + '/albums',
-        { // TODO: perché limit?in questo modo prendo solo 4 album -> meglio prenderli tutti, e poi selezionarne 4 casuali localmente
+        {
+          // TODO: perché limit?in questo modo prendo solo 4 album -> meglio prenderli tutti, e poi selezionarne 4 casuali localmente
           "offset": 0,
           'limit': 4,
         }.map((key, value) => MapEntry(key, value.toString())));
@@ -387,7 +387,7 @@ class API {
     int maxYear = min(referenceYear + 10, thisYear);
     while (result.length < 3) {
       int randomYear = minYear + Random().nextInt(maxYear - minYear);
-      if(randomYear == referenceYear || result.contains(randomYear)) {
+      if (randomYear == referenceYear || result.contains(randomYear)) {
         continue;
       }
       result.add(randomYear);
