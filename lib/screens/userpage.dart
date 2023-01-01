@@ -34,8 +34,7 @@ class _UserPageState extends State<UserPage> {
         body: Column(children: [
           FutureBuilder<Map<String, dynamic>>(
             future: api.getInfoUser(http.Client()), // a Future<String> or null
-            builder: (BuildContext context,
-                AsyncSnapshot<Map<String, dynamic>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return const Text('Awaiting result...');
@@ -54,9 +53,8 @@ class _UserPageState extends State<UserPage> {
                                 children: [
                                   CircleAvatar(
                                     backgroundColor: Colors.amber,
-                                    backgroundImage: NetworkImage(
-                                        snapshot.data!['imageUrl']),
-                                    radius: 70,
+                                    backgroundImage: NetworkImage(snapshot.data!['imageUrl']),
+                                    radius: 100,
                                   )
                                 ],
                               )
@@ -70,6 +68,10 @@ class _UserPageState extends State<UserPage> {
                       Text(
                         snapshot.data!['email'],
                         style: TextStyle(fontSize: 14),
+                      ),
+                      Text(
+                        snapshot.data!['product'] + " user ",
+                        style: TextStyle(fontSize: 12),
                       ),
                       Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                       Container(
@@ -98,10 +100,8 @@ class _UserPageState extends State<UserPage> {
                 fontSize: 20,
               )),
           FutureBuilder<List<dynamic>>(
-            future: api.getUserQuizScores('21q4wwalokcky25op74guvjcq',
-                http.Client()), // a Future<String> or null
-            builder:
-                (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+            future: api.getUserQuizScores('21q4wwalokcky25op74guvjcq', http.Client()), // a Future<String> or null
+            builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return const Text('Awaiting result...');
@@ -115,11 +115,7 @@ class _UserPageState extends State<UserPage> {
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemBuilder: ((context, index) {
-                        return ListTile(
-                            title: Text(result[index]['points'].toString()),
-                            subtitle: Text(result[index]['date']
-                                .toString()
-                                .substring(0, 10)));
+                        return ListTile(title: Text(result[index]['points'].toString()), subtitle: Text(result[index]['date'].toString().substring(0, 10)));
                       }));
 
                 default:
