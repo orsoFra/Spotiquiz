@@ -306,6 +306,31 @@ class API {
     return data.map((key, value) => MapEntry(key, value.toString()));
   }
 
+  Future<String> getIdUser(http.Client http) async {
+    //final _storage = const FlutterSecureStorage();
+    String? value = await _storage.read(key: 'access_token');
+    //get offset for the query
+    var url = Uri.https(
+      'api.spotify.com',
+      '/v1/me/',
+    );
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Error in method getIDUser');
+    }
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    //print(decodedResponse.entries);
+    Map<dynamic, dynamic> data = Map();
+    data.addAll(decodedResponse);
+    //print(data.entries);
+
+    //print(data['imageUrl']);
+    return data['id'];
+  }
+
   Future<List<String>> getTempoList(String track, http.Client http) async {
     Map<dynamic, dynamic> data = await getFeaturesTrack(track, http);
     List<String> result = [];

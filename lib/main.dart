@@ -8,7 +8,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/screens/userpage.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'models/MyStorage.dart';
 
 // Create storage
@@ -34,13 +35,15 @@ Future main() async {
     auth.login(); //prompt login
   }
   runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 void playAudioNetwork() async {
   a = await api.getRandomSongFromLibrary(http.Client());
   try {
-    await assetsAudioPlayer.open(Audio.network(a['preview_url']),
-        autoStart: false, showNotification: true);
+    await assetsAudioPlayer.open(Audio.network(a['preview_url']), autoStart: false, showNotification: true);
     assetsAudioPlayer.play();
   } catch (t) {
     print(t);
@@ -48,8 +51,7 @@ void playAudioNetwork() async {
 }
 
 void infoTrack() async {
-  Map<String, dynamic> info =
-      await api.getFeaturesTrack(a['id'], http.Client());
+  Map<String, dynamic> info = await api.getFeaturesTrack(a['id'], http.Client());
   print(info.keys);
 }
 
@@ -140,16 +142,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             MaterialButton(
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => QuestionPage()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionPage()));
               },
               color: Colors.orange[600],
               child: Text("RANDOM QUIZ"),
             ),
             MaterialButton(
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => UserPage()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
               },
               color: Colors.green[600],
               child: Text("INFO ON USER"),
