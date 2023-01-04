@@ -9,6 +9,8 @@ import '../models/question_model.dart';
 
 enum keys { DO, DO_diesis, RE, RE_diesis, MI, FA, FA_diesis, SOL, SOL_diesis, LA, LA_diesis, SI }
 
+const int TIMEOUT_IN_SECONDS = 300;
+
 class API {
   API(this._storage);
   final IStorage _storage;
@@ -17,7 +19,7 @@ class API {
     final _storage = FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
     var url = Uri.https('api.spotify.com', '/v1/me/playlists');
-    var response = await http.get(url, headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'});
+    var response = await http.get(url, headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'}).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
 
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     print(decodedResponse.toString());
@@ -34,11 +36,11 @@ class API {
     //final _storage = FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
     var url = Uri.https('api.spotify.com', '/v1/me/tracks');
-    var response = await http.get(url, headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'});
+    var response = await http.get(url, headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'}).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
 
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     //print(JsonEncoder().convert(decodedResponse));
-    var numOfTracks = decodedResponse['total']; // TODO: 401 the access token expired
+    var numOfTracks = decodedResponse['total'];
     var offset = Random().nextInt(numOfTracks);
     return offset;
   }
@@ -48,7 +50,7 @@ class API {
     String? value = await _storage.read(key: 'access_token');
     var url = Uri.https('api.spotify.com', '/v1/me');
     try {
-      var response = await http.get(url, headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'});
+      var response = await http.get(url, headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'}).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
       if (response.statusCode == 200)
         return true;
       else
@@ -68,7 +70,7 @@ class API {
     var newresponse = await http.get(
       newurl,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (newresponse.statusCode != 200) {
       throw Exception('Error in method getInfoTrack');
     }
@@ -94,7 +96,7 @@ class API {
     var newresponse = await http.get(
       newurl,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (newresponse.statusCode != 200) {
       throw Exception('Error in method getInfoTrack');
     }
@@ -121,7 +123,7 @@ class API {
     var response = await http.get(
       newurl,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       throw Exception('Error in method getInfoTrack');
     }
@@ -152,7 +154,7 @@ class API {
     var response = await http.get(
       newurl,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       throw Exception('Error in method getInfoTrack');
     }
@@ -183,7 +185,7 @@ class API {
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       throw Exception('Error in method getFeaturesTrack');
     }
@@ -206,7 +208,7 @@ class API {
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       throw Exception('Error in method getRandomTracksFromArtist');
     }
@@ -231,14 +233,13 @@ class API {
         'api.spotify.com',
         '/v1/artists/' + artist + '/albums',
         {
-          // TODO: perché limit?in questo modo prendo solo 4 album -> meglio prenderli tutti, e poi selezionarne 4 casuali localmente
           "offset": offset,
           'limit': 4,
         }.map((key, value) => MapEntry(key, value.toString())));
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       print(response.body.toString());
       throw Exception('Error in method getRandomAlbumsFromArtist');
@@ -260,7 +261,7 @@ class API {
       response = await http.get(
         url,
         headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-      );
+      ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     }
     /*if (response.statusCode != 200) {
       print(response.body.toString());
@@ -292,7 +293,7 @@ class API {
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       throw Exception('Error in method getInfoUser');
     }
@@ -317,7 +318,7 @@ class API {
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       throw Exception('Error in method getIDUser');
     }
@@ -367,7 +368,7 @@ class API {
     var response = await http.get(
       url,
       headers: {'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       throw Exception('Error in method getUserQuizScores');
     }
@@ -384,9 +385,9 @@ class API {
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
-      throw Exception("Invalid response statusCode: ${response.statusCode}"); // TODO: errore 403, probabilmente questa operazione (me/following) non è autorizzata per questo token
+      throw Exception("Invalid response statusCode: ${response.statusCode}");
     }
     //print('Searching for artist:' + artist);
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
@@ -397,7 +398,7 @@ class API {
     response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    );
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       print(response.body.toString());
       throw Exception('Error in method getRandomAlbumsFromArtist 2');
