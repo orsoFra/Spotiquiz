@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:spotiquiz/screens/resultpage.dart';
 
 import '../models/MyStorage.dart';
 import '../models/question_model.dart';
@@ -25,6 +26,11 @@ class API {
 
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     print(decodedResponse.toString());
+  }
+
+  void flushCredentials() async {
+    final _storage = FlutterSecureStorage();
+    await _storage.deleteAll();
   }
 
   //printer for long responses

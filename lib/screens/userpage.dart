@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/main.dart';
+import 'package:spotiquiz/screens/loginpage.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
@@ -79,7 +80,8 @@ class _UserPageState extends State<UserPage> {
                           color: Color.fromARGB(255, 14, 65, 91),
                           child: Text("Logout"),
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            api.flushCredentials();
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
                           },
                         ),
                       )

@@ -24,10 +24,10 @@ class Auth {
     await dotenv.load(fileName: ".env");
     //print(client_id);
     final result = await FlutterWebAuth.authenticate(
-      url:
-          "https://accounts.spotify.com/authorize?client_id=${client_id}\&response_type=code&redirect_uri=${redirect_uri}&scope=user-library-read%20playlist-read-private%20user-read-private%20user-follow-read%20user-read-email%20&state=34fFs29kd09",
-      callbackUrlScheme: callback_scheme,
-    );
+        url:
+            "https://accounts.spotify.com/authorize?client_id=${client_id}\&response_type=code&redirect_uri=${redirect_uri}&scope=user-library-read%20playlist-read-private%20user-read-private%20user-follow-read%20user-read-email%20&state=34fFs29kd09",
+        callbackUrlScheme: callback_scheme,
+        preferEphemeral: true);
 
 // Extract token from resulting url
     final token = Uri.parse(result);
