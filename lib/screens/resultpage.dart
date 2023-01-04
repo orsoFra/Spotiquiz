@@ -15,6 +15,14 @@ final api = API(storage);
 void getID(int score) async {
   String id = await api.getIdUser(http.Client());
   db.collection("quizzes").add({'date': Timestamp.now(), 'points': score, 'user': id});
+  db.collection('scores').doc(id).get().then((doc) {
+    if (doc.exists) {
+      //print("Document data:" + doc.data().toString());
+      db.collection("scores").doc(id).update({'totalScore': score + doc.data()!['totalScore']});
+    } else {
+      db.collection("scores").doc(id).set({'totalScore': score});
+    }
+  });
 }
 
 class ResultPage extends StatelessWidget {

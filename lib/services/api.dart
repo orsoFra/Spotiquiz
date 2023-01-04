@@ -10,6 +10,8 @@ import '../models/question_model.dart';
 enum keys { DO, DO_diesis, RE, RE_diesis, MI, FA, FA_diesis, SOL, SOL_diesis, LA, LA_diesis, SI }
 
 const int TIMEOUT_IN_SECONDS = 300;
+final List randomAlbums = ['The Wall', 'Oysters', 'Mamma Mia Deluxe', 'Bycicle', 'A collection of dance songs', 'Materials', 'Demons'];
+final List randomSongs = ['Another Brick in the Wall', 'Oysters to Drink', 'Mamma Mia Pizzeria', 'Song 4', 'Dance dance revolution', 'Plutonium', 'Birds'];
 
 class API {
   API(this._storage);
@@ -137,7 +139,7 @@ class API {
     data['album']['artists'][0].remove('type');
     //printWrapped(data.entries.toString());
     //getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
-    getRandomAlbumsFromArtist(data['album']['artists'][0]['id'], http);
+    //getRandomAlbumsFromArtist(data['album']['artists'][0]['id'], http);
     //getTempoList(track, http);
     //getKeysList(track, http);
     //getRandomArtistsFromUser(http);
@@ -197,14 +199,18 @@ class API {
   }
 
   //GET 3 random titles of songs from the same artist of another track
-  Future<List<String>> getRandomTracksFromArtist(String artist, http.Client http, [int? off]) async {
+  Future<List<String>> getRandomTracksFromArtist(String id, http.Client http, [int? off]) async {
     //final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
-    var offset = Random().nextInt(50);
-    if (off != null) offset = off; //pick offset from the param
+    //var offset = Random().nextInt(50);
+    //if (off != null) offset = off; //pick offset from the param
     //it's 995 since the offset limit is 1000
-    var url =
-        Uri.https('api.spotify.com', '/v1/search/', {'q': 'artist:' + artist, "offset": offset, 'limit': 4, 'type': 'track'}.map((key, value) => MapEntry(key, value.toString())));
+    var url = Uri.https(
+        'api.spotify.com',
+        '/v1/artists/' + id + '/top-tracks',
+        {
+          "country": 'IT',
+        }.map((key, value) => MapEntry(key, value.toString())));
     var response = await http.get(
       url,
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
@@ -215,10 +221,9 @@ class API {
     //print('Searching for artist:' + artist);
     List<String> result = [];
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    if (decodedResponse['tracks']['total'] < offset) return getRandomTracksFromArtist(artist, http, 0);
     //print(url);
     for (int i = 0; i < 4; i++) {
-      result.add(decodedResponse['tracks']['items'][i]['name']);
+      result.add(decodedResponse['tracks'][i]['name']);
     }
     //print(result);
     return result;
@@ -276,7 +281,7 @@ class API {
       if (i < decodedResponse['items'].length)
         result.add(decodedResponse['items'][i]['name']);
       else
-        result.add("The Wall");
+        result.add("NOT AVAILABLE");
     }
     //print(result);
     return result;

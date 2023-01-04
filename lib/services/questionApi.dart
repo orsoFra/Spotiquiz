@@ -80,7 +80,7 @@ class QuestionAPI {
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
     String correct_answer = song['name'];
     String URL = song['preview_url'];
-    String artist = song['album']['artists'][0]['name'];
+    String artist = song['album']['artists'][0]['id'];
     List<String> options = await api.getRandomTracksFromArtist(artist, http);
     if (!options.contains(correct_answer)) //if there is not the correct answer
       options.add(correct_answer); // add it
