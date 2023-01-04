@@ -15,11 +15,11 @@ class QuestionAPI {
 
   Future<QuestionModel> generateRandomQuestion(http.Client http) async {
     var questionGenerators = [
-      // generateRandomQuestion_AuthorOfSong,
+      generateRandomQuestion_AuthorOfSong,
       generateRandomQuestion_AlbumOfSong,
       generateRandomQuestion_SongToListen,
       generateRandomQuestion_AlbumToListen,
-      // generateRandomQuestion_AuthorToListen,
+      generateRandomQuestion_AuthorToListen,
       generateRandomQuestion_YearOfSong
     ];
     int chosenGenerator = Random().nextInt(questionGenerators.length);
@@ -31,7 +31,7 @@ class QuestionAPI {
 
   List<Future<QuestionModel>> generateRandomQuestions(http.Client http, int numQuestions) {
     List<Future<QuestionModel>> questions = [];
-    for(int i = 0; i < numQuestions; i++){
+    for (int i = 0; i < numQuestions; i++) {
       Future<QuestionModel> futureQuestion = generateRandomQuestion(http);
       questions.add(futureQuestion);
     }
@@ -40,8 +40,10 @@ class QuestionAPI {
 
   Future<QuestionModel> generateRandomQuestion_AuthorOfSong(http.Client http) async {
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
-    List<String> options = await api.getRandomArtistsFromUser(http); // TODO: this raises an exception sometimes
+    // TODO: this raises an exception sometimes
     String correct_answer = song['album']['artists'][0]['name'];
+    String idArtist = song['album']['artists'][0]['id'];
+    List<String> options = await api.getRelatedArtists(idArtist, http);
     if (!options.contains(correct_answer)) //if there is not the correct answer
       options.add(correct_answer); // add it
     while (options.indexOf(correct_answer) > 3) //if the answer is not in the first four
@@ -106,8 +108,9 @@ class QuestionAPI {
 
   Future<QuestionModel> generateRandomQuestion_AuthorToListen(http.Client http) async {
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
-    List<String> options = await api.getRandomArtistsFromUser(http);
     String correct_answer = song['album']['artists'][0]['name'];
+    String artist = song['album']['artists'][0]['id'];
+    List<String> options = await api.getRelatedArtists(artist, http);
     String URL = song['preview_url'];
     if (!options.contains(correct_answer)) //if there is not the correct answer
       options.add(correct_answer); // add it

@@ -411,6 +411,28 @@ class API {
     return data;
   }
 
+  Future<List<String>> getRelatedArtists(String id, http.Client http) async {
+    String? value = await _storage.read(key: 'access_token');
+    //get offset for the query
+    var url = Uri.https('api.spotify.com', '/v1/artists/' + id + '/related-artists');
+    // var url = Uri.https('api.spotify.com', '/v1/me/following');
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Invalid response statusCode: ${response.statusCode}"); // TODO: errore 403, probabilmente questa operazione (me/following) non è autorizzata per questo token
+    }
+    //print('Searching for artist:' + artist);
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    List<String> data = [];
+    for (int i = 0; i < 4; i++) {
+      data.add(decodedResponse['artists'][i]['name']);
+    }
+    print(data);
+    return data;
+  }
+
   List<int> getRandomYears(int referenceYear) {
     List<int> result = [];
     int thisYear = DateTime.now().year;
