@@ -14,6 +14,11 @@ class TimerController extends GetxController
   Animation get animation => this._animation;
   AnimationController get animationController => _animationController;
 
+  late PageController pageController;
+
+  TimerController(PageController pageController){
+    this.pageController = pageController;
+  }
 
   // called immediately after the widget is allocated memory
   @override
@@ -36,6 +41,10 @@ class TimerController extends GetxController
 
   void nextQuestion() {
     print("next question");
+    pageController.nextPage(
+        duration:
+        Duration(milliseconds: 400),
+        curve: Curves.easeInExpo);
     // Reset the counter
     _animationController.reset();
 

@@ -61,8 +61,7 @@ class _QuestionPageState extends State<QuestionPage> {
   @override
   Widget build(BuildContext context) {
     // QuestionModel question = new QuestionModel("Who is the author of the song Pippo?", ["a", "b", "c", "d"], 1);
-    TimerController timer_controller = Get.put(TimerController());
-
+    TimerController timer_controller = Get.put(TimerController(_controller!));
     return Scaffold(
       backgroundColor: Colors.indigo,
       appBar: AppBar(
@@ -114,7 +113,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   // widget.progressBar,
-                                  ProgressBar(),
+                                  ProgressBar(pageController: _controller!),
                                   SizedBox(
                                     width: double.infinity,
                                     child: Text(
@@ -199,6 +198,10 @@ class _QuestionPageState extends State<QuestionPage> {
                                         ),
                                         onPressed: () {
                                           assetsAudioPlayer.pause();
+                                          if (i ==
+                                              snapshot.data!.correctAnswer) {
+                                            score++;
+                                          }
                                           if (_controller!.page?.toInt() ==
                                               questions!.length - 1) {
                                             Navigator.pushReplacement(
@@ -207,10 +210,6 @@ class _QuestionPageState extends State<QuestionPage> {
                                                     builder: (context) =>
                                                         ResultPage(score)));
                                           } else {
-                                            if (i ==
-                                                snapshot.data!.correctAnswer) {
-                                              score++;
-                                            }
                                             _controller!.nextPage(
                                                 duration:
                                                     Duration(milliseconds: 400),

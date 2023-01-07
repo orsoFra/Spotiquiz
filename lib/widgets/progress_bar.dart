@@ -5,12 +5,13 @@ import 'package:flutter_svg/svg.dart';
 
 
 class ProgressBar extends StatelessWidget {
-
-  var controller = TimerController();
+  late PageController pageController;
 
   ProgressBar({
-    Key? key
-  }) : super(key: key);
+    Key? key, required PageController pageController
+  }) : super(key: key){
+    this.pageController = pageController;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class ProgressBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
       ),
       child: GetBuilder<TimerController>(
-        init: controller,
+        init: TimerController(pageController),
         builder: (controller) {
           return Stack(
             children: [
