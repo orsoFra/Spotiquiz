@@ -16,8 +16,8 @@ class QuestionController {
   QuestionController(Function stopPlayingCallback, int numPages){
     pageController = PageController(initialPage: 0);
     this.numPages = numPages;
-    this.score = 0;
     this.stopPlayingCallback = stopPlayingCallback;
+    this.reset();
   }
 
   void setContext(BuildContext context){
@@ -26,6 +26,10 @@ class QuestionController {
 
   void setTimerController(TimerController timerController){
     this.timerController = timerController;
+  }
+
+  void reset(){
+    this.score = 0;
   }
 
   void nextPage(){

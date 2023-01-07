@@ -61,6 +61,7 @@ class _QuestionPageState extends State<QuestionPage> {
     timerController = Get.put(TimerController(_controller!));
     _controller?.setTimerController(timerController);
     timerController.resetTimerAndStart();
+    _controller?.reset();
   }
 
   void stopPlaying(){
