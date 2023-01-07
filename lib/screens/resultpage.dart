@@ -15,6 +15,7 @@ final storage = MyStorage(sStorage);
 final api = API(storage);
 void getID(int score) async {
   String id = await api.getIdUser(http.Client());
+  String name = await api.getNameOfUser(http.Client(), id);
   db.collection("quizzes").add({'date': Timestamp.now(), 'points': score, 'user': id});
   db.collection('scores').doc(id).get().then((doc) {
     if (doc.exists) {
@@ -22,6 +23,8 @@ void getID(int score) async {
       db.collection("scores").doc(id).update({'totalScore': score + doc.data()!['totalScore']});
     } else {
       db.collection("scores").doc(id).set({'totalScore': score});
+      db.collection("scores").doc(id).set({'id': id});
+      db.collection("scores").doc(id).set({'name': name});
     }
   });
 }
@@ -73,7 +76,6 @@ class ResultPage extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 child: Text("Back to home"))
-            
           ],
         ));
   }

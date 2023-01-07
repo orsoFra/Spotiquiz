@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotiquiz/screens/leaderboard_page.dart';
 import 'package:spotiquiz/screens/questionpage.dart';
 import 'package:spotiquiz/screens/userpage.dart';
 
@@ -12,8 +13,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var song;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +43,13 @@ class _MyHomePageState extends State<MyHomePage> {
               },
               color: Colors.green[600],
               child: Text("INFO ON USER"),
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Leaderboard()));
+              },
+              color: Colors.green[600],
+              child: Text("LEADEBOARD"),
             ),
           ],
         ),

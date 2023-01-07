@@ -403,6 +403,54 @@ class API {
     }
     return result;
   }
+
+  Future<Map<String, dynamic>> getInfoOfUser(http.Client http, String id) async {
+    String? value = await _storage.read(key: 'access_token');
+    //get offset for the query
+    var url = Uri.https(
+      'api.spotify.com',
+      '/v1/users/' + id,
+    );
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
+    if (response.statusCode != 200) {
+      throw Exception('Error in method getInfoOfUser');
+    }
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    //print(decodedResponse.entries);
+    Map<dynamic, dynamic> data = Map();
+    data.addAll(decodedResponse);
+    //print(data.entries);
+    data['imageUrl'] = data['images'][0]['url'];
+    //print(data['imageUrl']);
+    return data.map((key, value) => MapEntry(key, value.toString()));
+  }
+
+  Future<String> getNameOfUser(http.Client http, String id) async {
+    String? value = await _storage.read(key: 'access_token');
+    //get offset for the query
+    var url = Uri.https(
+      'api.spotify.com',
+      '/v1/users/' + id,
+    );
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
+    if (response.statusCode != 200) {
+      return 'NO USERNAME';
+    }
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    //print(decodedResponse.entries);
+    Map<dynamic, dynamic> data = Map();
+    data.addAll(decodedResponse);
+    //print(data.entries);
+    data['imageUrl'] = data['images'][0]['url'];
+    //print(data['imageUrl']);
+    return data['display_name'];
+  }
 } //auth
 
 
