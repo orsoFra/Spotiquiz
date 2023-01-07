@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/screens/resultpage.dart';
+import 'package:test/expect.dart';
 
 import '../models/MyStorage.dart';
 import '../models/question_model.dart';
@@ -70,32 +71,6 @@ class API {
   }
 
   //retrievs the track'l URI
-  Future<Map<String, dynamic>> getRandomSongFromLibrary(http.Client http) async {
-    //final _storage = new FlutterSecureStorage();
-    String? value = await _storage.read(key: 'access_token');
-    var offset = await getOffset();
-    var newurl = Uri.https('api.spotify.com', '/v1/me/tracks/', {"offset": offset, 'limit': 1}.map((key, value) => MapEntry(key, value.toString())));
-    var newresponse = await http.get(
-      newurl,
-      headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
-    if (newresponse.statusCode != 200) {
-      throw Exception('Error in method getInfoTrack');
-    }
-    var decodedResponse = jsonDecode(utf8.decode(newresponse.bodyBytes)) as Map;
-    //printWrapped(decodedResponse.toString());
-    var previewUrl = decodedResponse['items'][0]['track']['preview_url'];
-    //print(decodedResponse['items'][0]['track']['id']);
-    //var infoOnTrack = getInfoTrack(decodedResponse['items'][0]['track']['id']);
-    //printWrapped(infoOnTrack);
-    if (previewUrl != null) {
-      var infoOnTrack = getInfoTrack(decodedResponse['items'][0]['track']['id'], http);
-      return infoOnTrack;
-    }
-    return getRandomSongFromLibrary(http); //in case of null preview, returns another song;
-  }
-
-  //retrievs the track'l URI
   Future<Map<dynamic, dynamic>> getRandomSongFromLibraryJSON(http.Client http) async {
     //final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
@@ -115,14 +90,14 @@ class API {
     //var infoOnTrack = getInfoTrack(decodedResponse['items'][0]['track']['id']);
     //printWrapped(infoOnTrack);
     if (previewUrl != null) {
-      var infoOnTrack = getInfoTrackJSON(decodedResponse['items'][0]['track']['id'], http);
-      return infoOnTrack;
+      print('preview not null');
+      return getInfoTrackJSON(decodedResponse['items'][0]['track']['id'], http, previewUrl);
     }
     return getRandomSongFromLibraryJSON(http); //in case of null preview, returns another song;
   }
 
 //pass a track ID and return some info: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track
-  Future<Map<String, dynamic>> getInfoTrack(String track, http.Client http) async {
+  Future<Map<dynamic, dynamic>> getInfoTrackJSON(String track, http.Client http, [String? pUrl]) async {
     String? value = await _storage.read(key: 'access_token');
     var newurl = Uri.https(
       'api.spotify.com',
@@ -141,42 +116,11 @@ class API {
     data.addAll(decodedResponse);
     data.remove('available_markets');
     data['album'].remove('available_markets');
-    data['album']['artists'][0].remove('external_urls');
-    data['album']['artists'][0].remove('type');
-    //printWrapped(data.entries.toString());
-    //getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
-    //getRandomAlbumsFromArtist(data['album']['artists'][0]['id'], http);
-    //getTempoList(track, http);
-    //getKeysList(track, http);
-    //getRandomArtistsFromUser(http);
-    return data.map((key, value) => MapEntry(key, value.toString()));
-  }
 
-//pass a track ID and return some info: https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track
-  Future<Map<dynamic, dynamic>> getInfoTrackJSON(String track, http.Client http) async {
-    String? value = await _storage.read(key: 'access_token');
-    var newurl = Uri.https(
-      'api.spotify.com',
-      '/v1/tracks/${track}',
-    );
-    var response = await http.get(
-      newurl,
-      headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
-    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
-    if (response.statusCode != 200) {
-      throw Exception('Error in method getInfoTrack');
-    }
-
-    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    Map<dynamic, dynamic> data = Map();
-    data.addAll(decodedResponse);
-    data.remove('available_markets');
-    data['album'].remove('available_markets');
-    data['album']['artists'][0].remove('external_urls');
-    data['album']['artists'][0].remove('type');
     //printWrapped(data.entries.toString());
     //getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
     //getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);
+    //print(decodedResponse);
     return data;
   }
 
@@ -441,7 +385,7 @@ class API {
     for (int i = 0; i < 4; i++) {
       data.add(decodedResponse['artists'][i]['name']);
     }
-    print(data);
+    //print(data);
     return data;
   }
 

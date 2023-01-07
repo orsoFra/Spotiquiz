@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -35,6 +36,9 @@ class QuestionAPI {
       Future<QuestionModel> futureQuestion = generateRandomQuestion(http);
       questions.add(futureQuestion);
     }
+    //CHECKS FOR HAVING ALL DIFFERENT QUESTIONS
+    if (questions.toSet().toList().length < numQuestions) return generateRandomQuestions(http, numQuestions);
+
     return questions;
   }
 
@@ -78,9 +82,15 @@ class QuestionAPI {
   Future<QuestionModel> generateRandomQuestion_SongToListen(http.Client http) async {
     // TODO: sometimes answers are duplicated
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
+    String URL = '';
     String correct_answer = song['name'];
-    String URL = song['preview_url'];
+    if (song['preview_url'] == Null) {
+      print(song.toString());
+    } else
+      URL = song['preview_url'];
+
     String artist = song['album']['artists'][0]['id'];
+
     List<String> options = await api.getRandomTracksFromArtist(artist, http);
     if (!options.contains(correct_answer)) //if there is not the correct answer
       options.add(correct_answer); // add it
@@ -94,7 +104,12 @@ class QuestionAPI {
   Future<QuestionModel> generateRandomQuestion_AlbumToListen(http.Client http) async {
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
     String correct_answer = song['album']['name'];
-    String URL = song['preview_url'];
+    String URL = '';
+    if (song['preview_url'] == Null)
+      print(song.toString());
+    else
+      URL = song['preview_url'];
+
     String artist = song['album']['artists'][0]['id'];
     List<String> options = await api.getRandomAlbumsFromArtist(artist, http);
     if (!options.contains(correct_answer)) //if there is not the correct answer
@@ -108,10 +123,15 @@ class QuestionAPI {
 
   Future<QuestionModel> generateRandomQuestion_AuthorToListen(http.Client http) async {
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
+    String URL = '';
     String correct_answer = song['album']['artists'][0]['name'];
     String artist = song['album']['artists'][0]['id'];
     List<String> options = await api.getRelatedArtists(artist, http);
-    String URL = song['preview_url'];
+    if (song['preview_url'] == Null)
+      print(song.toString());
+    else
+      URL = song['preview_url'];
+
     if (!options.contains(correct_answer)) //if there is not the correct answer
       options.add(correct_answer); // add it
     while (options.indexOf(correct_answer) > 3) //if the answer is not in the first four
