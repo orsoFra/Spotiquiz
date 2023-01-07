@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
+import 'package:spotiquiz/controllers/timer_controller.dart';
 import 'package:spotiquiz/main.dart';
 import 'package:spotiquiz/models/question_model.dart';
 import 'package:spotiquiz/services/api.dart';
@@ -8,6 +10,8 @@ import 'package:spotiquiz/services/questionApi.dart';
 import '../models/MyStorage.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:spotiquiz/screens/resultpage.dart';
+
+import '../widgets/progress_bar.dart';
 
 final sStorage = FlutterSecureStorage();
 final storage = new MyStorage(sStorage);
@@ -20,7 +24,8 @@ void playPauseAudioNetwork(String URL, bool doPlay) async {
     assetsAudioPlayer.pause();
   } else {
     try {
-      await assetsAudioPlayer.open(Audio.network(URL), autoStart: false, showNotification: true);
+      await assetsAudioPlayer.open(Audio.network(URL),
+          autoStart: false, showNotification: true);
       assetsAudioPlayer.play();
     } catch (t) {
       print(t);
@@ -29,7 +34,8 @@ void playPauseAudioNetwork(String URL, bool doPlay) async {
 }
 
 class QuestionPage extends StatefulWidget {
-  const QuestionPage({Key? key}) : super(key: key);
+  // ProgressBar progressBar = ProgressBar();
+  QuestionPage({Key? key}) : super(key: key);
 
   @override
   _QuestionPageState createState() => _QuestionPageState();
@@ -42,6 +48,8 @@ class _QuestionPageState extends State<QuestionPage> {
   int score = 0;
   PageController? _controller;
 
+  // ProgressBar get progressBar => widget.progressBar;
+
   @override
   void initState() {
     isPlaying = ValueNotifier<bool>(false);
@@ -53,6 +61,8 @@ class _QuestionPageState extends State<QuestionPage> {
   @override
   Widget build(BuildContext context) {
     // QuestionModel question = new QuestionModel("Who is the author of the song Pippo?", ["a", "b", "c", "d"], 1);
+    TimerController timer_controller = Get.put(TimerController());
+
     return Scaffold(
       backgroundColor: Colors.indigo,
       appBar: AppBar(
@@ -63,6 +73,8 @@ class _QuestionPageState extends State<QuestionPage> {
           itemCount: questions!.length,
           controller: _controller!,
           onPageChanged: (page) {
+            // widget.progressBar.controller.animationController.reset();
+            // widget.progressBar.controller.animationController.forward();
             if (page == questions!.length - 1) {
               setState(() {
                 //btnText = "See Results";
@@ -72,6 +84,8 @@ class _QuestionPageState extends State<QuestionPage> {
             setState(() {
               //answered = false;
               print("page changed");
+              // ProgressBar(controller,);
+              // widget.progressBar;
             });
           },
           physics: new NeverScrollableScrollPhysics(),
@@ -81,110 +95,142 @@ class _QuestionPageState extends State<QuestionPage> {
                 children: [
                   FutureBuilder<QuestionModel>(
                       future: this.questions![index],
-                      builder: (BuildContext context, AsyncSnapshot<QuestionModel> snapshot) {
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuestionModel> snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Center(child: const CircularProgressIndicator()),
+                                Center(
+                                    child: const CircularProgressIndicator()),
                               ],
                             );
                           case ConnectionState.done:
                             if (snapshot.data == null) print('data is null');
-                            return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                              SizedBox(
-                                width: double.infinity,
-                                child: Text(
-                                  "Question ${index + 1}/${questions!.length}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 28.0,
-                                  ),
-                                ),
-                              ),
-
-                              Divider(
-                                color: Colors.white,
-                                height: 8.0,
-                                thickness: 1.0,
-                              ),
-
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-
-                              SizedBox(
-                                width: double.infinity,
-                                height: 200.0,
-                                child: Text(
-                                  snapshot.data!.question,
-                                  style: TextStyle(color: Colors.white, fontSize: 22.0),
-                                ),
-                              ),
-                              if (snapshot.data!.songURL != null)
-                                ValueListenableBuilder(
-                                    valueListenable: isPlaying,
-                                    builder: (context, value, child) => IconButton(
-                                        iconSize: 50,
-                                        icon: (isPlaying.value) ? const Icon(Icons.stop) : Icon(Icons.play_arrow),
-                                        onPressed: () {
-                                          isPlaying.value = !isPlaying.value;
-                                          playPauseAudioNetwork(snapshot.data!.songURL!, isPlaying.value);
-                                        })),
-
-                              SizedBox(
-                                height: 25.0,
-                              ),
-
-                              // generate 4 bottons for the answers
-                              for (int i = 0; i < snapshot.data!.answers.length; i++)
-                                Container(
-                                  width: double.infinity,
-                                  margin: EdgeInsets.only(bottom: 18.0),
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                                        (Set<MaterialState> states) {
-                                          if (states.contains(MaterialState.pressed)) {
-                                            if (i == snapshot.data!.correctAnswer) {
-                                              return Colors.greenAccent;
-                                            } else {
-                                              return Colors.redAccent;
-                                            }
-                                          }
-                                          return null; // Defer to the widget's default.
-                                        },
+                            return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  // widget.progressBar,
+                                  ProgressBar(),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Text(
+                                      "Question ${index + 1}/${questions!.length}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 28.0,
                                       ),
-                                      // shape: StadiumBorder(),
-                                      // color: Colors.blueAccent,
-                                      // padding: EdgeInsets.symmetric(
-                                      //     vertical: 18.0),
                                     ),
-                                    onPressed: () {
-                                      assetsAudioPlayer.pause();
-                                      if (_controller!.page?.toInt() == questions!.length - 1) {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(score)));
-                                      } else {
-                                        if (i == snapshot.data!.correctAnswer) {
-                                          score++;
-                                        }
-                                        _controller!.nextPage(duration: Duration(milliseconds: 400), curve: Curves.easeInExpo);
-
-                                        setState(() {
-                                          isPlaying.value = false;
-                                        });
-                                      }
-                                    },
-                                    child: Text(snapshot.data!.answers[i], style: TextStyle(color: Colors.white)),
                                   ),
-                                ),
-                              SizedBox(
-                                height: 30.0,
-                              ),
-                            ]);
+
+                                  Divider(
+                                    color: Colors.white,
+                                    height: 8.0,
+                                    thickness: 1.0,
+                                  ),
+
+                                  const SizedBox(
+                                    height: 20.0,
+                                  ),
+
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 200.0,
+                                    child: Text(
+                                      snapshot.data!.question,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 22.0),
+                                    ),
+                                  ),
+                                  if (snapshot.data!.songURL != null)
+                                    ValueListenableBuilder(
+                                        valueListenable: isPlaying,
+                                        builder: (context, value, child) =>
+                                            IconButton(
+                                                iconSize: 50,
+                                                icon: (isPlaying.value)
+                                                    ? const Icon(Icons.stop)
+                                                    : Icon(Icons.play_arrow),
+                                                onPressed: () {
+                                                  isPlaying.value =
+                                                      !isPlaying.value;
+                                                  playPauseAudioNetwork(
+                                                      snapshot.data!.songURL!,
+                                                      isPlaying.value);
+                                                })),
+
+                                  SizedBox(
+                                    height: 25.0,
+                                  ),
+
+                                  // generate 4 bottons for the answers
+                                  for (int i = 0;
+                                      i < snapshot.data!.answers.length;
+                                      i++)
+                                    Container(
+                                      width: double.infinity,
+                                      margin: EdgeInsets.only(bottom: 18.0),
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          overlayColor: MaterialStateProperty
+                                              .resolveWith<Color?>(
+                                            (Set<MaterialState> states) {
+                                              if (states.contains(
+                                                  MaterialState.pressed)) {
+                                                if (i ==
+                                                    snapshot
+                                                        .data!.correctAnswer) {
+                                                  return Colors.greenAccent;
+                                                } else {
+                                                  return Colors.redAccent;
+                                                }
+                                              }
+                                              return null; // Defer to the widget's default.
+                                            },
+                                          ),
+                                          // shape: StadiumBorder(),
+                                          // color: Colors.blueAccent,
+                                          // padding: EdgeInsets.symmetric(
+                                          //     vertical: 18.0),
+                                        ),
+                                        onPressed: () {
+                                          assetsAudioPlayer.pause();
+                                          if (_controller!.page?.toInt() ==
+                                              questions!.length - 1) {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ResultPage(score)));
+                                          } else {
+                                            if (i ==
+                                                snapshot.data!.correctAnswer) {
+                                              score++;
+                                            }
+                                            _controller!.nextPage(
+                                                duration:
+                                                    Duration(milliseconds: 400),
+                                                curve: Curves.easeInExpo);
+                                            timer_controller.nextQuestion();
+
+                                            setState(() {
+                                              isPlaying.value = false;
+                                            });
+                                          }
+                                        },
+                                        child: Text(snapshot.data!.answers[i],
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      ),
+                                    ),
+                                  SizedBox(
+                                    height: 30.0,
+                                  ),
+                                ]);
                           default:
                             if (snapshot.hasError)
                               return new Text('Error: ${snapshot.error}');
