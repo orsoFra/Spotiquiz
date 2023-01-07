@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
+import 'question_controller.dart';
 
 // We use get package for our state management
 
@@ -14,10 +15,10 @@ class TimerController extends GetxController
   Animation get animation => this._animation;
   AnimationController get animationController => _animationController;
 
-  late PageController pageController;
+  late QuestionController questionController;
 
-  TimerController(PageController pageController){
-    this.pageController = pageController;
+  TimerController(QuestionController questionController){
+    this.questionController = questionController;
   }
 
   // called immediately after the widget is allocated memory
@@ -26,7 +27,7 @@ class TimerController extends GetxController
     // Our animation duration is 30 s
     // so our plan is to fill the progress bar within 60s
     _animationController =
-        AnimationController(duration: Duration(seconds: 30), vsync: this);
+        AnimationController(duration: Duration(seconds: 10), vsync: this);
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController)
       ..addListener(() {
         // update like setState
@@ -41,10 +42,15 @@ class TimerController extends GetxController
 
   void nextQuestion() {
     print("next question");
-    pageController.nextPage(
-        duration:
-        Duration(milliseconds: 400),
-        curve: Curves.easeInExpo);
+    questionController.nextPage();
+  }
+
+  void resetTimer() {
+    // Reset the counter
+    _animationController.reset();
+  }
+
+  void resetTimerAndStart() {
     // Reset the counter
     _animationController.reset();
 

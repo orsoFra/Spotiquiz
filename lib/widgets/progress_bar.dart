@@ -3,14 +3,16 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:spotiquiz/controllers/timer_controller.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../controllers/question_controller.dart';
+
 
 class ProgressBar extends StatelessWidget {
-  late PageController pageController;
+  late QuestionController questionController;
 
   ProgressBar({
-    Key? key, required PageController pageController
+    Key? key, required QuestionController questionController
   }) : super(key: key){
-    this.pageController = pageController;
+    this.questionController = questionController;
   }
 
   @override
@@ -23,7 +25,7 @@ class ProgressBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
       ),
       child: GetBuilder<TimerController>(
-        init: TimerController(pageController),
+        init: TimerController(questionController),
         builder: (controller) {
           return Stack(
             children: [
@@ -50,7 +52,7 @@ class ProgressBar extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("${(controller.animation.value * 30).round()} sec"),
+                      Text("${(controller.animation.value * 10).round()} sec"),
                       SvgPicture.asset("assets/icons/clock.svg"),
                     ],
                   ),

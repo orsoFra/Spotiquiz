@@ -7,6 +7,7 @@ import 'package:spotiquiz/models/question_model.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:spotiquiz/services/questionApi.dart';
+import '../controllers/question_controller.dart';
 import '../models/MyStorage.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:spotiquiz/screens/resultpage.dart';
@@ -45,8 +46,8 @@ class _QuestionPageState extends State<QuestionPage> {
   ValueNotifier<bool> isPlaying = ValueNotifier(false);
   List<Future<QuestionModel>>? questions;
 
-  int score = 0;
-  PageController? _controller;
+  QuestionController? _controller;
+  late TimerController timerController;
 
   // ProgressBar get progressBar => widget.progressBar;
 
@@ -54,14 +55,25 @@ class _QuestionPageState extends State<QuestionPage> {
   void initState() {
     isPlaying = ValueNotifier<bool>(false);
     super.initState();
-    _controller = PageController(initialPage: 0);
-    this.questions = qApi.generateRandomQuestions(http.Client(), 10);
+    int numQuestions = 10;
+    this.questions = qApi.generateRandomQuestions(http.Client(), numQuestions);
+    _controller = Get.put(QuestionController(this.stopPlaying, numQuestions));
+    timerController = Get.put(TimerController(_controller!));
+    _controller?.setTimerController(timerController);
+    timerController.resetTimerAndStart();
+  }
+
+  void stopPlaying(){
+    assetsAudioPlayer.pause();
+    setState(() {
+      isPlaying.value = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     // QuestionModel question = new QuestionModel("Who is the author of the song Pippo?", ["a", "b", "c", "d"], 1);
-    TimerController timer_controller = Get.put(TimerController(_controller!));
+    _controller?.setContext(context);
     return Scaffold(
       backgroundColor: Colors.indigo,
       appBar: AppBar(
@@ -70,7 +82,7 @@ class _QuestionPageState extends State<QuestionPage> {
       ),
       body: PageView.builder(
           itemCount: questions!.length,
-          controller: _controller!,
+          controller: _controller?.pageController,
           onPageChanged: (page) {
             // widget.progressBar.controller.animationController.reset();
             // widget.progressBar.controller.animationController.forward();
@@ -113,7 +125,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   // widget.progressBar,
-                                  ProgressBar(pageController: _controller!),
+                                  ProgressBar(questionController: _controller!),
                                   SizedBox(
                                     width: double.infinity,
                                     child: Text(
@@ -197,29 +209,11 @@ class _QuestionPageState extends State<QuestionPage> {
                                           //     vertical: 18.0),
                                         ),
                                         onPressed: () {
-                                          assetsAudioPlayer.pause();
                                           if (i ==
                                               snapshot.data!.correctAnswer) {
-                                            score++;
+                                            _controller?.score++;
                                           }
-                                          if (_controller!.page?.toInt() ==
-                                              questions!.length - 1) {
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ResultPage(score)));
-                                          } else {
-                                            _controller!.nextPage(
-                                                duration:
-                                                    Duration(milliseconds: 400),
-                                                curve: Curves.easeInExpo);
-                                            timer_controller.nextQuestion();
-
-                                            setState(() {
-                                              isPlaying.value = false;
-                                            });
-                                          }
+                                          _controller?.nextPage();
                                         },
                                         child: Text(snapshot.data!.answers[i],
                                             style:
