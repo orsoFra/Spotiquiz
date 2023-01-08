@@ -93,6 +93,7 @@ class API {
       print('preview not null');
       return getInfoTrackJSON(decodedResponse['items'][0]['track']['id'], http, previewUrl);
     }
+    print('recursive call');
     return getRandomSongFromLibraryJSON(http); //in case of null preview, returns another song;
   }
 
@@ -116,7 +117,10 @@ class API {
     data.addAll(decodedResponse);
     data.remove('available_markets');
     data['album'].remove('available_markets');
-
+    if (pUrl != null && pUrl != Null) {
+      //print('preview not null recursive');
+      data['preview_url'] = pUrl;
+    }
     //printWrapped(data.entries.toString());
     //getRandomTracksFromArtist(data['album']['artists'][0]['name'], http);
     //getRandomAlbumsFromArtist(data['album']['artists'][0]['name'], http);

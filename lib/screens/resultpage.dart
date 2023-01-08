@@ -22,9 +22,7 @@ void getID(int score) async {
       //print("Document data:" + doc.data().toString());
       db.collection("scores").doc(id).update({'totalScore': score + doc.data()!['totalScore']});
     } else {
-      db.collection("scores").doc(id).set({'totalScore': score});
-      db.collection("scores").doc(id).set({'id': id});
-      db.collection("scores").doc(id).set({'name': name});
+      db.collection("scores").doc(id).set({'id': id, 'totalScore': score, 'name': name});
     }
   });
 }

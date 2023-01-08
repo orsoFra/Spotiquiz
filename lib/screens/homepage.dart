@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:spotiquiz/screens/leaderboard_page.dart';
 import 'package:spotiquiz/screens/questionpage.dart';
 import 'package:spotiquiz/screens/userpage.dart';
+import 'package:card_swiper/card_swiper.dart';
+import 'package:spotiquiz/services/questionApi.dart';
+import 'package:http/http.dart' as http;
+
+final qApi = QuestionAPI();
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -15,28 +20,75 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 25, 20, 20),
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Press and see',
+            Container(
+              height: queryData.size.height * 0.5,
+              width: queryData.size.width * 0.8,
+              child: FutureBuilder<List<String>>(
+                future: qApi.generateHomeSuggestions(http.Client()),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Swiper(
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Color.fromARGB(255, 128, 5, 195),
+                                Color.fromARGB(255, 182, 80, 245),
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionPage()));
+                                },
+                                style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                                child: (snapshot.data![index] == 'RANDOM')
+                                    ? Text('RANDOM',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 38,
+                                          fontWeight: FontWeight.bold,
+                                        ))
+                                    : Text('LISTENING',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 38,
+                                          fontWeight: FontWeight.bold,
+                                        ))),
+                          ),
+                        );
+                      },
+                      itemCount: 2,
+                      pagination: const SwiperPagination(),
+                      control: const SwiperControl(color: Colors.transparent),
+                      itemHeight: queryData.size.height * 0.5,
+                      itemWidth: queryData.size.width * 0.8,
+                      layout: SwiperLayout.TINDER,
+                    );
+                  }
+                  return CircularProgressIndicator.adaptive();
+                },
+              ),
             ),
-            MaterialButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionPage()));
-              },
-              color: Colors.orange[600],
-              child: Text("RANDOM QUIZ"),
-            ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
@@ -44,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.green[600],
               child: Text("INFO ON USER"),
             ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => Leaderboard()));

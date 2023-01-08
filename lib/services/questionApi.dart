@@ -14,6 +14,13 @@ final storage = MyStorage(sStorage);
 class QuestionAPI {
   final api = API(storage);
 
+  Future<List<String>> generateHomeSuggestions(http.Client http) async {
+    List<String> suggestions = [];
+    suggestions.add('RANDOM');
+    suggestions.add('LISTENING');
+    return suggestions;
+  }
+
   Future<QuestionModel> generateRandomQuestion(http.Client http) async {
     var questionGenerators = [
       generateRandomQuestion_AuthorOfSong,
@@ -30,10 +37,35 @@ class QuestionAPI {
     return futureQuestion;
   }
 
+  Future<QuestionModel> generateListeningQuestion(http.Client http) async {
+    var questionGenerators = [
+      generateRandomQuestion_SongToListen,
+      generateRandomQuestion_AlbumToListen,
+      generateRandomQuestion_AuthorToListen,
+    ];
+    int chosenGenerator = Random().nextInt(questionGenerators.length);
+    var questionGenerator = questionGenerators[chosenGenerator];
+    Future<QuestionModel> futureQuestion = questionGenerator(http);
+    QuestionModel question = await futureQuestion;
+    return futureQuestion;
+  }
+
   List<Future<QuestionModel>> generateRandomQuestions(http.Client http, int numQuestions) {
     List<Future<QuestionModel>> questions = [];
     for (int i = 0; i < numQuestions; i++) {
       Future<QuestionModel> futureQuestion = generateRandomQuestion(http);
+      questions.add(futureQuestion);
+    }
+    //CHECKS FOR HAVING ALL DIFFERENT QUESTIONS
+    if (questions.toSet().toList().length < numQuestions) return generateRandomQuestions(http, numQuestions);
+
+    return questions;
+  }
+
+  List<Future<QuestionModel>> generateListeningQuestions(http.Client http, int numQuestions) {
+    List<Future<QuestionModel>> questions = [];
+    for (int i = 0; i < numQuestions; i++) {
+      Future<QuestionModel> futureQuestion = generateListeningQuestion(http);
       questions.add(futureQuestion);
     }
     //CHECKS FOR HAVING ALL DIFFERENT QUESTIONS
@@ -78,7 +110,6 @@ class QuestionAPI {
     return questionModel;
   }
 
-  //generate a song and get the url
   Future<QuestionModel> generateRandomQuestion_SongToListen(http.Client http) async {
     // TODO: sometimes answers are duplicated
     Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
