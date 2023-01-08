@@ -35,7 +35,6 @@ void playPauseAudioNetwork(String URL, bool doPlay) async {
 }
 
 class QuestionPage extends StatefulWidget {
-  // ProgressBar progressBar = ProgressBar();
   QuestionPage({Key? key}) : super(key: key);
 
   @override
@@ -48,8 +47,6 @@ class _QuestionPageState extends State<QuestionPage> {
 
   QuestionController? _controller;
   late TimerController timerController;
-
-  // ProgressBar get progressBar => widget.progressBar;
 
   @override
   void initState() {
@@ -85,19 +82,14 @@ class _QuestionPageState extends State<QuestionPage> {
           itemCount: questions!.length,
           controller: _controller?.pageController,
           onPageChanged: (page) {
-            // widget.progressBar.controller.animationController.reset();
-            // widget.progressBar.controller.animationController.forward();
+
             if (page == questions!.length - 1) {
               setState(() {
-                //btnText = "See Results";
                 print("finish");
               });
             }
             setState(() {
-              //answered = false;
               print("page changed");
-              // ProgressBar(controller,);
-              // widget.progressBar;
             });
           },
           physics: new NeverScrollableScrollPhysics(),
@@ -215,6 +207,8 @@ class _QuestionPageState extends State<QuestionPage> {
                                             _controller?.score++;
                                           }
                                           _controller?.nextPage();
+                                          setState(() {
+                                          });
                                         },
                                         child: Text(snapshot.data!.answers[i],
                                             style:

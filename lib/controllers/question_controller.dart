@@ -45,8 +45,8 @@ class QuestionController {
          duration:
          Duration(milliseconds: 400),
          curve: Curves.easeInExpo);
-     this.timerController.resetTimerAndStart();
 
+     this.timerController.resetTimerAndStart();
      stopPlayingCallback();
    }
 
