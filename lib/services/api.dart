@@ -89,7 +89,7 @@ class API {
     //print(decodedResponse['items'][0]['track']['id']);
     //var infoOnTrack = getInfoTrack(decodedResponse['items'][0]['track']['id']);
     //printWrapped(infoOnTrack);
-    if (previewUrl != null) {
+    if (previewUrl != null && previewUrl != Null) {
       print('preview not null');
       return getInfoTrackJSON(decodedResponse['items'][0]['track']['id'], http, previewUrl);
     }

@@ -40,6 +40,7 @@ class QuestionController {
          MaterialPageRoute(
              builder: (context) =>
                  ResultPage(this.score)));
+
    } else {
      pageController.nextPage(
          duration:
@@ -47,8 +48,8 @@ class QuestionController {
          curve: Curves.easeInExpo);
 
      this.timerController.resetTimerAndStart();
-     stopPlayingCallback();
    }
+   stopPlayingCallback();
 
   }
 

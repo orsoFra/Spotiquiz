@@ -48,6 +48,9 @@ class _QuestionPageState extends State<QuestionPage> {
   QuestionController? _controller;
   late TimerController timerController;
 
+  List<bool> hasBeenPressed = [false, false, false, false];
+  int previousIndex = -1;
+
   @override
   void initState() {
     isPlaying = ValueNotifier<bool>(false);
@@ -94,6 +97,10 @@ class _QuestionPageState extends State<QuestionPage> {
           },
           physics: new NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
+            if(index != previousIndex) {
+              hasBeenPressed = [false, false, false, false];
+            }
+            previousIndex = index;
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -179,28 +186,13 @@ class _QuestionPageState extends State<QuestionPage> {
                                       width: double.infinity,
                                       margin: EdgeInsets.only(bottom: 18.0),
                                       child: ElevatedButton(
-                                        style: ButtonStyle(
-                                          overlayColor: MaterialStateProperty
-                                              .resolveWith<Color?>(
-                                            (Set<MaterialState> states) {
-                                              if (states.contains(
-                                                  MaterialState.pressed)) {
-                                                if (i ==
-                                                    snapshot
-                                                        .data!.correctAnswer) {
-                                                  return Colors.greenAccent;
-                                                } else {
-                                                  return Colors.redAccent;
-                                                }
-                                              }
-                                              return null; // Defer to the widget's default.
-                                            },
-                                          ),
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: hasBeenPressed[i] ? i == snapshot.data!.correctAnswer ? Colors.greenAccent : Colors.redAccent : null),
+                                            // backgroundColor: Colors.greenAccent),
                                           // shape: StadiumBorder(),
                                           // color: Colors.blueAccent,
                                           // padding: EdgeInsets.symmetric(
                                           //     vertical: 18.0),
-                                        ),
                                         onPressed: () {
                                           if (i ==
                                               snapshot.data!.correctAnswer) {
@@ -208,6 +200,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                           }
                                           _controller?.nextPage();
                                           setState(() {
+                                            hasBeenPressed[i] = true;
                                           });
                                         },
                                         child: Text(snapshot.data!.answers[i],
