@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:spotiquiz/screens/homepage.dart';
+import 'package:spotiquiz/screens/main_page.dart';
 import 'package:spotiquiz/services/auth.dart';
 
 class Login extends StatefulWidget {
@@ -12,48 +13,67 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  bool loginZ() {
+  Future<bool> loginZ() async {
     final spotiauth = Auth();
-    spotiauth.login();
-    print('Promp login');
-    return true;
+    bool result = await spotiauth.login();
+    print('Prompt login' + result.toString());
+    return result;
     //accesstoken = await storage.read(key: 'acces_token');
   }
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 14, 65, 91),
+      backgroundColor: Color.fromARGB(255, 25, 20, 20),
       body: Center(
         child: Column(
           children: [
-            const Padding(padding: const EdgeInsets.symmetric(vertical: 40)),
+            Padding(padding: EdgeInsets.symmetric(vertical: queryData.size.height * 0.1)),
             Container(
-                height: 150,
+                height: 100,
                 child: Image.network(
-                  "https://i.pinimg.com/originals/b7/8d/e5/b78de50ead1fe734e86da657e6ef804a.jpg",
+                  "https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_CMYK_Green.png",
                   fit: BoxFit.fill,
                 )),
             Container(
-              width: 200,
               height: 150,
               child: const Center(
                   child: Text(
                 "Login with Spotfiy",
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
               )),
             ),
-            const Padding(padding: const EdgeInsets.symmetric(vertical: 10)),
-            MaterialButton(
+            const Padding(padding: const EdgeInsets.symmetric(vertical: 20)),
+            InkWell(
+              onTap: () async {
+                if (await loginZ()) Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage()));
+              },
+              child: Container(
+                height: queryData.size.height * 0.08,
+                width: queryData.size.width * 0.7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromARGB(255, 128, 5, 195),
+                      Color.fromARGB(255, 182, 80, 245),
+                    ],
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    "Login",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+              ),
+            ),
+            /*MaterialButton(
               onPressed: (() {
-                if (loginZ())
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MyHomePage(
-                            title: 'home',
-                          )));
+                if (loginZ()) Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage()));
               }),
               color: Color.fromARGB(255, 24, 74, 255),
               minWidth: 300,
@@ -64,6 +84,7 @@ class _LoginState extends State<Login> {
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             )
+            */
           ],
         ),
       ),

@@ -38,19 +38,24 @@ class Auth {
   }
 
   //gets the code and retrievs the auth_token and refresh token
-  void login() async {
-    var code = await getCode(); // this call makes the webview appear
-    var url = Uri.https('accounts.spotify.com', '/api/token');
-    var response = await http.post(url,
-        body: {'code': code, 'redirect_uri': redirect_uri, 'grant_type': 'authorization_code'},
-        headers: {'Authorization': 'Basic ' + (base64.encode(utf8.encode(client_id + ':' + client_secret)))});
-    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+  Future<bool> login() async {
+    try {
+      var code = await getCode(); // this call makes the webview appear
+      var url = Uri.https('accounts.spotify.com', '/api/token');
+      var response = await http.post(url,
+          body: {'code': code, 'redirect_uri': redirect_uri, 'grant_type': 'authorization_code'},
+          headers: {'Authorization': 'Basic ' + (base64.encode(utf8.encode(client_id + ':' + client_secret)))});
+      var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
-    //obtaines the tokens and storing them in secure storage
-    var accessToken = decodedResponse['access_token'];
-    await storage.write(key: 'access_token', value: accessToken);
-    var refreshToken = decodedResponse['refresh_token'];
-    await storage.write(key: 'refresh_token', value: refreshToken);
+      //obtaines the tokens and storing them in secure storage
+      var accessToken = decodedResponse['access_token'];
+      await storage.write(key: 'access_token', value: accessToken);
+      var refreshToken = decodedResponse['refresh_token'];
+      await storage.write(key: 'refresh_token', value: refreshToken);
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
   //refershes the expired token token

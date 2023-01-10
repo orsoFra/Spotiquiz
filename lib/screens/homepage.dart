@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
                   },
                   style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                  child: Text("INFO ON USER"),
+                  child: Text("YOUR PROFILE"),
                 ),
               ),
             ),

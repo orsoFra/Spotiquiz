@@ -82,6 +82,7 @@ class _UserPageState extends State<UserPage> {
                           child: Text("Logout"),
                           onPressed: () {
                             api.flushCredentials();
+                            Navigator.of(context).pop();
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
                           },
                         ),
