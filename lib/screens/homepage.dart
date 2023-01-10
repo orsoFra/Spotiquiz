@@ -27,11 +27,19 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        backgroundColor: Color.fromARGB(255, 25, 20, 20),
+        elevation: 0,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text('Welcome Back',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 38,
+                  fontWeight: FontWeight.bold,
+                )),
             Container(
               height: queryData.size.height * 0.5,
               width: queryData.size.width * 0.8,
@@ -89,20 +97,60 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-            MaterialButton(
-              onPressed: () {
+            InkWell(
+              onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
               },
-              color: Colors.green[600],
-              child: Text("INFO ON USER"),
+              child: Container(
+                height: queryData.size.height * 0.08,
+                width: queryData.size.width * 0.7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromARGB(255, 128, 5, 195),
+                      Color.fromARGB(255, 182, 80, 245),
+                    ],
+                  ),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
+                  },
+                  style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                  child: Text("INFO ON USER"),
+                ),
+              ),
             ),
             Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-            MaterialButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Leaderboard()));
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
               },
-              color: Colors.green[600],
-              child: Text("LEADEBOARD"),
+              child: Container(
+                height: queryData.size.height * 0.08,
+                width: queryData.size.width * 0.7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromARGB(255, 128, 5, 195),
+                      Color.fromARGB(255, 182, 80, 245),
+                    ],
+                  ),
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Leaderboard()));
+                  },
+                  style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                  child: Text("LEADERBOARD"),
+                ),
+              ),
             ),
           ],
         ),

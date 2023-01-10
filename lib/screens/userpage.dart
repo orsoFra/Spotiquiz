@@ -27,12 +27,14 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 25, 20, 20),
         appBar: AppBar(
-          backgroundColor: Colors.teal,
+          backgroundColor: Color.fromARGB(255, 25, 20, 20),
           elevation: 0,
+          title: Text("Your Profile"),
         ),
         body: Column(children: [
+          Padding(padding: EdgeInsets.symmetric(vertical: 10)),
           FutureBuilder<Map<String, dynamic>>(
             future: api.getInfoUser(http.Client()), // a Future<String> or null
             builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
@@ -42,37 +44,36 @@ class _UserPageState extends State<UserPage> {
                 case ConnectionState.done:
                   return Column(
                     children: [
-                      Container(
-                          decoration: const BoxDecoration(color: Colors.teal),
-                          height: 270,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: Colors.amber,
-                                    backgroundImage: NetworkImage(snapshot.data!['imageUrl']),
-                                    radius: 100,
-                                  )
-                                ],
+                              Container(
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.amber,
+                                  backgroundImage: NetworkImage(snapshot.data!['imageUrl']),
+                                  radius: 100,
+                                ),
                               )
                             ],
-                          )),
+                          )
+                        ],
+                      ),
                       Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                       Text(
                         snapshot.data!['display_name'],
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 20, color: Colors.white),
                       ),
                       Text(
                         snapshot.data!['email'],
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                       Text(
                         snapshot.data!['product'] + " user ",
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                       Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                       Container(
