@@ -47,7 +47,11 @@ class _LoginState extends State<Login> {
             const Padding(padding: const EdgeInsets.symmetric(vertical: 20)),
             InkWell(
               onTap: () async {
-                if (await loginZ()) Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainPage()));
+                if (await loginZ())
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => MyHomePage(
+                            title: 'Homepage',
+                          )));
               },
               child: Container(
                 height: queryData.size.height * 0.08,
