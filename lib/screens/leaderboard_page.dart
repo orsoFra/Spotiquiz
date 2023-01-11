@@ -73,8 +73,132 @@ class _LeaderboardState extends State<Leaderboard> {
             if (snapshot.hasData) {
               return Center(
                   child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: queryData.size.height * 0.3,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                              bottomLeft: Radius.circular(30),
+                            ),
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Color.fromARGB(255, 120, 120, 120),
+                                Color.fromARGB(255, 209, 209, 209),
+                              ],
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                "#2",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(snapshot.data!.elementAt(1)['totalScore'].toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Text(snapshot.data!.elementAt(1)['name'].toString())
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          height: queryData.size.height * 0.4,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                            ),
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Color.fromARGB(255, 142, 107, 11),
+                                Color.fromARGB(255, 241, 183, 24),
+                              ],
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                "#1",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(snapshot.data!.elementAt(0)['totalScore'].toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Text(snapshot.data!.elementAt(0)['name'].toString())
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          height: queryData.size.height * 0.2,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                              bottomRight: Radius.circular(30),
+                            ),
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Color.fromARGB(255, 151, 89, 19),
+                                Color.fromARGB(255, 209, 151, 104),
+                              ],
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                "#3",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(snapshot.data!.elementAt(2)['totalScore'].toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Text(snapshot.data!.elementAt(2)['name'].toString())
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
                 //FIRST PLACE
-                Container(
+                /*Container(
                     height: queryData.size.height * 0.2,
                     width: queryData.size.width * 0.8,
                     padding: EdgeInsets.all(10),
@@ -214,9 +338,12 @@ class _LeaderboardState extends State<Leaderboard> {
                           ]),
                         )
                       ],
-                    )),
+                    )),*/
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                Divider(),
+                Divider(
+                  color: Colors.white,
+                ),
+                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                 //SCORE OF THE USER
                 Container(
                     height: queryData.size.height * 0.2,
@@ -237,7 +364,7 @@ class _LeaderboardState extends State<Leaderboard> {
                         future: getPosUser(),
                         builder: (context, pos) {
                           if (pos.hasData) {
-                            return Row(children: [
+                            return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                               Text(
                                 '#' + pos.data!.toString(),
                                 style: TextStyle(
@@ -246,19 +373,15 @@ class _LeaderboardState extends State<Leaderboard> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Row(children: [
-                                Center(
-                                  child: Column(children: [
-                                    Text(snapshot.data!.elementAt(pos.data! - 1)['totalScore'].toString(),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                    Text(snapshot.data!.elementAt(pos.data! - 1)['name'].toString())
-                                  ]),
-                                )
-                              ])
+                              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                Text(snapshot.data!.elementAt(pos.data! - 1)['totalScore'].toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                Text(snapshot.data!.elementAt(pos.data! - 1)['name'].toString())
+                              ]),
                             ]);
                           } else
                             return CircularProgressIndicator();

@@ -25,8 +25,7 @@ void playPauseAudioNetwork(String URL, bool doPlay) async {
     assetsAudioPlayer.pause();
   } else {
     try {
-      await assetsAudioPlayer.open(Audio.network(URL),
-          autoStart: false, showNotification: true);
+      await assetsAudioPlayer.open(Audio.network(URL), autoStart: false, showNotification: true);
       assetsAudioPlayer.play();
     } catch (t) {
       print(t);
@@ -35,8 +34,8 @@ void playPauseAudioNetwork(String URL, bool doPlay) async {
 }
 
 class QuestionPage extends StatefulWidget {
-  QuestionPage({Key? key}) : super(key: key);
-
+  QuestionPage({Key? key, required bool this.isListening}) : super(key: key);
+  final bool isListening;
   @override
   _QuestionPageState createState() => _QuestionPageState();
 }
@@ -56,7 +55,10 @@ class _QuestionPageState extends State<QuestionPage> {
     isPlaying = ValueNotifier<bool>(false);
     super.initState();
     int numQuestions = 10;
-    this.questions = qApi.generateRandomQuestions(http.Client(), numQuestions);
+    if (widget.isListening)
+      this.questions = qApi.generateListeningQuestions(http.Client(), numQuestions);
+    else
+      this.questions = qApi.generateRandomQuestions(http.Client(), numQuestions);
     _controller = Get.put(QuestionController(this.stopPlaying, numQuestions));
     timerController = Get.put(TimerController(_controller!));
     _controller?.setTimerController(timerController);
@@ -64,7 +66,7 @@ class _QuestionPageState extends State<QuestionPage> {
     _controller?.reset();
   }
 
-  void stopPlaying(){
+  void stopPlaying() {
     assetsAudioPlayer.pause();
     setState(() {
       isPlaying.value = false;
@@ -76,16 +78,15 @@ class _QuestionPageState extends State<QuestionPage> {
     // QuestionModel question = new QuestionModel("Who is the author of the song Pippo?", ["a", "b", "c", "d"], 1);
     _controller?.setContext(context);
     return Scaffold(
-      backgroundColor: Colors.indigo,
+      backgroundColor: Color.fromARGB(255, 25, 20, 20),
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: Color.fromARGB(255, 25, 20, 20),
         elevation: 0,
       ),
       body: PageView.builder(
           itemCount: questions!.length,
           controller: _controller?.pageController,
           onPageChanged: (page) {
-
             if (page == questions!.length - 1) {
               setState(() {
                 print("finish");
@@ -97,7 +98,7 @@ class _QuestionPageState extends State<QuestionPage> {
           },
           physics: new NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            if(index != previousIndex) {
+            if (index != previousIndex) {
               hasBeenPressed = [false, false, false, false];
             }
             previousIndex = index;
@@ -106,112 +107,107 @@ class _QuestionPageState extends State<QuestionPage> {
                 children: [
                   FutureBuilder<QuestionModel>(
                       future: this.questions![index],
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuestionModel> snapshot) {
+                      builder: (BuildContext context, AsyncSnapshot<QuestionModel> snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Center(
-                                    child: const CircularProgressIndicator()),
+                                Center(child: const CircularProgressIndicator()),
                               ],
                             );
                           case ConnectionState.done:
                             if (snapshot.data == null) print('data is null');
-                            return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  // widget.progressBar,
-                                  ProgressBar(questionController: _controller!),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: Text(
-                                      "Question ${index + 1}/${questions!.length}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 28.0,
-                                      ),
-                                    ),
-                                  ),
-
-                                  Divider(
+                            return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                              // widget.progressBar,
+                              ProgressBar(questionController: _controller!),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Text(
+                                  "Question ${index + 1}/${questions!.length}",
+                                  style: const TextStyle(
                                     color: Colors.white,
-                                    height: 8.0,
-                                    thickness: 1.0,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30.0,
                                   ),
+                                ),
+                              ),
 
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
+                              Divider(
+                                color: Colors.white,
+                                height: 8.0,
+                                thickness: 1.0,
+                              ),
 
-                                  SizedBox(
-                                    width: double.infinity,
-                                    height: 200.0,
-                                    child: Text(
-                                      snapshot.data!.question,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 22.0),
-                                    ),
-                                  ),
-                                  if (snapshot.data!.songURL != null)
-                                    ValueListenableBuilder(
-                                        valueListenable: isPlaying,
-                                        builder: (context, value, child) =>
-                                            IconButton(
-                                                iconSize: 50,
-                                                icon: (isPlaying.value)
-                                                    ? const Icon(Icons.stop)
-                                                    : Icon(Icons.play_arrow),
-                                                onPressed: () {
-                                                  isPlaying.value =
-                                                      !isPlaying.value;
-                                                  playPauseAudioNetwork(
-                                                      snapshot.data!.songURL!,
-                                                      isPlaying.value);
-                                                })),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
 
-                                  SizedBox(
-                                    height: 25.0,
-                                  ),
-
-                                  // generate 4 bottons for the answers
-                                  for (int i = 0;
-                                      i < snapshot.data!.answers.length;
-                                      i++)
-                                    Container(
-                                      width: double.infinity,
-                                      margin: EdgeInsets.only(bottom: 18.0),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: hasBeenPressed[i] ? i == snapshot.data!.correctAnswer ? Colors.greenAccent : Colors.redAccent : null),
-                                            // backgroundColor: Colors.greenAccent),
-                                          // shape: StadiumBorder(),
-                                          // color: Colors.blueAccent,
-                                          // padding: EdgeInsets.symmetric(
-                                          //     vertical: 18.0),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 200.0,
+                                child: Text(
+                                  snapshot.data!.question,
+                                  style: TextStyle(color: Colors.white, fontSize: 27.0),
+                                ),
+                              ),
+                              if (snapshot.data!.songURL != null)
+                                ValueListenableBuilder(
+                                    valueListenable: isPlaying,
+                                    builder: (context, value, child) => IconButton(
+                                        iconSize: 50,
+                                        icon: (isPlaying.value)
+                                            ? const Icon(
+                                                Icons.stop,
+                                                color: Colors.white,
+                                              )
+                                            : Icon(
+                                                Icons.play_arrow,
+                                                color: Colors.white,
+                                              ),
                                         onPressed: () {
-                                          if (i ==
-                                              snapshot.data!.correctAnswer) {
-                                            _controller?.score++;
-                                          }
-                                          _controller?.nextPage();
-                                          setState(() {
-                                            hasBeenPressed[i] = true;
-                                          });
-                                        },
-                                        child: Text(snapshot.data!.answers[i],
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ),
-                                    ),
-                                  SizedBox(
-                                    height: 30.0,
+                                          isPlaying.value = !isPlaying.value;
+                                          playPauseAudioNetwork(snapshot.data!.songURL!, isPlaying.value);
+                                        })),
+
+                              SizedBox(
+                                height: 25.0,
+                              ),
+
+                              // generate 4 bottons for the answers
+                              for (int i = 0; i < snapshot.data!.answers.length; i++)
+                                Container(
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(bottom: 18.0),
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: hasBeenPressed[i]
+                                            ? i == snapshot.data!.correctAnswer
+                                                ? Colors.greenAccent
+                                                : Colors.redAccent
+                                            : null),
+                                    // backgroundColor: Colors.greenAccent),
+                                    // shape: StadiumBorder(),
+                                    // color: Colors.blueAccent,
+                                    // padding: EdgeInsets.symmetric(
+                                    //     vertical: 18.0),
+                                    onPressed: () {
+                                      if (i == snapshot.data!.correctAnswer) {
+                                        _controller?.score++;
+                                      }
+                                      _controller?.nextPage();
+                                      setState(() {
+                                        hasBeenPressed[i] = true;
+                                      });
+                                    },
+                                    child: Text(snapshot.data!.answers[i], style: TextStyle(color: Colors.white)),
                                   ),
-                                ]);
+                                ),
+                              SizedBox(
+                                height: 30.0,
+                              ),
+                            ]);
                           default:
                             if (snapshot.hasError)
                               return new Text('Error: ${snapshot.error}');

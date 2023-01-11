@@ -49,40 +49,85 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (snapshot.hasData) {
                     return Swiper(
                       itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Color.fromARGB(255, 128, 5, 195),
-                                Color.fromARGB(255, 182, 80, 245),
-                              ],
-                            ),
-                          ),
-                          child: Center(
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => QuestionPage()));
-                                },
-                                style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                                child: (snapshot.data![index] == 'RANDOM')
-                                    ? Text('RANDOM',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 38,
-                                          fontWeight: FontWeight.bold,
-                                        ))
-                                    : Text('LISTENING',
+                        if (snapshot.data![index] == 'RANDOM') {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => QuestionPage(
+                                        isListening: false,
+                                      )));
+                            },
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color.fromARGB(255, 128, 5, 195),
+                                    Color.fromARGB(255, 182, 80, 245),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => QuestionPage(
+                                                isListening: false,
+                                              )));
+                                    },
+                                    style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                                    child: Text('RANDOM',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 38,
                                           fontWeight: FontWeight.bold,
                                         ))),
-                          ),
-                        );
+                              ),
+                            ),
+                          );
+                        } else {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => QuestionPage(
+                                        isListening: true,
+                                      )));
+                            },
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color.fromARGB(255, 5, 56, 195),
+                                    Color.fromARGB(255, 80, 121, 245),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => QuestionPage(
+                                                isListening: true,
+                                              )));
+                                    },
+                                    style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                                    child: Text('LISTENING',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 38,
+                                          fontWeight: FontWeight.bold,
+                                        ))),
+                              ),
+                            ),
+                          );
+                        } //else
                       },
                       itemCount: 2,
                       pagination: const SwiperPagination(),
