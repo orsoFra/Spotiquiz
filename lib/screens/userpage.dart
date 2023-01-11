@@ -26,6 +26,7 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 25, 20, 20),
         appBar: AppBar(
@@ -40,7 +41,9 @@ class _UserPageState extends State<UserPage> {
             builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return const Text('Awaiting result...');
+                  return const CircularProgressIndicator(
+                    color: Color.fromARGB(255, 49, 45, 45),
+                  );
                 case ConnectionState.done:
                   return Column(
                     children: [
@@ -51,13 +54,14 @@ class _UserPageState extends State<UserPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
+                              CircleAvatar(
+                                radius: 110,
+                                backgroundColor: Color.fromARGB(255, 49, 45, 45),
                                 child: CircleAvatar(
-                                  backgroundColor: Colors.amber,
                                   backgroundImage: NetworkImage(snapshot.data!['imageUrl']),
                                   radius: 100,
                                 ),
-                              )
+                              ),
                             ],
                           )
                         ],
@@ -65,28 +69,63 @@ class _UserPageState extends State<UserPage> {
                       Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                       Text(
                         snapshot.data!['display_name'],
-                        style: TextStyle(fontSize: 20, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         snapshot.data!['email'],
-                        style: TextStyle(fontSize: 14, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         snapshot.data!['product'] + " user ",
-                        style: TextStyle(fontSize: 12, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                      Container(
-                        child: MaterialButton(
-                          color: Color.fromARGB(255, 14, 65, 91),
-                          child: Text("Logout"),
-                          onPressed: () {
-                            api.flushCredentials();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
-                          },
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
+                        },
+                        child: Container(
+                          height: queryData.size.height * 0.05,
+                          width: queryData.size.width * 0.5,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft,
+                              colors: [
+                                Color.fromARGB(255, 128, 5, 195),
+                                Color.fromARGB(255, 182, 80, 245),
+                              ],
+                            ),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              api.flushCredentials();
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+                            },
+                            style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                            child: Text("LOGOUT",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
                         ),
-                      )
+                      ),
                     ],
                   );
 
@@ -110,8 +149,8 @@ class _UserPageState extends State<UserPage> {
                 case ConnectionState.waiting:
                   return const Text('Awaiting result...');
                 case ConnectionState.done:
-                  print(snapshot.data);
-                  print(snapshot.data?.length);
+                  //print(snapshot.data);
+                  //print(snapshot.data?.length);
                   var l = snapshot.data?.length;
                   var result = snapshot.data!;
                   return ListView.builder(
