@@ -13,44 +13,32 @@ class QuestionController {
   late QuestionPage questionPage;
   late Function stopPlayingCallback;
 
-  QuestionController(Function stopPlayingCallback, int numPages){
+  QuestionController(Function stopPlayingCallback, int numPages) {
     pageController = PageController(initialPage: 0);
     this.numPages = numPages;
     this.stopPlayingCallback = stopPlayingCallback;
     this.reset();
   }
 
-  void setContext(BuildContext context){
+  void setContext(BuildContext context) {
     this.context = context;
   }
 
-  void setTimerController(TimerController timerController){
+  void setTimerController(TimerController timerController) {
     this.timerController = timerController;
   }
 
-  void reset(){
+  void reset() {
     this.score = 0;
   }
 
-  void nextPage(){
-   if (pageController.page?.toInt() ==
-       numPages - 1) {
-     Navigator.pushReplacement(
-         context,
-         MaterialPageRoute(
-             builder: (context) =>
-                 ResultPage(this.score)));
+  void nextPage() {
+    if (pageController.page?.toInt() == numPages - 1) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ResultPage(this.score)));
+    } else {
+      pageController.nextPage(duration: Duration(milliseconds: 400), curve: Curves.easeInExpo);
 
-   } else {
-     pageController.nextPage(
-         duration:
-         Duration(milliseconds: 400),
-         curve: Curves.easeInExpo);
-
-     this.timerController.resetTimerAndStart();
-   }
-   stopPlayingCallback();
-
+      this.timerController.resetTimerAndStart();
+    }
   }
-
 }

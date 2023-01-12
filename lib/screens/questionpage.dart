@@ -196,10 +196,13 @@ class _QuestionPageState extends State<QuestionPage> {
                                       if (i == snapshot.data!.correctAnswer) {
                                         _controller?.score++;
                                       }
-                                      _controller?.nextPage();
+
                                       setState(() {
                                         hasBeenPressed[i] = true;
+                                        assetsAudioPlayer.pause();
+                                        isPlaying.value = false;
                                       });
+                                      _controller?.nextPage();
                                     },
                                     child: Text(snapshot.data!.answers[i], style: TextStyle(color: Colors.white)),
                                   ),
