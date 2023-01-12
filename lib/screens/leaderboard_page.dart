@@ -7,45 +7,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
 import '../models/MyStorage.dart';
+import '../services/data.dart';
 
-final db = FirebaseFirestore.instance;
 final sStorage = FlutterSecureStorage();
 final storage = MyStorage(sStorage);
 final api = API(storage);
-
-Future getScores() async {
-  String id = await api.getIdUser(http.Client());
-  var res = db.collection('scores').orderBy('totalScore');
-  return res;
-}
-
-Future<List> getLeaderboard() async {
-  List<Object> res = [];
-  await db.collection('scores').orderBy('totalScore', descending: true).get().then((snapshot) => snapshot.docs.forEach((element) {
-        //print(element.reference);
-        res.add(element);
-      }));
-  return res;
-}
-
-Future<int> getPosUser() async {
-  String id = await api.getIdUser(http.Client());
-  List<Object> res = [];
-  var doc = await db.collection('scores').doc(id).get().then((DocumentSnapshot doc) async {
-    final data = doc.data() as Map<String, dynamic>;
-    await db
-        .collection('scores')
-        .where('totalScore', isGreaterThan: data['totalScore'])
-        .orderBy('totalScore', descending: true)
-        .get()
-        .then((snapshot) => snapshot.docs.forEach((element) {
-              //print(element.reference);
-              res.add(element);
-            }));
-  });
-
-  return res.length + 1;
-}
 
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key});

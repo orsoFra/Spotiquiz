@@ -8,31 +8,16 @@ import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
 import '../models/MyStorage.dart';
-
-final db = FirebaseFirestore.instance;
-final sStorage = FlutterSecureStorage();
-final storage = MyStorage(sStorage);
-final api = API(storage);
-void getID(int score) async {
-  String id = await api.getIdUser(http.Client());
-  String name = await api.getNameOfUser(http.Client(), id);
-  db.collection("quizzes").add({'date': Timestamp.now(), 'points': score, 'user': id});
-  db.collection('scores').doc(id).get().then((doc) {
-    if (doc.exists) {
-      //print("Document data:" + doc.data().toString());
-      db.collection("scores").doc(id).update({'totalScore': score + doc.data()!['totalScore']});
-    } else {
-      db.collection("scores").doc(id).set({'id': id, 'totalScore': score, 'name': name});
-    }
-  });
-}
+import '../services/data.dart';
 
 class ResultPage extends StatelessWidget {
   final int score;
+
   const ResultPage(this.score, {Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    getID(score);
+    storeResults(score);
     return Scaffold(
         backgroundColor: Colors.indigo,
         body: Column(
