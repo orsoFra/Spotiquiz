@@ -30,7 +30,7 @@ class _LeaderboardState extends State<Leaderboard> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         backgroundColor: Color.fromARGB(255, 25, 20, 20),
-        title: Text('Leaderboard'),
+        title: Text('All time leaderboard'),
         elevation: 0,
       ),
       body: FutureBuilder<List<dynamic>>(

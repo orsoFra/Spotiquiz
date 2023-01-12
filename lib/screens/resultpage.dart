@@ -18,8 +18,12 @@ class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     storeResults(score);
+    MediaQueryData queryData = MediaQuery.of(context);
+    final Shader linearGradient = LinearGradient(
+      colors: <Color>[Color(0xffDA44bb), Color(0xff8921aa)],
+    ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
     return Scaffold(
-        backgroundColor: Colors.indigo,
+        backgroundColor: Color.fromARGB(255, 25, 20, 20),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,18 +51,44 @@ class ResultPage extends StatelessWidget {
             Text(
               "${score}",
               style: TextStyle(
-                color: Colors.orange,
+                foreground: Paint()..shader = linearGradient,
                 fontSize: 80.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
             // Button to return to the home
-            ElevatedButton(
-                onPressed: () {
-                  //Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(title: "Homepage")));
-                  Navigator.pop(context);
-                },
-                child: Text("Back to home"))
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: queryData.size.height * 0.08,
+                width: queryData.size.width * 0.7,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                  child: Text("BACK TO HOME",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      )),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromARGB(255, 128, 5, 195),
+                      Color.fromARGB(255, 182, 80, 245),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
         ));
   }

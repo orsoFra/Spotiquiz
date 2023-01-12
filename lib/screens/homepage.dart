@@ -42,8 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontWeight: FontWeight.bold,
                 )),
             Container(
-              height: queryData.size.height * 0.5,
-              width: queryData.size.width * 0.8,
+              height: queryData.size.height * 0.6,
+              width: queryData.size.width * 0.9,
               child: FutureBuilder<List<String>>(
                 future: qApi.generateHomeSuggestions(http.Client()),
                 builder: (context, snapshot) {
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       )));
                             },
                             child: Container(
-                              height: 100,
+                              height: 150,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 gradient: LinearGradient(
@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       )));
                             },
                             child: Container(
-                              height: 100,
+                              height: 150,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 gradient: LinearGradient(
@@ -133,8 +133,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemCount: snapshot.data!.length,
                       pagination: const SwiperPagination(),
                       control: const SwiperControl(color: Colors.transparent),
-                      itemHeight: queryData.size.height * 0.5,
-                      itemWidth: queryData.size.width * 0.8,
+                      itemHeight: queryData.size.height * 0.6,
+                      itemWidth: queryData.size.width * 0.9,
                       layout: SwiperLayout.TINDER,
                     );
                   }
@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-            InkWell(
+            /*InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
               },
@@ -228,9 +228,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-            ),
+            ),*/
           ],
-
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

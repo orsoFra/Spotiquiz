@@ -14,6 +14,7 @@ import 'package:spotiquiz/firebase_options.dart';
 import 'package:spotiquiz/models/MyStorage.dart';
 import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/screens/loginpage.dart';
+import 'package:spotiquiz/screens/navigation.dart';
 
 final sStorage = FlutterSecureStorage();
 final storage = new MyStorage(sStorage);
@@ -46,9 +47,7 @@ class MainPage extends StatelessWidget {
           print(snapshot.data.toString());
 
           if (snapshot.data.toString() == 'true') {
-            return MyHomePage(
-              title: 'Homepage',
-            );
+            return Navigation();
           } else
             return Login();
         } else
