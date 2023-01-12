@@ -72,7 +72,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(snapshot.data!.elementAt(1)['totalScore'].toString(),
+                              Text(snapshot.data!.elementAt(1)['totalScore'].toString() + ' points',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -110,7 +110,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(snapshot.data!.elementAt(0)['totalScore'].toString(),
+                              Text(snapshot.data!.elementAt(0)['totalScore'].toString() + ' points',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -149,7 +149,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Text(snapshot.data!.elementAt(2)['totalScore'].toString(),
+                              Text(snapshot.data!.elementAt(2)['totalScore'].toString() + ' points',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -307,7 +307,7 @@ class _LeaderboardState extends State<Leaderboard> {
                     )),*/
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                 Divider(
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 49, 45, 45),
                 ),
                 Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                 //SCORE OF THE USER
@@ -321,8 +321,8 @@ class _LeaderboardState extends State<Leaderboard> {
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
                         colors: [
-                          Color.fromARGB(255, 170, 2, 19),
-                          Color.fromARGB(255, 245, 120, 88),
+                          Color.fromARGB(255, 30, 25, 25),
+                          Color.fromARGB(255, 49, 45, 45),
                         ],
                       ),
                     ),
@@ -340,17 +340,24 @@ class _LeaderboardState extends State<Leaderboard> {
                                 ),
                               ),
                               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                Text(snapshot.data!.elementAt(pos.data! - 1)['totalScore'].toString(),
+                                Text(snapshot.data!.elementAt(pos.data! - 1)['totalScore'].toString() + ' points',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     )),
-                                Text(snapshot.data!.elementAt(pos.data! - 1)['name'].toString())
+                                Text(snapshot.data!.elementAt(pos.data! - 1)['name'].toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    )),
                               ]),
                             ]);
                           } else
-                            return CircularProgressIndicator();
+                            return CircularProgressIndicator(
+                              color: Color.fromARGB(255, 49, 45, 45),
+                            );
                         }))
               ]));
             } else

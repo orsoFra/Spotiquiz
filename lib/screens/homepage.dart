@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           );
                         } //else
                       },
-                      itemCount: 2,
+                      itemCount: snapshot.data!.length,
                       pagination: const SwiperPagination(),
                       control: const SwiperControl(color: Colors.transparent),
                       itemHeight: queryData.size.height * 0.5,
@@ -166,7 +166,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
                   },
                   style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                  child: Text("YOUR PROFILE"),
+                  child: Text("YOUR PROFILE",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      )),
                 ),
               ),
             ),
@@ -194,7 +199,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Leaderboard()));
                   },
                   style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                  child: Text("LEADERBOARD"),
+                  child: Text("LEADERBOARD",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      )),
                 ),
               ),
             ),
