@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 import 'package:spotiquiz/controllers/timer_controller.dart';
 
 import '../screens/questionpage.dart';
@@ -35,6 +36,7 @@ class QuestionController {
   void nextPage() {
     if (pageController.page?.toInt() == numPages - 1) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ResultPage(this.score)));
+      timerController.pause();
     } else {
       pageController.nextPage(duration: Duration(milliseconds: 400), curve: Curves.easeInExpo);
 

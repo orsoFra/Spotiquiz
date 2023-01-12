@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
@@ -5,8 +7,7 @@ import 'question_controller.dart';
 
 // We use get package for our state management
 
-class TimerController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class TimerController extends GetxController with GetSingleTickerProviderStateMixin {
   // Lets animated our progress bar
 
   late AnimationController _animationController;
@@ -17,7 +18,7 @@ class TimerController extends GetxController
 
   late QuestionController questionController;
 
-  TimerController(QuestionController questionController){
+  TimerController(QuestionController questionController) {
     this.questionController = questionController;
   }
 
@@ -26,8 +27,7 @@ class TimerController extends GetxController
   void onInit() {
     // Our animation duration is 30 s
     // so our plan is to fill the progress bar within 60s
-    _animationController =
-        AnimationController(duration: Duration(seconds: 40), vsync: this);
+    _animationController = AnimationController(duration: Duration(seconds: 10), vsync: this);
     _animation = Tween<double>(begin: 0, end: 1).animate(_animationController)
       ..addListener(() {
         // update like setState
@@ -50,6 +50,10 @@ class TimerController extends GetxController
     _animationController.reset();
   }
 
+  void pause() {
+    _animationController.stop();
+  }
+
   void resetTimerAndStart() {
     // Reset the counter
     _animationController.reset();
@@ -65,5 +69,4 @@ class TimerController extends GetxController
     _animationController.dispose();
     super.onClose();
   }
-
 }
