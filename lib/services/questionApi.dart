@@ -18,6 +18,7 @@ class QuestionAPI {
     List<String> suggestions = [];
     suggestions.add('RANDOM');
     suggestions.add('LISTENING');
+    suggestions.add('SILENT');
     return suggestions;
   }
 
@@ -50,6 +51,15 @@ class QuestionAPI {
     return futureQuestion;
   }
 
+  Future<QuestionModel> generateNonListeningQuestion(http.Client http) async {
+    var questionGenerators = [generateRandomQuestion_AuthorOfSong, generateRandomQuestion_AlbumOfSong, generateRandomQuestion_YearOfSong];
+    int chosenGenerator = Random().nextInt(questionGenerators.length);
+    var questionGenerator = questionGenerators[chosenGenerator];
+    Future<QuestionModel> futureQuestion = questionGenerator(http);
+    QuestionModel question = await futureQuestion;
+    return futureQuestion;
+  }
+
   List<Future<QuestionModel>> generateRandomQuestions(http.Client http, int numQuestions) {
     List<Future<QuestionModel>> questions = [];
     for (int i = 0; i < numQuestions; i++) {
@@ -66,6 +76,18 @@ class QuestionAPI {
     List<Future<QuestionModel>> questions = [];
     for (int i = 0; i < numQuestions; i++) {
       Future<QuestionModel> futureQuestion = generateListeningQuestion(http);
+      questions.add(futureQuestion);
+    }
+    //CHECKS FOR HAVING ALL DIFFERENT QUESTIONS
+    if (questions.toSet().toList().length < numQuestions) return generateRandomQuestions(http, numQuestions);
+
+    return questions;
+  }
+
+  List<Future<QuestionModel>> generateNonListeningQuestions(http.Client http, int numQuestions) {
+    List<Future<QuestionModel>> questions = [];
+    for (int i = 0; i < numQuestions; i++) {
+      Future<QuestionModel> futureQuestion = generateNonListeningQuestion(http);
       questions.add(futureQuestion);
     }
     //CHECKS FOR HAVING ALL DIFFERENT QUESTIONS

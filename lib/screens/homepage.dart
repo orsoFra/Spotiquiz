@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => QuestionPage(
-                                        isListening: false,
+                                        isListening: 0,
                                       )));
                             },
                             child: Container(
@@ -76,11 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () {
                                       Navigator.of(context).push(MaterialPageRoute(
                                           builder: (context) => QuestionPage(
-                                                isListening: false,
+                                                isListening: 0,
                                               )));
                                     },
                                     style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                                    child: Text('RANDOM',
+                                    child: Text('RANDOM QUIZ',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 38,
@@ -89,12 +89,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           );
-                        } else {
+                        } else if (snapshot.data![index] == 'LISTENING') {
                           return InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => QuestionPage(
-                                        isListening: true,
+                                        isListening: 1,
                                       )));
                             },
                             child: Container(
@@ -115,11 +115,50 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () {
                                       Navigator.of(context).push(MaterialPageRoute(
                                           builder: (context) => QuestionPage(
-                                                isListening: true,
+                                                isListening: 1,
                                               )));
                                     },
                                     style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                                    child: Text('LISTENING',
+                                    child: Text('LISTENING QUIZ',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 38,
+                                          fontWeight: FontWeight.bold,
+                                        ))),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => QuestionPage(
+                                        isListening: 2,
+                                      )));
+                            },
+                            child: Container(
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color.fromARGB(255, 195, 56, 5),
+                                    Color.fromARGB(255, 245, 108, 80),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => QuestionPage(
+                                                isListening: 2,
+                                              )));
+                                    },
+                                    style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                                    child: Text('SILENT QUIZ',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 38,
