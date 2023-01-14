@@ -11,6 +11,7 @@ import '../controllers/question_controller.dart';
 import '../models/MyStorage.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:spotiquiz/screens/resultpage.dart';
+import 'package:spotiquiz/services/data.dart' as dApi;
 
 import '../widgets/progress_bar.dart';
 
@@ -19,6 +20,7 @@ final storage = new MyStorage(sStorage);
 final api = API(storage);
 final qApi = QuestionAPI();
 final assetsAudioPlayer = AssetsAudioPlayer();
+
 //bool isPlaying = false;
 void playPauseAudioNetwork(String URL, bool doPlay) async {
   if (!doPlay) {
@@ -197,6 +199,9 @@ class _QuestionPageState extends State<QuestionPage> {
                                     onPressed: () {
                                       if (i == snapshot.data!.correctAnswer) {
                                         _controller?.score++;
+                                        dApi.storeStats(snapshot.data!.authorId!, true);
+                                      } else {
+                                        dApi.storeStats(snapshot.data!.authorId!, false);
                                       }
 
                                       setState(() {
