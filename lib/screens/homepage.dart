@@ -170,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         } //else
                       },
                       itemCount: snapshot.data!.length,
-                      pagination: const SwiperPagination(),
+                      pagination: const SwiperPagination(builder: SwiperPagination.rect),
                       control: const SwiperControl(color: Colors.transparent),
                       itemHeight: queryData.size.height * 0.6,
                       itemWidth: queryData.size.width * 0.9,

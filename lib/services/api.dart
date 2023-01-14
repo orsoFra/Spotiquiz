@@ -455,6 +455,30 @@ class API {
     //print(data['imageUrl']);
     return data['display_name'];
   }
+
+  Future<String> getNameOfArtist(http.Client http, String id) async {
+    String? value = await _storage.read(key: 'access_token');
+    //get offset for the query
+    var url = Uri.https(
+      'api.spotify.com',
+      '/v1/artists/' + id,
+    );
+    var response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
+    ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
+    if (response.statusCode != 200) {
+      return 'ARTIST NAME';
+    }
+    var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+    //print(decodedResponse.entries);
+    Map<dynamic, dynamic> data = Map();
+    data.addAll(decodedResponse);
+    //print(data.entries);
+
+    //print(data['imageUrl']);
+    return data['name'];
+  }
 } //auth
 
 
