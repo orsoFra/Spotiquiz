@@ -208,27 +208,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-            InkWell(
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => History()));
-              },
-              child: Container(
-                height: queryData.size.height * 0.08,
-                width: queryData.size.width * 0.7,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Color.fromARGB(255, 128, 5, 195),
-                      Color.fromARGB(255, 182, 80, 245),
-                    ],
-                  ),
-                ),
-              ),
-            ),
           ],
 
         ),
