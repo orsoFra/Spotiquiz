@@ -34,8 +34,8 @@ void playPauseAudioNetwork(String URL, bool doPlay) async {
 }
 
 class QuestionPage extends StatefulWidget {
-  QuestionPage({Key? key, required bool this.isListening}) : super(key: key);
-  final bool isListening;
+  QuestionPage({Key? key, required int this.isListening}) : super(key: key);
+  final int isListening;
   @override
   _QuestionPageState createState() => _QuestionPageState();
 }
@@ -55,10 +55,12 @@ class _QuestionPageState extends State<QuestionPage> {
     isPlaying = ValueNotifier<bool>(false);
     super.initState();
     int numQuestions = 10;
-    if (widget.isListening)
+    if (widget.isListening == 1)
       this.questions = qApi.generateListeningQuestions(http.Client(), numQuestions);
-    else
+    else if (widget.isListening == 0)
       this.questions = qApi.generateRandomQuestions(http.Client(), numQuestions);
+    else
+      this.questions = qApi.generateNonListeningQuestions(http.Client(), numQuestions);
     _controller = Get.put(QuestionController(this.stopPlaying, numQuestions));
     timerController = Get.put(TimerController(_controller!));
     _controller?.setTimerController(timerController);

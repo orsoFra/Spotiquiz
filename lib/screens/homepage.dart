@@ -42,8 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontWeight: FontWeight.bold,
                 )),
             Container(
-              height: queryData.size.height * 0.5,
-              width: queryData.size.width * 0.8,
+              height: queryData.size.height * 0.6,
+              width: queryData.size.width * 0.9,
               child: FutureBuilder<List<String>>(
                 future: qApi.generateHomeSuggestions(http.Client()),
                 builder: (context, snapshot) {
@@ -55,11 +55,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => QuestionPage(
-                                        isListening: false,
+                                        isListening: 0,
                                       )));
                             },
                             child: Container(
-                              height: 100,
+                              height: 150,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 gradient: LinearGradient(
@@ -76,11 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () {
                                       Navigator.of(context).push(MaterialPageRoute(
                                           builder: (context) => QuestionPage(
-                                                isListening: false,
+                                                isListening: 0,
                                               )));
                                     },
                                     style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                                    child: Text('RANDOM',
+                                    child: Text('RANDOM QUIZ',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 38,
@@ -89,16 +89,16 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           );
-                        } else {
+                        } else if (snapshot.data![index] == 'LISTENING') {
                           return InkWell(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => QuestionPage(
-                                        isListening: true,
+                                        isListening: 1,
                                       )));
                             },
                             child: Container(
-                              height: 100,
+                              height: 150,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 gradient: LinearGradient(
@@ -115,11 +115,50 @@ class _MyHomePageState extends State<MyHomePage> {
                                     onPressed: () {
                                       Navigator.of(context).push(MaterialPageRoute(
                                           builder: (context) => QuestionPage(
-                                                isListening: true,
+                                                isListening: 1,
                                               )));
                                     },
                                     style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                                    child: Text('LISTENING',
+                                    child: Text('LISTENING QUIZ',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 38,
+                                          fontWeight: FontWeight.bold,
+                                        ))),
+                              ),
+                            ),
+                          );
+                        } else {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => QuestionPage(
+                                        isListening: 2,
+                                      )));
+                            },
+                            child: Container(
+                              height: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color.fromARGB(255, 195, 56, 5),
+                                    Color.fromARGB(255, 245, 108, 80),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => QuestionPage(
+                                                isListening: 2,
+                                              )));
+                                    },
+                                    style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
+                                    child: Text('SILENT QUIZ',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 38,
@@ -133,8 +172,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemCount: snapshot.data!.length,
                       pagination: const SwiperPagination(),
                       control: const SwiperControl(color: Colors.transparent),
-                      itemHeight: queryData.size.height * 0.5,
-                      itemWidth: queryData.size.width * 0.8,
+                      itemHeight: queryData.size.height * 0.6,
+                      itemWidth: queryData.size.width * 0.9,
                       layout: SwiperLayout.TINDER,
                     );
                   }
@@ -143,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-            InkWell(
+            /*InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
               },
@@ -208,8 +247,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+            InkWell(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => History()));
+              },
+              child: Container(
+                height: queryData.size.height * 0.08,
+                width: queryData.size.width * 0.7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromARGB(255, 128, 5, 195),
+                      Color.fromARGB(255, 182, 80, 245),
+                    ],
+                  ),
+                ),
+              ),
+            ),*/
           ],
-
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

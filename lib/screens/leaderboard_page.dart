@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -30,339 +32,347 @@ class _LeaderboardState extends State<Leaderboard> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         backgroundColor: Color.fromARGB(255, 25, 20, 20),
-        title: Text('Leaderboard'),
+        title: Text('All time leaderboard'),
         elevation: 0,
       ),
-      body: FutureBuilder<List<dynamic>>(
-          future: getLeaderboard(),
-          builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-            if (snapshot.hasData) {
-              return Center(
-                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                IntrinsicHeight(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: queryData.size.height * 0.3,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                              bottomLeft: Radius.circular(30),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Color.fromARGB(255, 120, 120, 120),
-                                Color.fromARGB(255, 209, 209, 209),
-                              ],
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                "#2",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
+      body: RefreshIndicator(
+        child: FutureBuilder<List<dynamic>>(
+            future: getLeaderboard(),
+            builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                return SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Center(
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                    IntrinsicHeight(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: queryData.size.height * 0.3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                  bottomLeft: Radius.circular(30),
+                                ),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color.fromARGB(255, 120, 120, 120),
+                                    Color.fromARGB(255, 209, 209, 209),
+                                  ],
                                 ),
                               ),
-                              Text(snapshot.data!.elementAt(1)['totalScore'].toString() + ' points',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                              Text(snapshot.data!.elementAt(1)['name'].toString())
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "#2",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(snapshot.data!.elementAt(1)['totalScore'].toString() + ' points',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  Text(snapshot.data!.elementAt(1)['name'].toString())
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: queryData.size.height * 0.4,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                ),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color.fromARGB(255, 142, 107, 11),
+                                    Color.fromARGB(255, 241, 183, 24),
+                                  ],
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "#1",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(snapshot.data!.elementAt(0)['totalScore'].toString() + ' points',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  Text(snapshot.data!.elementAt(0)['name'].toString())
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: queryData.size.height * 0.2,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                  bottomRight: Radius.circular(30),
+                                ),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Color.fromARGB(255, 151, 89, 19),
+                                    Color.fromARGB(255, 209, 151, 104),
+                                  ],
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "#3",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(snapshot.data!.elementAt(2)['totalScore'].toString() + ' points',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  Text(snapshot.data!.elementAt(2)['name'].toString())
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    //FIRST PLACE
+                    /*Container(
+                        height: queryData.size.height * 0.2,
+                        width: queryData.size.width * 0.8,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color.fromARGB(255, 142, 107, 11),
+                              Color.fromARGB(255, 241, 183, 24),
                             ],
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: queryData.size.height * 0.4,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Color.fromARGB(255, 142, 107, 11),
-                                Color.fromARGB(255, 241, 183, 24),
-                              ],
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                "#1",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "#1",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 38,
+                                fontWeight: FontWeight.bold,
                               ),
-                              Text(snapshot.data!.elementAt(0)['totalScore'].toString() + ' points',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                              Text(snapshot.data!.elementAt(0)['name'].toString())
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: queryData.size.height * 0.2,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                              bottomRight: Radius.circular(30),
                             ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                Color.fromARGB(255, 151, 89, 19),
-                                Color.fromARGB(255, 209, 151, 104),
-                              ],
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                "#3",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(snapshot.data!.elementAt(2)['totalScore'].toString() + ' points',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                              Text(snapshot.data!.elementAt(2)['name'].toString())
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                //FIRST PLACE
-                /*Container(
-                    height: queryData.size.height * 0.2,
-                    width: queryData.size.width * 0.8,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          Color.fromARGB(255, 142, 107, 11),
-                          Color.fromARGB(255, 241, 183, 24),
-                        ],
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          "#1",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 38,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Center(
-                          child: Column(children: [
-                            Text(snapshot.data!.elementAt(0)['totalScore'].toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            Text(snapshot.data!.elementAt(0)['name'].toString())
-                            /*FutureBuilder<String>(
-                                    future: api.getNameOfUser(http.Client(), snapshot.data!.elementAt(0)['id'].toString()),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData)
-                                        return Text(snapshot.data!);
-                                      else
-                                        return Text("awaiting data...");
-                                    })*/
-                          ]),
-                        )
-                      ],
-                    )),
-                //Second
-                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                Container(
-                    height: queryData.size.height * 0.15,
-                    width: queryData.size.width * 0.7,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          Color.fromARGB(255, 120, 120, 120),
-                          Color.fromARGB(255, 209, 209, 209),
-                        ],
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          "#2",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 38,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Center(
-                          child: Column(children: [
-                            Text(snapshot.data!.elementAt(1)['totalScore'].toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            Text(snapshot.data!.elementAt(1)['name'].toString())
-                            /*FutureBuilder<String>(
-                                    future: api.getNameOfUser(http.Client(), snapshot.data!.elementAt(1)['id'].toString()),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData)
-                                        return Text(snapshot.data!);
-                                      else
-                                        return Text("awaiting data...");
-                                    })*/
-                          ]),
-                        )
-                      ],
-                    )),
-                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                Container(
-                    height: queryData.size.height * 0.10,
-                    width: queryData.size.width * 0.6,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          Color.fromARGB(255, 151, 89, 19),
-                          Color.fromARGB(255, 209, 151, 104),
-                        ],
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          "#3",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 38,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Center(
-                          child: Column(children: [
-                            Text(snapshot.data!.elementAt(2)['totalScore'].toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            Text(snapshot.data!.elementAt(2)['name'].toString())
-                            /*FutureBuilder<String>(
-                                    future: api.getNameOfUser(http.Client(), snapshot.data!.elementAt(2)['id'].toString()),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData)
-                                        return Text(snapshot.data!);
-                                      else
-                                        return Text("awaiting data...");
-                                    })*/
-                          ]),
-                        )
-                      ],
-                    )),*/
-                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                Divider(
-                  color: Color.fromARGB(255, 49, 45, 45),
-                ),
-                Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                //SCORE OF THE USER
-                Container(
-                    height: queryData.size.height * 0.2,
-                    width: queryData.size.width * 0.8,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [
-                          Color.fromARGB(255, 30, 25, 25),
-                          Color.fromARGB(255, 49, 45, 45),
-                        ],
-                      ),
-                    ),
-                    child: FutureBuilder<int>(
-                        future: getPosUser(),
-                        builder: (context, pos) {
-                          if (pos.hasData) {
-                            return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                              Text(
-                                '#' + pos.data!.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                Text(snapshot.data!.elementAt(pos.data! - 1)['totalScore'].toString() + ' points',
+                            Center(
+                              child: Column(children: [
+                                Text(snapshot.data!.elementAt(0)['totalScore'].toString(),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     )),
-                                Text(snapshot.data!.elementAt(pos.data! - 1)['name'].toString(),
+                                Text(snapshot.data!.elementAt(0)['name'].toString())
+                                /*FutureBuilder<String>(
+                                        future: api.getNameOfUser(http.Client(), snapshot.data!.elementAt(0)['id'].toString()),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData)
+                                            return Text(snapshot.data!);
+                                          else
+                                            return Text("awaiting data...");
+                                        })*/
+                              ]),
+                            )
+                          ],
+                        )),
+                    //Second
+                    Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                    Container(
+                        height: queryData.size.height * 0.15,
+                        width: queryData.size.width * 0.7,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color.fromARGB(255, 120, 120, 120),
+                              Color.fromARGB(255, 209, 209, 209),
+                            ],
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "#2",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 38,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Center(
+                              child: Column(children: [
+                                Text(snapshot.data!.elementAt(1)['totalScore'].toString(),
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 16,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     )),
+                                Text(snapshot.data!.elementAt(1)['name'].toString())
+                                /*FutureBuilder<String>(
+                                        future: api.getNameOfUser(http.Client(), snapshot.data!.elementAt(1)['id'].toString()),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData)
+                                            return Text(snapshot.data!);
+                                          else
+                                            return Text("awaiting data...");
+                                        })*/
                               ]),
-                            ]);
-                          } else
-                            return CircularProgressIndicator(
-                              color: Color.fromARGB(255, 49, 45, 45),
-                            );
-                        }))
-              ]));
-            } else
-              return CircularProgressIndicator();
-          }),
+                            )
+                          ],
+                        )),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                    Container(
+                        height: queryData.size.height * 0.10,
+                        width: queryData.size.width * 0.6,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color.fromARGB(255, 151, 89, 19),
+                              Color.fromARGB(255, 209, 151, 104),
+                            ],
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "#3",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 38,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Center(
+                              child: Column(children: [
+                                Text(snapshot.data!.elementAt(2)['totalScore'].toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                Text(snapshot.data!.elementAt(2)['name'].toString())
+                                /*FutureBuilder<String>(
+                                        future: api.getNameOfUser(http.Client(), snapshot.data!.elementAt(2)['id'].toString()),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData)
+                                            return Text(snapshot.data!);
+                                          else
+                                            return Text("awaiting data...");
+                                        })*/
+                              ]),
+                            )
+                          ],
+                        )),*/
+                    Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                    Divider(
+                      color: Color.fromARGB(255, 49, 45, 45),
+                    ),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                    //SCORE OF THE USER
+                    Container(
+                        height: queryData.size.height * 0.2,
+                        width: queryData.size.width * 0.8,
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color.fromARGB(255, 30, 25, 25),
+                              Color.fromARGB(255, 49, 45, 45),
+                            ],
+                          ),
+                        ),
+                        child: FutureBuilder<int>(
+                            future: getPosUser(),
+                            builder: (context, pos) {
+                              if (pos.hasData) {
+                                return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                                  Text(
+                                    '#' + pos.data!.toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                    Text(snapshot.data!.elementAt(pos.data! - 1)['totalScore'].toString() + ' points',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    Text(snapshot.data!.elementAt(pos.data! - 1)['name'].toString(),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                  ]),
+                                ]);
+                              } else
+                                return CircularProgressIndicator(
+                                  color: Color.fromARGB(255, 49, 45, 45),
+                                );
+                            }))
+                  ])),
+                );
+              } else
+                return CircularProgressIndicator();
+            }),
+        onRefresh: () async {
+          setState(() {});
+        },
+      ),
     );
   }
 }
