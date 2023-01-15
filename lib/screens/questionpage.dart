@@ -12,7 +12,6 @@ import '../models/MyStorage.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:spotiquiz/screens/resultpage.dart';
 import 'package:spotiquiz/services/data.dart' as dApi;
-
 import '../widgets/progress_bar.dart';
 
 final sStorage = FlutterSecureStorage();
@@ -79,14 +78,10 @@ class _QuestionPageState extends State<QuestionPage> {
 
   @override
   Widget build(BuildContext context) {
-    // QuestionModel question = new QuestionModel("Who is the author of the song Pippo?", ["a", "b", "c", "d"], 1);
+    MediaQueryData queryData = MediaQuery.of(context);
     _controller?.setContext(context);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 25, 20, 20),
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 25, 20, 20),
-        elevation: 0,
-      ),
       body: PageView.builder(
           itemCount: questions!.length,
           controller: _controller?.pageController,
@@ -125,7 +120,9 @@ class _QuestionPageState extends State<QuestionPage> {
                             if (snapshot.data == null) print('data is null');
                             return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                               // widget.progressBar,
+                              //Padding(padding: EdgeInsets.symmetric(vertical: 20)),
                               ProgressBar(questionController: _controller!),
+                              Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                               SizedBox(
                                 width: double.infinity,
                                 child: Text(
@@ -181,42 +178,84 @@ class _QuestionPageState extends State<QuestionPage> {
 
                               // generate 4 bottons for the answers
                               for (int i = 0; i < snapshot.data!.answers.length; i++)
-                                Container(
-                                  width: double.infinity,
-                                  margin: EdgeInsets.only(bottom: 18.0),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: hasBeenPressed[i]
-                                            ? i == snapshot.data!.correctAnswer
-                                                ? Colors.greenAccent
-                                                : Colors.redAccent
-                                            : null),
-                                    // backgroundColor: Colors.greenAccent),
-                                    // shape: StadiumBorder(),
-                                    // color: Colors.blueAccent,
-                                    // padding: EdgeInsets.symmetric(
-                                    //     vertical: 18.0),
-                                    onPressed: () {
-                                      if (i == snapshot.data!.correctAnswer) {
-                                        _controller?.score++;
-                                        dApi.storeStats(snapshot.data!.authorId!, true);
-                                      } else {
-                                        dApi.storeStats(snapshot.data!.authorId!, false);
-                                      }
+                                Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        if (i == snapshot.data!.correctAnswer) {
+                                          _controller?.score++;
+                                          dApi.storeStats(snapshot.data!.authorId!, true);
+                                        } else {
+                                          dApi.storeStats(snapshot.data!.authorId!, false);
+                                        }
 
-                                      setState(() {
-                                        hasBeenPressed[i] = true;
-                                        assetsAudioPlayer.pause();
-                                        isPlaying.value = false;
-                                      });
-                                      _controller?.nextPage();
-                                    },
-                                    child: Text(snapshot.data!.answers[i], style: TextStyle(color: Colors.white)),
-                                  ),
+                                        setState(() {
+                                          hasBeenPressed[i] = true;
+                                          assetsAudioPlayer.pause();
+                                          isPlaying.value = false;
+                                        });
+                                        _controller?.nextPage();
+                                      },
+                                      child: Container(
+                                        width: queryData.size.width * 0.7,
+                                        height: queryData.size.height * 0.08,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: hasBeenPressed[i]
+                                              ? i == snapshot.data!.correctAnswer
+                                                  // correct answer: green button
+                                                  ? [Color.fromARGB(255, 0, 255, 0),
+                                                    Color.fromARGB(255, 34, 139, 34),]
+                                                  // wrong answer: red button
+                                                  : [Color.fromARGB(255, 255, 0, 0),
+                                                    Color.fromARGB(255, 178, 34, 34),]
+                                              // default: violet
+                                             : [Color.fromARGB(255, 128, 5, 195),
+                                               Color.fromARGB(255, 182, 80, 245),]),
+                                          ),
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.transparent,
+                                              shadowColor: Colors.transparent,
+                                          ),
+                                          // backgroundColor: Colors.greenAccent),
+                                          // shape: StadiumBorder(),
+                                          // color: Colors.blueAccent,
+                                          // padding: EdgeInsets.symmetric(
+                                          //     vertical: 18.0),
+                                          onPressed: () {
+                                            if (i == snapshot.data!.correctAnswer) {
+                                              _controller?.score++;
+                                              dApi.storeStats(snapshot.data!.authorId!, true);
+                                            } else {
+                                              dApi.storeStats(snapshot.data!.authorId!, false);
+                                            }
+                                            setState(() {
+                                              hasBeenPressed[i] = true;
+                                              assetsAudioPlayer.pause();
+                                              isPlaying.value = false;
+                                            });
+                                            _controller?.nextPage();
+                                          },
+                                          child: Text(snapshot.data!.answers[i],
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                    ),
+
+                                    ),
+                                    Padding(padding: EdgeInsets.symmetric(vertical: 10))
+                                  ],
                                 ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30.0,
                               ),
+
                             ]);
                           default:
                             if (snapshot.hasError)

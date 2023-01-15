@@ -455,6 +455,12 @@ class API {
     //print(data['imageUrl']);
     return data['display_name'];
   }
+
+  // method that calls others methods --> in order to do an unique http call in the user page
+  // Future
+
+
+
 } //auth
 
 

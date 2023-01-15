@@ -81,6 +81,16 @@ Future<int> getNumPerfectQuizzes() async {
   return res;
 }
 
+Future getUserData() async{
+  String id = await api.getIdUser(http.Client());
+  dynamic res = -1;
+  await db.collection('users').doc(id).get().then((snapshot) {
+    res = snapshot.data();
+    res["avgScore"] = res["totalScore"] / res["numQuizzes"];
+  });
+  return res;
+}
+
 Future<List> getLeaderboard() async {
   List<Object> res = [];
   await db.collection('users').orderBy('totalScore', descending: true).get().then((snapshot) => snapshot.docs.forEach((element) {

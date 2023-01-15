@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
-
 import '../services/data.dart';
 
 class History extends StatefulWidget {

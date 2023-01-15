@@ -4,7 +4,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/screens/main_page.dart';
 import 'package:spotiquiz/services/auth.dart';
-
 import 'navigation.dart';
 
 class Login extends StatefulWidget {

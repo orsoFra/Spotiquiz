@@ -11,10 +11,6 @@ import 'package:http/http.dart' as http;
 import '../models/MyStorage.dart';
 import '../services/data.dart';
 
-final sStorage = FlutterSecureStorage();
-final storage = MyStorage(sStorage);
-final api = API(storage);
-
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key});
 
