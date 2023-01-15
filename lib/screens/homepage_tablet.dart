@@ -178,7 +178,7 @@ class _HomeTabletState extends State<HomeTablet> {
                           pagination: const SwiperPagination(builder: SwiperPagination.rect),
                           control: const SwiperControl(color: Colors.transparent),
                           itemHeight: queryData.size.height * 0.6,
-                          itemWidth: queryData.size.width * 0.9,
+                          itemWidth: queryData.size.width * 0.8,
                           layout: SwiperLayout.TINDER,
                         );
                       }
