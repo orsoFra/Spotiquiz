@@ -55,6 +55,7 @@ dependencies:
   cloud_firestore: ^4.3.1
   card_swiper: ^2.0.4
   google_nav_bar: ^5.0.6
+  responsive_builder: ^0.4.3
 
 dev_dependencies:
   flutter_test:
