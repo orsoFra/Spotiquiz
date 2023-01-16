@@ -5,6 +5,7 @@ import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/screens/leaderboard_page.dart';
 import 'package:spotiquiz/screens/userpage.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:flutter/services.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -13,11 +14,16 @@ class Navigation extends StatefulWidget {
   State<Navigation> createState() => _NavigationState();
 }
 
+void initState() {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+}
+
 class _NavigationState extends State<Navigation> {
   int _selectedIndex = 1;
   static const List<Widget> _pages = <Widget>[Leaderboard(), MyHomePage(title: ''), UserPage()];
   @override
   Widget build(BuildContext context) {
+    initState();
     MediaQueryData queryData = MediaQuery.of(context);
     return Scaffold(
       body: IndexedStack(

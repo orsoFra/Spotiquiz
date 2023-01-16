@@ -13,6 +13,8 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:spotiquiz/screens/resultpage.dart';
 import 'package:spotiquiz/services/data.dart' as dApi;
 import '../widgets/progress_bar.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+import 'package:spotiquiz/services/scalesize.dart';
 
 final sStorage = FlutterSecureStorage();
 final storage = new MyStorage(sStorage);
@@ -101,136 +103,105 @@ class _QuestionPageState extends State<QuestionPage> {
               hasBeenPressed = [false, false, false, false];
             }
             previousIndex = index;
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  FutureBuilder<QuestionModel>(
-                      future: this.questions![index],
-                      builder: (BuildContext context, AsyncSnapshot<QuestionModel> snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.waiting:
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Center(child: const CircularProgressIndicator()),
-                              ],
-                            );
-                          case ConnectionState.done:
-                            if (snapshot.data == null) print('data is null');
-                            return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                              ProgressBar(questionController: _controller!),
-                              Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                              SizedBox(
-                                width: double.infinity,
-                                child: Text(
-                                  "Question ${index + 1}/${questions!.length}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30.0,
-                                  ),
-                                ),
-                              ),
-
-                              Divider(
-                                color: Colors.white,
-                                height: 8.0,
-                                thickness: 1.0,
-                              ),
-
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-
-                              SizedBox(
-                                width: double.infinity,
-                                height: queryData.size.height * 0.15,
-                                child: Text(
-                                  snapshot.data!.question,
-                                  style: TextStyle(color: Colors.white, fontSize: 27.0),
-                                ),
-                              ),
-                              if (snapshot.data!.songURL != null)
-                                ValueListenableBuilder(
-                                    valueListenable: isPlaying,
-                                    builder: (context, value, child) => IconButton(
-                                        iconSize: 50,
-                                        icon: (isPlaying.value)
-                                            ? const Icon(
-                                                Icons.stop,
-                                                color: Colors.white,
-                                              )
-                                            : Icon(
-                                                Icons.play_arrow,
-                                                color: Colors.white,
-                                              ),
-                                        onPressed: () {
-                                          isPlaying.value = !isPlaying.value;
-                                          playPauseAudioNetwork(snapshot.data!.songURL!, isPlaying.value);
-                                        })),
-
-                              SizedBox(
-                                height: 25.0,
-                              ),
-
-                              // generate 4 bottons for the answers
-                              for (int i = 0; i < snapshot.data!.answers.length; i++)
-                                Column(
+            return OrientationLayoutBuilder(
+              portrait: ((context) {
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: queryData.size.height * 0.08,
+                      ),
+                      FutureBuilder<QuestionModel>(
+                          future: this.questions![index],
+                          builder: (BuildContext context, AsyncSnapshot<QuestionModel> snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    InkWell(
-                                      onTap: () {
-                                        if (i == snapshot.data!.correctAnswer) {
-                                          _controller?.score++;
-                                          dApi.storeStats(snapshot.data!.authorId!, true);
-                                        } else {
-                                          dApi.storeStats(snapshot.data!.authorId!, false);
-                                        }
+                                    Center(child: const CircularProgressIndicator()),
+                                  ],
+                                );
+                              case ConnectionState.done:
+                                if (snapshot.data == null) print('data is null');
+                                return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                  ProgressBar(questionController: _controller!),
+                                  Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Text(
+                                      "Question ${index + 1}/${questions!.length}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 30.0,
+                                      ),
+                                    ),
+                                  ),
 
-                                        setState(() {
-                                          hasBeenPressed[i] = true;
-                                          assetsAudioPlayer.pause();
-                                          isPlaying.value = false;
-                                        });
-                                        _controller?.nextPage();
-                                      },
-                                      child: Container(
-                                        width: queryData.size.width * 0.7,
-                                        height: queryData.size.height * 0.08,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(30),
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topRight,
-                                            end: Alignment.bottomLeft,
-                                            colors: hasBeenPressed[i]
-                                              ? i == snapshot.data!.correctAnswer
-                                                  // correct answer: green button
-                                                  ? [Color.fromARGB(255, 0, 255, 0),
-                                                    Color.fromARGB(255, 34, 139, 34),]
-                                                  // wrong answer: red button
-                                                  : [Color.fromARGB(255, 255, 0, 0),
-                                                    Color.fromARGB(255, 178, 34, 34),]
-                                              // default: violet
-                                             : [Color.fromARGB(255, 128, 5, 195),
-                                               Color.fromARGB(255, 182, 80, 245),]),
-                                          ),
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            primary: Colors.transparent,
-                                              shadowColor: Colors.transparent,
-                                          ),
-                                          // backgroundColor: Colors.greenAccent),
-                                          // shape: StadiumBorder(),
-                                          // color: Colors.blueAccent,
-                                          // padding: EdgeInsets.symmetric(
-                                          //     vertical: 18.0),
-                                          onPressed: () {
+                                  Divider(
+                                    color: Colors.white,
+                                    height: 8.0,
+                                    thickness: 1.0,
+                                  ),
+
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: queryData.size.height * 0.10,
+                                    child: Text(
+                                      snapshot.data!.question,
+                                      style: TextStyle(color: Colors.white, fontSize: 27.0),
+                                    ),
+                                  ),
+                                  (snapshot.data!.songURL != null)
+                                      ? ValueListenableBuilder(
+                                          valueListenable: isPlaying,
+                                          builder: (context, value, child) => IconButton(
+                                              iconSize: 50,
+                                              icon: (isPlaying.value)
+                                                  ? const Icon(
+                                                      Icons.stop,
+                                                      color: Colors.white,
+                                                    )
+                                                  : Icon(
+                                                      Icons.play_arrow,
+                                                      color: Colors.white,
+                                                    ),
+                                              onPressed: () {
+                                                isPlaying.value = !isPlaying.value;
+                                                playPauseAudioNetwork(snapshot.data!.songURL!, isPlaying.value);
+                                              }))
+                                      : ResponsiveBuilder(
+                                          builder: (context, sizingInformation) {
+                                            if (sizingInformation.deviceScreenType == DeviceScreenType.tablet) {
+                                              return SizedBox(
+                                                height: queryData.size.height * 0.1,
+                                              );
+                                            } else
+                                              return SizedBox(
+                                                height: queryData.size.height * 0.07,
+                                              );
+                                          },
+                                        ),
+
+                                  SizedBox(
+                                    height: 25.0,
+                                  ),
+
+                                  // generate 4 bottons for the answers
+                                  for (int i = 0; i < snapshot.data!.answers.length; i++)
+                                    Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
                                             if (i == snapshot.data!.correctAnswer) {
                                               _controller?.score++;
                                               dApi.storeStats(snapshot.data!.authorId!, true);
                                             } else {
                                               dApi.storeStats(snapshot.data!.authorId!, false);
                                             }
+
                                             setState(() {
                                               hasBeenPressed[i] = true;
                                               assetsAudioPlayer.pause();
@@ -238,69 +209,339 @@ class _QuestionPageState extends State<QuestionPage> {
                                             });
                                             _controller?.nextPage();
                                           },
-                                          child: Text(snapshot.data!.answers[i],
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold)),
+                                          child: Container(
+                                            width: queryData.size.width * 0.7,
+                                            height: queryData.size.height * 0.08,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(30),
+                                              gradient: LinearGradient(
+                                                  begin: Alignment.topRight,
+                                                  end: Alignment.bottomLeft,
+                                                  colors: hasBeenPressed[i]
+                                                      ? i == snapshot.data!.correctAnswer
+                                                          // correct answer: green button
+                                                          ? [
+                                                              Color.fromARGB(255, 0, 255, 0),
+                                                              Color.fromARGB(255, 34, 139, 34),
+                                                            ]
+                                                          // wrong answer: red button
+                                                          : [
+                                                              Color.fromARGB(255, 255, 0, 0),
+                                                              Color.fromARGB(255, 178, 34, 34),
+                                                            ]
+                                                      // default: violet
+                                                      : [
+                                                          Color.fromARGB(255, 128, 5, 195),
+                                                          Color.fromARGB(255, 182, 80, 245),
+                                                        ]),
+                                            ),
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Colors.transparent,
+                                                shadowColor: Colors.transparent,
+                                              ),
+                                              // backgroundColor: Colors.greenAccent),
+                                              // shape: StadiumBorder(),
+                                              // color: Colors.blueAccent,
+                                              // padding: EdgeInsets.symmetric(
+                                              //     vertical: 18.0),
+                                              onPressed: () {
+                                                if (i == snapshot.data!.correctAnswer) {
+                                                  _controller?.score++;
+                                                  dApi.storeStats(snapshot.data!.authorId!, true);
+                                                } else {
+                                                  dApi.storeStats(snapshot.data!.authorId!, false);
+                                                }
+                                                setState(() {
+                                                  hasBeenPressed[i] = true;
+                                                  assetsAudioPlayer.pause();
+                                                  isPlaying.value = false;
+                                                });
+                                                _controller?.nextPage();
+                                              },
+                                              child: Text(snapshot.data!.answers[i],
+                                                  textScaleFactor: ScaleSize.textScaleFactor(context),
+                                                  style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                            ),
+                                          ),
                                         ),
+                                        Padding(padding: EdgeInsets.symmetric(vertical: 10))
+                                      ],
                                     ),
+                                  SizedBox(
+                                    height: queryData.size.height * 0.07,
+                                  ),
 
+                                  // QUIT BUTTON
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Stack(
+                                      children: <Widget>[
+                                        Positioned.fill(
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: <Color>[
+                                                  Color(0xFF0D47A1),
+                                                  Color(0xFF1976D2),
+                                                  Color(0xFF42A5F5),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            padding: const EdgeInsets.all(16.0),
+                                            textStyle: const TextStyle(fontSize: 20),
+                                          ),
+                                          onPressed: () {
+                                            // if you want to exit, the timer and the music have to be stopped
+                                            // and we don't want the results
+                                            // and we have to back to the home page
+                                            timerController.pause();
+                                            assetsAudioPlayer.pause();
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Quit'),
+                                        ),
+                                      ],
                                     ),
-                                    Padding(padding: EdgeInsets.symmetric(vertical: 10))
-                                  ],
-                                ),
-                              const SizedBox(
-                                height: 30.0,
-                              ),
-
-                              // QUIT BUTTON
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Stack(
-                                  children: <Widget>[
-                                    Positioned.fill(
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: <Color>[
-                                              Color(0xFF0D47A1),
-                                              Color(0xFF1976D2),
-                                              Color(0xFF42A5F5),
-                                            ],
+                                  ),
+                                ]);
+                              default:
+                                if (snapshot.hasError)
+                                  return new Text('Error: ${snapshot.error}');
+                                else
+                                  return new Text('Result: ${snapshot.data}');
+                            }
+                          }),
+                    ],
+                  ),
+                );
+              }),
+              landscape: (context) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FutureBuilder<QuestionModel>(
+                        future: this.questions![index],
+                        builder: (BuildContext context, AsyncSnapshot<QuestionModel> snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Center(child: const CircularProgressIndicator()),
+                                ],
+                              );
+                            case ConnectionState.done:
+                              if (snapshot.data == null) print('data is null');
+                              if (snapshot.hasData) {
+                                return Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                  Container(
+                                    width: queryData.size.width * 0.4,
+                                    child: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                      ProgressBar(questionController: _controller!),
+                                      Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: Text(
+                                          "Question ${index + 1}/${questions!.length}",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 30.0,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    TextButton(
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: Colors.white,
-                                          padding: const EdgeInsets.all(16.0),
-                                          textStyle: const TextStyle(fontSize: 20),
+                                      Divider(
+                                        color: Colors.white,
+                                        height: 8.0,
+                                        thickness: 1.0,
+                                      ),
+                                      const SizedBox(
+                                        height: 20.0,
+                                      ),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        height: queryData.size.height * 0.15,
+                                        child: Text(
+                                          snapshot.data!.question,
+                                          style: TextStyle(color: Colors.white, fontSize: 27.0),
                                         ),
-                                        onPressed: (){
-                                          // if you want to exit, the timer and the music have to be stopped
-                                          // and we don't want the results
-                                          // and we have to back to the home page
-                                          timerController.pause();
-                                          assetsAudioPlayer.pause();
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('Quit'),
-                                    ),
+                                      ),
+                                      (snapshot.data!.songURL != null)
+                                          ? ValueListenableBuilder(
+                                              valueListenable: isPlaying,
+                                              builder: (context, value, child) => IconButton(
+                                                  iconSize: 50,
+                                                  icon: (isPlaying.value)
+                                                      ? const Icon(
+                                                          Icons.stop,
+                                                          color: Colors.white,
+                                                        )
+                                                      : Icon(
+                                                          Icons.play_arrow,
+                                                          color: Colors.white,
+                                                        ),
+                                                  onPressed: () {
+                                                    isPlaying.value = !isPlaying.value;
+                                                    playPauseAudioNetwork(snapshot.data!.songURL!, isPlaying.value);
+                                                  }))
+                                          : SizedBox(
+                                              height: queryData.size.height * 0.1,
+                                            ),
+                                      SizedBox(
+                                        height: 25.0,
+                                      ),
+                                    ]),
+                                  ),
+                                  Column(
+                                      // generate 4 bottons for the answers
+                                      children: [
+                                        for (int i = 0; i < snapshot.data!.answers.length; i++)
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  if (i == snapshot.data!.correctAnswer) {
+                                                    _controller?.score++;
+                                                    dApi.storeStats(snapshot.data!.authorId!, true);
+                                                  } else {
+                                                    dApi.storeStats(snapshot.data!.authorId!, false);
+                                                  }
+
+                                                  setState(() {
+                                                    hasBeenPressed[i] = true;
+                                                    assetsAudioPlayer.pause();
+                                                    isPlaying.value = false;
+                                                  });
+                                                  _controller?.nextPage();
+                                                },
+                                                child: Container(
+                                                  width: queryData.size.width * 0.3,
+                                                  height: queryData.size.height * 0.08,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    gradient: LinearGradient(
+                                                        begin: Alignment.topRight,
+                                                        end: Alignment.bottomLeft,
+                                                        colors: hasBeenPressed[i]
+                                                            ? i == snapshot.data!.correctAnswer
+                                                                // correct answer: green button
+                                                                ? [
+                                                                    Color.fromARGB(255, 0, 255, 0),
+                                                                    Color.fromARGB(255, 34, 139, 34),
+                                                                  ]
+                                                                // wrong answer: red button
+                                                                : [
+                                                                    Color.fromARGB(255, 255, 0, 0),
+                                                                    Color.fromARGB(255, 178, 34, 34),
+                                                                  ]
+                                                            // default: violet
+                                                            : [
+                                                                Color.fromARGB(255, 128, 5, 195),
+                                                                Color.fromARGB(255, 182, 80, 245),
+                                                              ]),
+                                                  ),
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      primary: Colors.transparent,
+                                                      shadowColor: Colors.transparent,
+                                                    ),
+                                                    // backgroundColor: Colors.greenAccent),
+                                                    // shape: StadiumBorder(),
+                                                    // color: Colors.blueAccent,
+                                                    // padding: EdgeInsets.symmetric(
+                                                    //     vertical: 18.0),
+                                                    onPressed: () {
+                                                      if (i == snapshot.data!.correctAnswer) {
+                                                        _controller?.score++;
+                                                        dApi.storeStats(snapshot.data!.authorId!, true);
+                                                      } else {
+                                                        dApi.storeStats(snapshot.data!.authorId!, false);
+                                                      }
+                                                      setState(() {
+                                                        hasBeenPressed[i] = true;
+                                                        assetsAudioPlayer.pause();
+                                                        isPlaying.value = false;
+                                                      });
+                                                      _controller?.nextPage();
+                                                    },
+                                                    child: Text(
+                                                      snapshot.data!.answers[i],
+                                                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                                                      textAlign: TextAlign.center,
+                                                      textScaleFactor: ScaleSize.textScaleFactor(context),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(padding: EdgeInsets.symmetric(vertical: 10))
+                                            ],
+                                          ),
+                                      ])
+                                ]);
+                              } else {
+                                return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                  Center(child: const CircularProgressIndicator()),
+                                ]);
+                              }
+                            default:
+                              if (snapshot.hasError)
+                                return new Text('Error: ${snapshot.error}');
+                              else
+                                return new Text('Result: ${snapshot.data}');
+                          }
+                        }),
+                    // QUIT BUTTON
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Stack(
+                        children: <Widget>[
+                          Positioned.fill(
+                            child: Container(
+                              width: queryData.size.width * 0.17,
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: <Color>[
+                                    Color(0xFF0D47A1),
+                                    Color(0xFF1976D2),
+                                    Color(0xFF42A5F5),
                                   ],
-                                ) ,
+                                ),
                               ),
-                            ]);
-                          default:
-                            if (snapshot.hasError)
-                              return new Text('Error: ${snapshot.error}');
-                            else
-                              return new Text('Result: ${snapshot.data}');
-                        }
-                      }),
-                ],
-              ),
+                            ),
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.all(16.0),
+                              textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {
+                              // if you want to exit, the timer and the music have to be stopped
+                              // and we don't want the results
+                              // and we have to back to the home page
+                              timerController.pause();
+                              assetsAudioPlayer.pause();
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'Quit',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           }),
     );
