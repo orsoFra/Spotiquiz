@@ -256,7 +256,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
                               // QUIT BUTTON
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(30),
                                 child: Stack(
                                   children: <Widget>[
                                     Positioned.fill(

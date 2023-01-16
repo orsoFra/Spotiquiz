@@ -139,6 +139,7 @@ class _UserPageState extends State<UserPage> {
                               height: 20.0,
                             ),
 
+
                             Text('Quiz done: ${snapshot.data![1]['numQuizzes']}',
                                 style: TextStyle(
                                   color: Colors.white,
