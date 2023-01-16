@@ -28,7 +28,7 @@ class ResultPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               width: double.infinity,
               child: Text("Congratulations!",
                   textAlign: TextAlign.center,
@@ -38,14 +38,14 @@ class ResultPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 45.0,
             ),
-            Text(
+            const Text(
               "Your Score is:",
               style: TextStyle(color: Colors.white, fontSize: 34.0),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             Text(

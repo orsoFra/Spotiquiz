@@ -119,8 +119,6 @@ class _QuestionPageState extends State<QuestionPage> {
                           case ConnectionState.done:
                             if (snapshot.data == null) print('data is null');
                             return Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                              // widget.progressBar,
-                              //Padding(padding: EdgeInsets.symmetric(vertical: 20)),
                               ProgressBar(questionController: _controller!),
                               Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                               SizedBox(
@@ -147,7 +145,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
                               SizedBox(
                                 width: double.infinity,
-                                height: 200.0,
+                                height: queryData.size.height * 0.15,
                                 child: Text(
                                   snapshot.data!.question,
                                   style: TextStyle(color: Colors.white, fontSize: 27.0),
@@ -256,6 +254,43 @@ class _QuestionPageState extends State<QuestionPage> {
                                 height: 30.0,
                               ),
 
+                              // QUIT BUTTON
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: Stack(
+                                  children: <Widget>[
+                                    Positioned.fill(
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: <Color>[
+                                              Color(0xFF0D47A1),
+                                              Color(0xFF1976D2),
+                                              Color(0xFF42A5F5),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.all(16.0),
+                                          textStyle: const TextStyle(fontSize: 20),
+                                        ),
+                                        onPressed: (){
+                                          // if you want to exit, the timer and the music have to be stopped
+                                          // and we don't want the results
+                                          // and we have to back to the home page
+                                          timerController.pause();
+                                          assetsAudioPlayer.pause();
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Quit'),
+                                    ),
+                                  ],
+                                ) ,
+                              ),
                             ]);
                           default:
                             if (snapshot.hasError)
