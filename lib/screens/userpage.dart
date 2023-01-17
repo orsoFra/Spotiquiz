@@ -65,7 +65,7 @@ class _UserPageState extends State<UserPage> {
                                   children: [
                                     CircleAvatar(
                                       radius: 110,
-                                      backgroundColor: Color.fromARGB(255, 49, 45, 45),
+                                      backgroundColor: const Color.fromARGB(255, 49, 45, 45),
                                       child: CircleAvatar(
                                         backgroundImage: NetworkImage(snapshot.data![0]['imageUrl']),
                                         radius: 100,
@@ -75,10 +75,10 @@ class _UserPageState extends State<UserPage> {
                                 )
                               ],
                             ),
-                            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                            const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                             Text(
                               snapshot.data![0]['display_name'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 25,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -86,7 +86,7 @@ class _UserPageState extends State<UserPage> {
                             ),
                             Text(
                               snapshot.data![0]['email'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -94,13 +94,200 @@ class _UserPageState extends State<UserPage> {
                             ),
                             Text(
                               snapshot.data![0]['product'] + " user ",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+                            const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+
+                            // HISTORY VIEW
+                            Container(
+                              child: GridView.count(
+                                scrollDirection: Axis.vertical,
+                                physics: ScrollPhysics(),
+                                //childAspectRatio: queryData.size.width /
+                                    //((queryData).size.height / 1.4),
+                                //crossAxisSpacing: 2,
+                                //mainAxisSpacing: 2,
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                children: <Widget> [
+                                  // first
+                                  Padding(
+                                    padding: const EdgeInsets.all(40.0),
+                                    child: Container(
+                                        padding: const EdgeInsets.all(25),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(100),
+                                          gradient: const LinearGradient(
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: [
+                                              Color.fromARGB(255, 120, 120, 120),
+                                              Color.fromARGB(255, 209, 209, 209),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children:[
+                                            const Icon(Icons.done, size: 20, color: Colors.white,),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text('${snapshot.data![1]['numQuizzes']}',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const Text('Completed',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                  ),
+                                  // second
+                                  Padding(
+                                    padding: const EdgeInsets.all(40.0),
+                                    child: Container(
+                                        padding: const EdgeInsets.all(25),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(100),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: [
+                                              Color.fromARGB(255, 120, 120, 120),
+                                              Color.fromARGB(255, 209, 209, 209),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children:[
+                                            const Icon(Icons.star_rate, size: 20, color: Colors.white,),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text('${snapshot.data![1]['numPerfectQuizzes']}',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const Text('Perfect',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                  ),
+                                  // third
+                                  Padding(
+                                    padding: const EdgeInsets.all(40.0),
+                                    child: Container(
+                                        padding: const EdgeInsets.all(25),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(100),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: [
+                                              Color.fromARGB(255, 120, 120, 120),
+                                              Color.fromARGB(255, 209, 209, 209),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children:[
+                                            const Icon(Icons.emoji_events, size: 20, color: Colors.white,),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text('${snapshot.data![1]['totalScore']}',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const Text('Score',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                  ),
+                                  // fourth
+                                  Padding(
+                                    padding: const EdgeInsets.all(40.0),
+                                    child: Container(
+                                        padding: const EdgeInsets.all(25),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(100),
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: [
+                                              Color.fromARGB(255, 120, 120, 120),
+                                              Color.fromARGB(255, 209, 209, 209),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children:[
+                                            const Icon(Icons.bar_chart, size: 20, color: Colors.white,),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text('${snapshot.data![1]['avgScore']}',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const Text('Average',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+                            ),
+
+                            // LOGOUT BUTTON
                             InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
@@ -110,7 +297,7 @@ class _UserPageState extends State<UserPage> {
                                 width: queryData.size.width * 0.5,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  gradient: LinearGradient(
+                                  gradient: const LinearGradient(
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
                                     colors: [
@@ -126,7 +313,7 @@ class _UserPageState extends State<UserPage> {
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
                                   },
                                   style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                                  child: Text("LOGOUT",
+                                  child: const Text("LOGOUT",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -135,26 +322,6 @@ class _UserPageState extends State<UserPage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-
-
-                            Text('Quiz done: ${snapshot.data![1]['numQuizzes']}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                )),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            Text('Quiz perfect: ${snapshot.data![1]['numPerfectQuizzes']}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                )),
                           ],
                         );
                       }

@@ -86,7 +86,7 @@ Future getUserData() async{
   dynamic res = -1;
   await db.collection('users').doc(id).get().then((snapshot) {
     res = snapshot.data();
-    res["avgScore"] = res["totalScore"] / res["numQuizzes"];
+    res["avgScore"] = (res["totalScore"] / res["numQuizzes"]).toStringAsPrecision(3);
   });
   return res;
 }
