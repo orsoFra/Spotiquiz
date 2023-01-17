@@ -81,7 +81,7 @@ Future<int> getNumPerfectQuizzes() async {
   return res;
 }
 
-Future getUserData() async{
+Future getUserData() async {
   String id = await api.getIdUser(http.Client());
   dynamic res = -1;
   await db.collection('users').doc(id).get().then((snapshot) {
@@ -117,4 +117,14 @@ Future<int> getPosUser() async {
   });
 
   return res.length + 1;
+}
+
+Future<List> getMKArtist() async {
+  String id = await api.getIdUser(http.Client());
+  List<Object> res = [];
+  await db.collection('users').doc(id).collection('authors').orderBy('questionCorrect', descending: true).get().then((snapshot) => snapshot.docs.forEach((element) {
+        //print(element.reference);
+        res.add(api.getNameOfArtist(http.Client(), element as String));
+      }));
+  return res;
 }
