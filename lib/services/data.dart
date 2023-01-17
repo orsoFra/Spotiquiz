@@ -136,5 +136,7 @@ Future<List> getMKArtist() async {
             //print(element.reference);
             res.add(await api.getNameOfArtist(http.Client(), element as String));
           }));
+  while (res.length < 3) res.add('');
+
   return res;
 }
