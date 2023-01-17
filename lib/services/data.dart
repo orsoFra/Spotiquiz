@@ -122,9 +122,9 @@ Future<int> getPosUser() async {
 Future<List> getMKArtist() async {
   String id = await api.getIdUser(http.Client());
   List<Object> res = [];
-  await db.collection('users').doc(id).collection('authors').orderBy('questionsCorrect', descending: true).get().then((snapshot) => snapshot.docs.forEach((element) {
+  await db.collection('users').doc(id).collection('authors').orderBy('questionsCorrect', descending: true).get().then((snapshot) => snapshot.docs.forEach((element) async {
         //print(element.reference);
-        res.add(api.getNameOfArtist(http.Client(), element as String));
+        res.add(await api.getNameOfArtist(http.Client(), element as String));
       }));
   return res;
 }
