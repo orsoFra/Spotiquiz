@@ -316,6 +316,14 @@ class MockAPI extends _i1.Mock implements _i4.API {
         returnValueForMissingStub: null,
       );
   @override
+  void flushCredentials() => super.noSuchMethod(
+        Invocation.method(
+          #flushCredentials,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
   void printWrapped(String? text) => super.noSuchMethod(
         Invocation.method(
           #printWrapped,
@@ -340,31 +348,34 @@ class MockAPI extends _i1.Mock implements _i4.API {
         returnValue: _i3.Future<bool>.value(false),
       ) as _i3.Future<bool>);
   @override
-  _i3.Future<Map<String, dynamic>> getRandomSongFromLibrary(_i5.Client? http) =>
+  _i3.Future<Map<dynamic, dynamic>> getRandomSongFromLibraryJSON(
+          _i5.Client? http) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getRandomSongFromLibrary,
+          #getRandomSongFromLibraryJSON,
           [http],
         ),
         returnValue:
-            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i3.Future<Map<String, dynamic>>);
+            _i3.Future<Map<dynamic, dynamic>>.value(<dynamic, dynamic>{}),
+      ) as _i3.Future<Map<dynamic, dynamic>>);
   @override
-  _i3.Future<Map<String, dynamic>> getInfoTrack(
+  _i3.Future<Map<dynamic, dynamic>> getInfoTrackJSON(
     String? track,
-    _i5.Client? http,
-  ) =>
+    _i5.Client? http, [
+    String? pUrl,
+  ]) =>
       (super.noSuchMethod(
         Invocation.method(
-          #getInfoTrack,
+          #getInfoTrackJSON,
           [
             track,
             http,
+            pUrl,
           ],
         ),
         returnValue:
-            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-      ) as _i3.Future<Map<String, dynamic>>);
+            _i3.Future<Map<dynamic, dynamic>>.value(<dynamic, dynamic>{}),
+      ) as _i3.Future<Map<dynamic, dynamic>>);
   @override
   _i3.Future<Map<String, dynamic>> getFeaturesTrack(
     String? track,
@@ -383,7 +394,7 @@ class MockAPI extends _i1.Mock implements _i4.API {
       ) as _i3.Future<Map<String, dynamic>>);
   @override
   _i3.Future<List<String>> getRandomTracksFromArtist(
-    String? artist,
+    String? id,
     _i5.Client? http, [
     int? off,
   ]) =>
@@ -391,7 +402,7 @@ class MockAPI extends _i1.Mock implements _i4.API {
         Invocation.method(
           #getRandomTracksFromArtist,
           [
-            artist,
+            id,
             http,
             off,
           ],
@@ -426,6 +437,14 @@ class MockAPI extends _i1.Mock implements _i4.API {
             _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
       ) as _i3.Future<Map<String, dynamic>>);
   @override
+  _i3.Future<String> getIdUser(_i5.Client? http) => (super.noSuchMethod(
+        Invocation.method(
+          #getIdUser,
+          [http],
+        ),
+        returnValue: _i3.Future<String>.value(''),
+      ) as _i3.Future<String>);
+  @override
   _i3.Future<List<String>> getTempoList(
     String? track,
     _i5.Client? http,
@@ -455,4 +474,97 @@ class MockAPI extends _i1.Mock implements _i4.API {
         ),
         returnValue: _i3.Future<List<String>>.value(<String>[]),
       ) as _i3.Future<List<String>>);
+  @override
+  _i3.Future<List<dynamic>> getUserQuizScores(
+    String? userid,
+    _i5.Client? http,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getUserQuizScores,
+          [
+            userid,
+            http,
+          ],
+        ),
+        returnValue: _i3.Future<List<dynamic>>.value(<dynamic>[]),
+      ) as _i3.Future<List<dynamic>>);
+  @override
+  _i3.Future<List<String>> getRandomArtistsFromUser(_i5.Client? http) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getRandomArtistsFromUser,
+          [http],
+        ),
+        returnValue: _i3.Future<List<String>>.value(<String>[]),
+      ) as _i3.Future<List<String>>);
+  @override
+  _i3.Future<List<String>> getRelatedArtists(
+    String? id,
+    _i5.Client? http,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getRelatedArtists,
+          [
+            id,
+            http,
+          ],
+        ),
+        returnValue: _i3.Future<List<String>>.value(<String>[]),
+      ) as _i3.Future<List<String>>);
+  @override
+  List<int> getRandomYears(int? referenceYear) => (super.noSuchMethod(
+        Invocation.method(
+          #getRandomYears,
+          [referenceYear],
+        ),
+        returnValue: <int>[],
+      ) as List<int>);
+  @override
+  _i3.Future<Map<String, dynamic>> getInfoOfUser(
+    _i5.Client? http,
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getInfoOfUser,
+          [
+            http,
+            id,
+          ],
+        ),
+        returnValue:
+            _i3.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i3.Future<Map<String, dynamic>>);
+  @override
+  _i3.Future<String> getNameOfUser(
+    _i5.Client? http,
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getNameOfUser,
+          [
+            http,
+            id,
+          ],
+        ),
+        returnValue: _i3.Future<String>.value(''),
+      ) as _i3.Future<String>);
+  @override
+  _i3.Future<String> getNameOfArtist(
+    _i5.Client? http,
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getNameOfArtist,
+          [
+            http,
+            id,
+          ],
+        ),
+        returnValue: _i3.Future<String>.value(''),
+      ) as _i3.Future<String>);
 }

@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:spotiquiz/models/MyStorage.dart';
 import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/screens/main_page.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'navigation.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Login extends StatelessWidget {
+  const Login({super.key, required this.spotiauth});
+  final Auth spotiauth;
 
-  @override
-  State<Login> createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
   Future<bool> loginZ() async {
-    final spotiauth = Auth();
     bool result = await spotiauth.login();
     print('Prompt login' + result.toString());
     return result;

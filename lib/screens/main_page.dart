@@ -10,13 +10,11 @@ import 'package:spotiquiz/screens/navigation.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:spotiquiz/screens/homepage_tablet.dart';
 
-final sStorage = FlutterSecureStorage();
-final storage = new MyStorage(sStorage);
-final api = API(storage);
-final auth = Auth();
-
 class MainPage extends StatelessWidget {
-  const MainPage({super.key});
+  const MainPage({super.key, required this.api, required this.auth, required this.storage});
+  final API api;
+  final Auth auth;
+  final MyStorage storage;
 
   Future<bool> checkLogin() async {
     await dotenv.load(fileName: ".env");
@@ -50,9 +48,13 @@ class MainPage extends StatelessWidget {
               },
             );
           } else
-            return Login();
+            return Login(
+              spotiauth: auth,
+            );
         } else
-          return Login();
+          return Login(
+            spotiauth: auth,
+          );
       },
     );
   }
