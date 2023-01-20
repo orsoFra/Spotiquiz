@@ -48,12 +48,14 @@ class _UserPageState extends State<UserPage> {
                     queryData: queryData,
                     txtSize: 40,
                     imgSize: 120,
+                    tabFactor: 0.7,
                   );
                 } else
                   return Grid(
                     queryData: queryData,
                     txtSize: 20,
                     imgSize: 100,
+                    tabFactor: 1,
                   );
               },
             );
@@ -381,10 +383,11 @@ class _UserPageState extends State<UserPage> {
 }
 
 class Grid extends StatefulWidget {
-  const Grid({super.key, required this.queryData, required this.txtSize, required this.imgSize});
+  const Grid({super.key, required this.queryData, required this.txtSize, required this.imgSize, required this.tabFactor});
   final MediaQueryData queryData;
   final double txtSize;
   final double imgSize;
+  final double tabFactor; //reduce dimension of boxes in tablet
 
   @override
   State<Grid> createState() => _GridState();
@@ -465,6 +468,7 @@ class _GridState extends State<Grid> {
 
                     // HISTORY VIEW
                     Container(
+                      width: widget.queryData.size.width * widget.tabFactor,
                       child: GridView.count(
                         scrollDirection: Axis.vertical,
                         physics: ScrollPhysics(),
@@ -479,7 +483,7 @@ class _GridState extends State<Grid> {
                           Padding(
                             padding: const EdgeInsets.all(40.0),
                             child: Container(
-                                padding: EdgeInsets.all(widget.queryData.size.width * 0.01),
+                                padding: EdgeInsets.all(widget.queryData.size.width * 0.01 * widget.tabFactor),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   gradient: const LinearGradient(
@@ -527,7 +531,7 @@ class _GridState extends State<Grid> {
                           Padding(
                             padding: const EdgeInsets.all(40.0),
                             child: Container(
-                                padding: EdgeInsets.all(widget.queryData.size.width * 0.01),
+                                padding: EdgeInsets.all(widget.queryData.size.width * 0.01 * widget.tabFactor),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   gradient: LinearGradient(
@@ -576,7 +580,7 @@ class _GridState extends State<Grid> {
                           Padding(
                             padding: const EdgeInsets.all(40.0),
                             child: Container(
-                                padding: EdgeInsets.all(widget.queryData.size.width * 0.01),
+                                padding: EdgeInsets.all(widget.queryData.size.width * 0.01 * widget.tabFactor),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   gradient: LinearGradient(
@@ -625,7 +629,7 @@ class _GridState extends State<Grid> {
                           Padding(
                             padding: const EdgeInsets.all(40.0),
                             child: Container(
-                                padding: EdgeInsets.all(widget.queryData.size.width * 0.01),
+                                padding: EdgeInsets.all(widget.queryData.size.width * 0.01 * widget.tabFactor),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   gradient: LinearGradient(
