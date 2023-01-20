@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/main.dart';
 import 'package:spotiquiz/screens/loginpage.dart';
+import 'package:spotiquiz/screens/settings.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +34,20 @@ class _UserPageState extends State<UserPage> {
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 25, 20, 20),
           elevation: 0,
-          title: Text("Your Profile"),
+          title: const Text("Your Profile"),
+          actions: <Widget> [
+            Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage()));
+                },
+                child: const Icon(
+                  Icons.settings
+                ),
+              ),
+            )
+          ],
         ),
         body: RefreshIndicator(
           child: SingleChildScrollView(
