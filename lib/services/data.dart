@@ -29,6 +29,16 @@ void storeResults(int score) async {
   });
 }
 
+void storeFeedbacks(int rating, String feedback) async{
+  String id = await api.getIdUser(http.Client());
+  db.collection('feedbacks').add({'date': Timestamp.now(), 'user': id, 'rating': rating, 'feedback': feedback});
+}
+
+void storeBugs(String comment) async{
+  String id = await api.getIdUser(http.Client());
+  db.collection('bugs').add({'date': Timestamp.now(), 'user': id, 'comment': comment});
+}
+
 void storeStats(String authId, bool isCorrect) async {
   String id = await api.getIdUser(http.Client());
   db.collection('users').doc(id).collection('authors').doc(authId).get().then((doc) {

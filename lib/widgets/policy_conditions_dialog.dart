@@ -21,6 +21,7 @@ class PolicyConditionsDialog extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
+            // take file md
               child: FutureBuilder(
                 future: Future.delayed(Duration(milliseconds: 150)).then((value) {
                   return rootBundle.loadString('assets/terms_and_policy/$mdFileName');
@@ -37,6 +38,7 @@ class PolicyConditionsDialog extends StatelessWidget {
                 },
               ),
           ),
+          // show the content of md files in a text button
           TextButton(
             style: TextButton.styleFrom(
               padding: EdgeInsets.all(0),

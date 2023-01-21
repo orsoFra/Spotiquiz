@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:spotiquiz/screens/languages.dart';
 import 'package:spotiquiz/screens/loginpage.dart';
+import 'package:spotiquiz/services/data.dart';
 import 'package:spotiquiz/widgets/policy_conditions_dialog.dart';
 import 'package:animations/animations.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -14,29 +17,38 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  final TextEditingController myController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Settings')),
+      appBar: AppBar(title: const Text('Settings')),
       body: SettingsList(
         sections: [
           // GENERAL SECTION
           SettingsSection(
-            title: Text('General'),
+            title: const Text('General'),
               tiles: [
                 // Info app: version, developers,
                 SettingsTile.navigation(
-                  leading: Icon(Icons.info),
-                  title: Text('Info App'),
+                  leading: const Icon(Icons.info),
+                  title: const Text('Info App'),
                   onPressed: (BuildContext context){
                     //
                   },
                 ),
                 // language
                 SettingsTile.navigation(
-                    leading: Icon(Icons.language),
-                    title: Text('Language'),
-                    value: Text('English'),
+                    leading: const Icon(Icons.language),
+                    title: const Text('Language'),
+                    value: const Text('English'),
                     onPressed: (BuildContext context){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => LanguagesPage()));
                     },
@@ -45,12 +57,12 @@ class _SettingPageState extends State<SettingPage> {
 
           // ACCOUNT SECTION
           SettingsSection(
-              title: Text('Account'),
+              title: const Text('Account'),
               tiles: [
                 // logout
                 SettingsTile.navigation(
-                  leading: Icon(Icons.logout),
-                  title: Text('Logout'),
+                  leading: const Icon(Icons.logout),
+                  title: const Text('Logout'),
                   onPressed: (BuildContext context){
                     Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => Login()));
                   },
@@ -59,12 +71,12 @@ class _SettingPageState extends State<SettingPage> {
 
           // TERMS AND POLICY SECTION
           SettingsSection(
-              title: Text('Policy & Conditions'),
+              title: const Text('Policy & Conditions'),
               tiles: [
                 // logout
                 SettingsTile.navigation(
-                  leading: Icon(Icons.account_balance),
-                  title: Text("Terms of Service"),
+                  leading: const Icon(Icons.account_balance),
+                  title: const Text("Terms of Service"),
                   onPressed: (BuildContext context){
                     // open dialog of terms  of service
                     showModal(
@@ -78,8 +90,8 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 SettingsTile.navigation(
-                  leading: Icon(Icons.policy),
-                  title: Text('Privacy Policy'),
+                  leading: const Icon(Icons.policy),
+                  title: const Text('Privacy Policy'),
                   onPressed: (BuildContext context){
                     // open dialog of privacy policy
                     showModal(
@@ -90,29 +102,94 @@ class _SettingPageState extends State<SettingPage> {
                           mdFileName: 'privacy_policy.md',
                         );
                       },);
-
                   },
                 ),
               ]),
 
           // FEEDBACK
           SettingsSection(
-              title: Text('Feedback'),
+              title: const Text('Feedback'),
               tiles: [
                 // Info app: version, developers,
                 SettingsTile.navigation(
-                  leading: Icon(Icons.bug_report),
-                  title: Text('Report A Bug'),
+                  leading: const Icon(Icons.bug_report),
+                  title: const Text('Report A Bug'),
                   onPressed: (BuildContext context){
-                    //Navigator.of(context).push(MaterialPageRoute(builder: (context) => LanguagesPage()));
+                    showDialog(
+                        context: context,
+                        builder: (context){
+                          return AlertDialog(
+                            title: const Text('Report a Bug!'),
+                            content: TextField(
+                              controller: myController,
+                              decoration: InputDecoration(hintText: 'Enter your comment here.'),
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: (){
+                                    Navigator.of(context).pop();
+                                    // store bugs
+                                    storeBugs(myController.text);
+                                    Fluttertoast.showToast(
+                                        msg: "Thank you for reporting the Bug!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.white,
+                                        textColor: Colors.black,
+                                        fontSize: 16.0
+                                    );
+                                  },
+                                  child: const Text('SUBMIT'))
+                            ],
+                          );
+                        },
+                    );
+
                   },
                 ),
                 // language
                 SettingsTile.navigation(
-                  leading: Icon(Icons.feedback),
-                  title: Text('Send Feedback'),
+                  leading: const Icon(Icons.feedback),
+                  title: const Text('Send Feedback'),
                   onPressed: (BuildContext context){
-                    //Navigator.of(context).push(MaterialPageRoute(builder: (context) => LanguagesPage()));
+                    showDialog(
+                        context: context,
+                        builder: (context){
+                          return RatingDialog(
+                            title: const Text(
+                                'Send a Feedback!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            ),
+                            message: const Text(
+                                'Tap a star to set your rating. Add more description here if you want.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 15),
+                            ),
+                            image: const FlutterLogo(size: 100),
+                            submitButtonText: 'Submit',
+                            commentHint: 'Set your custom comment hint',
+                            onCancelled: () => print('cancelled'),
+                            onSubmitted: (response){
+                              // store feedback
+                              storeFeedbacks(response.rating.toInt(), response.comment);
+                              print('rating: ${response.rating}, comment: ${response.comment}');
+                              Fluttertoast.showToast(
+                                  msg: "Thank you for the Feedback!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.white,
+                                  textColor: Colors.black,
+                                  fontSize: 16.0
+                              );
+                            },
+                          );
+                        });
                   },
                 ),
               ]),

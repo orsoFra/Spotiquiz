@@ -34,6 +34,8 @@ dependencies:
   settings_ui: ^2.0.2
   flutter_markdown: ^0.6.13
   animations: ^2.0.7
+  rating_dialog: ^2.0.4
+  fluttertoast: ^8.1.2
 
   # to handle SVGs for Android, iOS, and Web
   flutter_svg: ^0.21.0+1
