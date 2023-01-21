@@ -21,7 +21,14 @@ final api = API(storage);
 final auth = Auth();
 
 class UserPage extends StatefulWidget {
-  const UserPage({super.key});
+  UserPage({super.key}) {
+    dApi = Data(api: api);
+  }
+  late Data dApi;
+
+  UserPage.test({super.key, required Data dA}) {
+    dApi = dA;
+  }
 
   @override
   State<UserPage> createState() {
@@ -80,7 +87,7 @@ class _UserPageState extends State<UserPage> {
                 child: Column(children: [
                   Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                   FutureBuilder<List>(
-                    future: Future.wait([api.getInfoUser(http.Client()), getUserData()]), // a Future<String> or null
+                    future: Future.wait([api.getInfoUser(http.Client()), dApi.getUserData()]), // a Future<String> or null
                     builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                       if (!snapshot.hasData) {
                         return const CircularProgressIndicator(
@@ -418,7 +425,7 @@ class _GridState extends State<Grid> {
         child: Column(children: [
           Padding(padding: EdgeInsets.symmetric(vertical: 10)),
           FutureBuilder<List>(
-            future: Future.wait([api.getInfoUser(http.Client()), getUserData()]), // a Future<String> or null
+            future: Future.wait([api.getInfoUser(http.Client()), dApi.getUserData()]), // a Future<String> or null
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (!snapshot.hasData) {
                 return Container(

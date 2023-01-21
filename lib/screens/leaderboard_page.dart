@@ -12,9 +12,18 @@ import 'package:http/http.dart' as http;
 import '../models/MyStorage.dart';
 import '../services/data.dart';
 
-class Leaderboard extends StatefulWidget {
-  const Leaderboard({super.key});
+final storage = MyStorage(sStorage);
+final api = API(storage);
 
+class Leaderboard extends StatefulWidget {
+  Leaderboard({super.key}) {
+    dApi = Data(api: api);
+  }
+  late Data dApi;
+
+  Leaderboard.test({super.key, required Data dA}) {
+    dApi = dA;
+  }
   @override
   State<Leaderboard> createState() => _LeaderboardState();
 }
@@ -36,7 +45,7 @@ class _LeaderboardState extends State<Leaderboard> {
         portrait: (context) {
           return RefreshIndicator(
             child: FutureBuilder<List<dynamic>>(
-                future: getLeaderboard(),
+                future: widget.dApi.getLeaderboard(),
                 builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
                   if (snapshot.hasData) {
                     return Column(
@@ -69,7 +78,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                   ),
                                 ),
                                 child: FutureBuilder<int>(
-                                    future: getPosUser(),
+                                    future: widget.dApi.getPosUser(),
                                     builder: (context, pos) {
                                       if (pos.hasData) {
                                         return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -122,7 +131,7 @@ class _LeaderboardState extends State<Leaderboard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FutureBuilder<List<dynamic>>(
-                    future: getLeaderboard(),
+                    future: widget.dApi.getLeaderboard(),
                     builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
                       if (snapshot.hasData) {
                         return SingleChildScrollView(
@@ -151,7 +160,7 @@ class _LeaderboardState extends State<Leaderboard> {
                                         ),
                                       ),
                                       child: FutureBuilder<int>(
-                                          future: getPosUser(),
+                                          future: widget.dApi.getPosUser(),
                                           builder: (context, pos) {
                                             if (pos.hasData) {
                                               return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [

@@ -10,6 +10,11 @@ import 'package:http/http.dart' as http;
 import '../models/MyStorage.dart';
 import '../services/data.dart';
 
+final sStorage = FlutterSecureStorage();
+final storage = new MyStorage(sStorage);
+final api = API(storage);
+final dApi = Data(api: api);
+
 class ResultPage extends StatelessWidget {
   final int score;
 
@@ -17,7 +22,7 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    storeResults(score);
+    dApi.storeResults(score);
     MediaQueryData queryData = MediaQuery.of(context);
     final Shader linearGradient = LinearGradient(
       colors: <Color>[Color(0xffDA44bb), Color(0xff8921aa)],
