@@ -18,6 +18,7 @@ import 'package:spotiquiz/services/scalesize.dart';
 final sStorage = FlutterSecureStorage();
 final storage = new MyStorage(sStorage);
 final api = API(storage);
+final auth = Auth();
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -39,16 +40,14 @@ class _UserPageState extends State<UserPage> {
           backgroundColor: Color.fromARGB(255, 25, 20, 20),
           elevation: 0,
           title: const Text("Your Profile"),
-          actions: <Widget> [
+          actions: <Widget>[
             Padding(
-                padding: const EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingPage()));
                 },
-                child: const Icon(
-                  Icons.settings
-                ),
+                child: const Icon(Icons.settings),
               ),
             )
           ],
@@ -363,7 +362,10 @@ class _UserPageState extends State<UserPage> {
                                   onPressed: () {
                                     api.flushCredentials();
                                     Navigator.of(context).pop();
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => Login(
+                                              spotiauth: auth,
+                                            )));
                                   },
                                   style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
                                   child: const Text("LOGOUT",
@@ -715,7 +717,10 @@ class _GridState extends State<Grid> {
                           onPressed: () {
                             api.flushCredentials();
                             Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Login(
+                                      spotiauth: auth,
+                                    )));
                           },
                           style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
                           child: const Text("LOGOUT",

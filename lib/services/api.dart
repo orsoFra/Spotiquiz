@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:spotiquiz/screens/resultpage.dart';
 import 'package:test/expect.dart';
 
 import '../models/MyStorage.dart';
@@ -219,7 +218,7 @@ class API {
           }.map((key, value) => MapEntry(key, value.toString())));
       response = await http.get(
         url,
-        headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
+        headers: {'Authorization': 'Bearer ' + value, 'Content-Type': 'application/json'},
       ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     }
     /*if (response.statusCode != 200) {
@@ -356,7 +355,7 @@ class API {
     url = Uri.https('api.spotify.com', '/v1/me/following', {"limit ": 4, "offset": offset, 'type': 'artist'}.map((key, value) => MapEntry(key, value.toString())));
     response = await http.get(
       url,
-      headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
+      headers: {'Authorization': 'Bearer ' + value, 'Content-Type': 'application/json'},
     ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
       print(response.body.toString());

@@ -5,9 +5,12 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:spotiquiz/screens/languages.dart';
 import 'package:spotiquiz/screens/loginpage.dart';
 import 'package:spotiquiz/services/data.dart';
+import 'package:spotiquiz/services/auth.dart';
 import 'package:spotiquiz/widgets/policy_conditions_dialog.dart';
 import 'package:animations/animations.dart';
 import 'package:rating_dialog/rating_dialog.dart';
+
+final auth = Auth();
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -56,18 +59,19 @@ class _SettingPageState extends State<SettingPage> {
               ]),
 
           // ACCOUNT SECTION
-          SettingsSection(
-              title: const Text('Account'),
-              tiles: [
-                // logout
-                SettingsTile.navigation(
-                  leading: const Icon(Icons.logout),
-                  title: const Text('Logout'),
-                  onPressed: (BuildContext context){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => Login()));
-                  },
-                )
-              ]),
+          SettingsSection(title: Text('Account'), tiles: [
+            // logout
+            SettingsTile.navigation(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onPressed: (BuildContext context) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => Login(
+                          spotiauth: auth,
+                        )));
+              },
+            )
+          ]),
 
           // TERMS AND POLICY SECTION
           SettingsSection(

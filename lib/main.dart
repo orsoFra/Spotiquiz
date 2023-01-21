@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/screens/main_page.dart';
 import 'package:spotiquiz/services/auth.dart';
@@ -10,12 +12,18 @@ import 'firebase_options.dart';
 import 'models/MyStorage.dart';
 
 // Create storage
+const sStorage = FlutterSecureStorage();
+final storage = new MyStorage(sStorage);
+final api = API(storage);
+final autha = Auth();
 
 Future main() async {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +34,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Spotiquiz',
-      home: const MainPage(),
+      home: MainPage(
+        auth: autha,
+        api: api,
+        storage: storage,
+      ),
     );
   }
 }
