@@ -14,10 +14,9 @@ import 'package:spotiquiz/models/MyStorage.dart';
 import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/screens/loginpage.dart';
 import 'package:spotiquiz/screens/main_page.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/services/auth.dart';
-import 'widget_test.mocks.dart';
 
 Widget buildTestableWidget(Widget widget) {
   return MediaQuery(data: MediaQueryData(), child: MaterialApp(home: widget));
@@ -29,7 +28,8 @@ class MockStorage extends Mock implements IStorage {}
 
 class MocksAPI extends Mock implements API {}
 
-@GenerateMocks([Auth])
+class MockAuth extends Mock implements Auth {}
+
 void main() {
   testWidgets('Login Page', (WidgetTester tester) async {
     final mockObserver = MockNavigatorObserver();
@@ -69,8 +69,15 @@ void main() {
 
   testWidgets('Login action', (WidgetTester tester) async {
     final mockAuth = MockAuth();
-    when(() => mockAuth.login()).thenAnswer((((realInvocation) => (() => Future.value(true)))));
-    await tester.tap(find.byType(InkWell));
-    await tester.pumpAndSettle();
+    await mockNetworkImagesFor(() async {
+      await tester.runAsync(() async {
+        await tester.pumpWidget(buildTestableWidget(Login(
+          spotiauth: mockAuth,
+        )));
+        await tester.pumpAndSettle();
+        when(() => mockAuth.login()).thenAnswer((((realInvocation) => Future.value(true))));
+        await tester.tap(find.byType(InkWell));
+      });
+    });
   });
 }

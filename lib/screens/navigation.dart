@@ -20,7 +20,7 @@ void initState() {
 
 class _NavigationState extends State<Navigation> {
   int _selectedIndex = 1;
-  static const List<Widget> _pages = <Widget>[Leaderboard(), MyHomePage(title: ''), UserPage()];
+  static List<Widget> _pages = <Widget>[const Leaderboard(), MyHomePage(title: ''), const UserPage()];
   @override
   Widget build(BuildContext context) {
     initState();
