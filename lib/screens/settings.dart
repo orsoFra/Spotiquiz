@@ -32,12 +32,22 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      backgroundColor: const Color.fromARGB(255, 25, 20, 20),
+      appBar: AppBar(title: const Text('Settings'),
+        backgroundColor: Color.fromARGB(255, 25, 20, 20),
+      elevation: 0,),
       body: SettingsList(
+        darkTheme: SettingsThemeData(
+          settingsListBackground: const Color(0xff191414),
+        ),
+
+        // darkTheme: ColorScheme.dark(
+        //   background: const Color(0xff121212),
+        // ),
         sections: [
           // GENERAL SECTION
           SettingsSection(
-            title: const Text('General'),
+            title: const Text('General', style: TextStyle(color: Color(0xffb650f5)),),
               tiles: [
                 // Info app: version, developers,
                 SettingsTile.navigation(
@@ -59,7 +69,7 @@ class _SettingPageState extends State<SettingPage> {
               ]),
 
           // ACCOUNT SECTION
-          SettingsSection(title: Text('Account'), tiles: [
+          SettingsSection(title: Text('Account', style: TextStyle(color: Color(0xffb650f5)),), tiles: [
             // logout
             SettingsTile.navigation(
               leading: Icon(Icons.logout),
@@ -75,7 +85,7 @@ class _SettingPageState extends State<SettingPage> {
 
           // TERMS AND POLICY SECTION
           SettingsSection(
-              title: const Text('Policy & Conditions'),
+              title: const Text('Policy & Conditions',  style: TextStyle(color: Color(0xffb650f5)),),
               tiles: [
                 // logout
                 SettingsTile.navigation(
@@ -112,7 +122,7 @@ class _SettingPageState extends State<SettingPage> {
 
           // FEEDBACK
           SettingsSection(
-              title: const Text('Feedback'),
+              title: const Text('Feedback',  style: TextStyle(color: Color(0xffb650f5)),),
               tiles: [
                 // Info app: version, developers,
                 SettingsTile.navigation(

@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Spotiquiz',
+      theme: ThemeData.dark(),
       home: MainPage(
         auth: autha,
         api: api,
