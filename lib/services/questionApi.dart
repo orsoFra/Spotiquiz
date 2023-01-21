@@ -15,7 +15,7 @@ final storage = MyStorage(sStorage);
 class QuestionAPI {
   final api = API(storage);
 
-  Future<List<String>> generateHomeSuggestions(http.Client http) async {
+  Future<List<String>> generateHomeSuggestions([http.Client? http]) async {
     List<String> suggestions = [];
     suggestions.add('RANDOM');
     suggestions.add('LISTENING');
