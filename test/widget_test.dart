@@ -7,7 +7,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:spotiquiz/main.dart';
 import 'package:spotiquiz/models/MyStorage.dart';
@@ -15,16 +14,20 @@ import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/screens/loginpage.dart';
 import 'package:spotiquiz/screens/main_page.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:spotiquiz/screens/navigation.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/services/auth.dart';
 
-Widget buildTestableWidget(Widget widget) {
-  return MediaQuery(data: MediaQueryData(), child: MaterialApp(home: widget));
+Widget buildTestableWidget(Widget widget, NavigatorObserver obv) {
+  return MediaQuery(
+      data: MediaQueryData(),
+      child: MaterialApp(
+        home: widget,
+        navigatorObservers: [obv],
+      ));
 }
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
-class MockStorage extends Mock implements IStorage {}
 
 class MocksAPI extends Mock implements API {}
 
@@ -40,9 +43,7 @@ void main() {
     await tester.runAsync(() async {
       await mockNetworkImagesFor(
         () async {
-          await tester.pumpWidget(buildTestableWidget(Login(
-            spotiauth: mockAuth,
-          )));
+          await tester.pumpWidget(buildTestableWidget(Login(spotiauth: mockAuth), mockObserver));
           expect(find.byType(Text), findsWidgets);
           expect(find.byType(InkWell), findsWidgets);
           expect(find.byType(Image), findsWidgets);
@@ -52,31 +53,19 @@ void main() {
         },
       );
     });
-
-    /*
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);*/
   });
 
   testWidgets('Login action', (WidgetTester tester) async {
     final mockAuth = MockAuth();
+    final mockObserver = MockNavigatorObserver();
     await mockNetworkImagesFor(() async {
       await tester.runAsync(() async {
-        await tester.pumpWidget(buildTestableWidget(Login(
-          spotiauth: mockAuth,
-        )));
+        await tester.pumpWidget(buildTestableWidget(Login(spotiauth: mockAuth), mockObserver));
         await tester.pumpAndSettle();
         when(() => mockAuth.login()).thenAnswer((((realInvocation) => Future.value(true))));
         await tester.tap(find.byType(InkWell));
+        await tester.pump();
+        //expect(find.byType(CircularProgressIndicator), findsWidgets);
       });
     });
   });

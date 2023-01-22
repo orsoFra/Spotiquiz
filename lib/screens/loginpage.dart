@@ -38,7 +38,7 @@ class Login extends StatelessWidget {
               height: 150,
               child: const Center(
                   child: Text(
-                "Login with Spotfiy",
+                "Login with Spotify",
                 style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
               )),
             ),

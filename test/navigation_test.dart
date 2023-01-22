@@ -25,7 +25,7 @@ void main() {
     });
   });
 
-  testWidgets('testNavbar change page', (widgetTester) async {
+  testWidgets('testNavbar change page leaderboard', (widgetTester) async {
     await widgetTester.runAsync(() async {
       await widgetTester.pumpWidget(buildTestableWidget(const Navigation()));
       await widgetTester.pump();

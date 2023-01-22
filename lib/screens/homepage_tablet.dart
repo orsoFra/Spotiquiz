@@ -13,7 +13,15 @@ import '../models/card.dart';
 final qApi = QuestionAPI();
 
 class HomeTablet extends StatefulWidget {
-  const HomeTablet({super.key});
+  HomeTablet({super.key}) {
+    qApi = QuestionAPI();
+  }
+
+  late final qApi;
+
+  HomeTablet.test({super.key, required QuestionAPI qA}) {
+    qApi = qA;
+  }
 
   @override
   State<HomeTablet> createState() => _HomeTabletState();
@@ -49,7 +57,7 @@ class _HomeTabletState extends State<HomeTablet> {
                   height: queryData.size.height * 0.6,
                   width: queryData.size.width * 0.9,
                   child: FutureBuilder<List<String>>(
-                    future: qApi.generateHomeSuggestions(http.Client()),
+                    future: widget.qApi.generateHomeSuggestions(http.Client()),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Swiper(
@@ -177,7 +185,7 @@ class _HomeTabletState extends State<HomeTablet> {
                         height: queryData.size.height * 0.75,
                         width: queryData.size.width * 0.4,
                         child: FutureBuilder<List<String>>(
-                          future: qApi.generateHomeSuggestions(http.Client()),
+                          future: widget.qApi.generateHomeSuggestions(http.Client()),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return Swiper(
