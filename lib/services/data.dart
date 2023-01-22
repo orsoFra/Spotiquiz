@@ -98,11 +98,16 @@ class Data {
   Future getUserData() async {
     String id = await api.getIdUser(http.Client());
     dynamic res = -1;
-    await db.collection('users').doc(id).get().then((snapshot) {
-      res = snapshot.data();
-      res["avgScore"] = (res["totalScore"] / res["numQuizzes"]).toStringAsPrecision(3);
+    db.collection('users').doc(id).get().then((doc) {
+      if (doc.exists){
+        res = doc.data();
+        res["avgScore"] = (res["totalScore"] / res["numQuizzes"]).toStringAsPrecision(3);
+        return res;
+      } else
+        {
+          return {'numQuizzes': 0, 'numPerfectQuizzes': 0, 'totalScore': 0, 'avgScore': 0};
+        }
     });
-    return res;
   }
 
   Future<List> getLeaderboard() async {

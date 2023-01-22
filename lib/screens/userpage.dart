@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -8,7 +7,6 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:spotiquiz/main.dart';
 import 'package:spotiquiz/screens/loginpage.dart';
 import 'package:spotiquiz/screens/settings.dart';
-import 'package:spotiquiz/services/auth.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
 import '../models/MyStorage.dart';
@@ -18,21 +16,22 @@ import 'package:spotiquiz/services/scalesize.dart';
 final sStorage = FlutterSecureStorage();
 final storage = new MyStorage(sStorage);
 final api = API(storage);
-final auth = Auth();
 
 class UserPage extends StatefulWidget {
   UserPage({super.key}) {
     dApi = Data(api: api);
+    api = API(storage);
   }
   late Data dApi;
+  late API api;
 
-  UserPage.test({super.key, required Data dA}) {
+  UserPage.test({super.key, required Data dA, required API api}) {
     dApi = dA;
+    api = api;
   }
 
   @override
   State<UserPage> createState() {
-    //getInfoUser();
     return _UserPageState();
   }
 }
@@ -346,44 +345,6 @@ class _UserPageState extends State<UserPage> {
                               ),
                             ),
 
-                            // LOGOUT BUTTON
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
-                              },
-                              child: Container(
-                                height: queryData.size.height * 0.05,
-                                width: queryData.size.width * 0.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  gradient: const LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.bottomLeft,
-                                    colors: [
-                                      Color.fromARGB(255, 128, 5, 195),
-                                      Color.fromARGB(255, 182, 80, 245),
-                                    ],
-                                  ),
-                                ),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    api.flushCredentials();
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) => Login(
-                                              spotiauth: auth,
-                                            )));
-                                  },
-                                  style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                                  child: const Text("LOGOUT",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                ),
-                              ),
-                            ),
                           ],
                         );
                       }
@@ -698,45 +659,6 @@ class _GridState extends State<Grid> {
                                 )),
                           ),
                         ],
-                      ),
-                    ),
-
-                    // LOGOUT BUTTON
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
-                      },
-                      child: Container(
-                        height: widget.queryData.size.height * 0.05,
-                        width: widget.queryData.size.width * 0.5,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Color.fromARGB(255, 128, 5, 195),
-                              Color.fromARGB(255, 182, 80, 245),
-                            ],
-                          ),
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            api.flushCredentials();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Login(
-                                      spotiauth: auth,
-                                    )));
-                          },
-                          style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
-                          child: const Text("LOGOUT",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
                       ),
                     ),
                   ],
