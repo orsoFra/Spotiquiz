@@ -15,7 +15,7 @@ class QuestionController {
   late Function stopPlayingCallback;
 
   QuestionController(Function stopPlayingCallback, int numPages) {
-    pageController = PageController(initialPage: 0);
+    this.pageController = PageController(initialPage: 0);
     this.numPages = numPages;
     this.stopPlayingCallback = stopPlayingCallback;
     this.reset();
