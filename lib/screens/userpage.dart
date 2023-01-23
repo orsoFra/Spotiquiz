@@ -13,14 +13,13 @@ import '../models/MyStorage.dart';
 import '../services/data.dart';
 import 'package:spotiquiz/services/scalesize.dart';
 
-final sStorage = FlutterSecureStorage();
-final storage = new MyStorage(sStorage);
-final api = API(storage);
 
 class UserPage extends StatefulWidget {
   UserPage({super.key}) {
-    dApi = Data(api: api);
+    final sStorage = FlutterSecureStorage();
+    final storage = new MyStorage(sStorage);
     api = API(storage);
+    dApi = Data(api: api);
   }
   late Data dApi;
   late API api;
@@ -37,6 +36,15 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+
+  late API api;
+
+  _UserPageState(){
+    final sStorage = FlutterSecureStorage();
+    final storage = new MyStorage(sStorage);
+    api = API(storage);
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
@@ -378,6 +386,16 @@ class Grid extends StatefulWidget {
 }
 
 class _GridState extends State<Grid> {
+
+  late API api;
+
+  _GridState(){
+    final sStorage = FlutterSecureStorage();
+    final storage = new MyStorage(sStorage);
+    api = API(storage);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
