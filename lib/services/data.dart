@@ -11,6 +11,10 @@ final storage = MyStorage(sStorage);
 
 class Data {
   Data({required this.api});
+
+  /*Data({required API api}) {
+    this.api = api;
+  }*/
   final API api;
 
   void storeResults(int score) async {
@@ -98,16 +102,12 @@ class Data {
   Future getUserData() async {
     String id = await api.getIdUser(http.Client());
     dynamic res = -1;
-    db.collection('users').doc(id).get().then((doc) {
-      if (doc.exists){
-        res = doc.data();
-        res["avgScore"] = (res["totalScore"] / res["numQuizzes"]).toStringAsPrecision(3);
-        return res;
-      } else
-        {
-          return {'numQuizzes': 0, 'numPerfectQuizzes': 0, 'totalScore': 0, 'avgScore': 0};
-        }
+    await db.collection('users').doc(id).get().then((snapshot) {
+      res = snapshot.data();
+      res["avgScore"] = (res["totalScore"] / res["numQuizzes"]).toStringAsPrecision(3);
     });
+    if (res == -1) return {'numQuizzes': '0', 'numPerfectQuizzes': '0', 'totalScore': '0', 'avgScore': '0'};
+    return res;
   }
 
   Future<List> getLeaderboard() async {
