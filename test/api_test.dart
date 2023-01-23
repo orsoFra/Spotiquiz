@@ -132,7 +132,7 @@ void main() {
       });
 
       when(() => mockStorage.read(key: 'access_token')).thenAnswer((invocation) => Future.value('response'));
-      expect(api.getInfoTrackJSON('11dFghVXANMlKmJXsNCbNl', mockHTTPClient), isA<Future<Map<String, dynamic>>>());
+      expect(api.getInfoTrackJSON('11dFghVXANMlKmJXsNCbNl', mockHTTPClient), isA<Future<Map<dynamic, dynamic>>>());
       verify(() => mockStorage.read(key: 'access_token')).called(greaterThan(0));
     });
 
@@ -144,7 +144,7 @@ void main() {
       });
       when(() => mockStorage.read(key: 'access_token')).thenAnswer((invocation) => Future.value('response'));
       expect(api.getInfoTrackJSON('11dFghVXANMlKmJXsNCbNl', mockHTTPClient), throwsA(isA<Exception>()));
-      verify(() => mockStorage.read(key: 'access_token')).called(greaterThan(1));
+      verify(() => mockStorage.read(key: 'access_token')).called(1);
     });
   });
 

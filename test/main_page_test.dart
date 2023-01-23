@@ -8,8 +8,6 @@ import 'package:spotiquiz/screens/main_page.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/services/auth.dart';
 
-import 'api_test.mocks.dart';
-
 Widget buildTestableWidget(Widget widget) {
   return MediaQuery(data: const MediaQueryData(), child: MaterialApp(home: widget));
 }
