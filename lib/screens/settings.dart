@@ -93,6 +93,8 @@ class _SettingPageState extends State<SettingPage> {
                   leading: Icon(Icons.logout),
                   title: Text('Logout'),
                   onPressed: (BuildContext context) {
+                    api.flushCredentials();
+                    Navigator.of(context).pop();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (BuildContext context) => Login(
                               spotiauth: auth,

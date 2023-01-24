@@ -13,7 +13,6 @@ import '../models/MyStorage.dart';
 import '../services/data.dart';
 import 'package:spotiquiz/services/scalesize.dart';
 
-
 class UserPage extends StatefulWidget {
   UserPage({super.key}) {
     final sStorage = FlutterSecureStorage();
@@ -36,10 +35,9 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-
   late API api;
 
-  _UserPageState(){
+  _UserPageState() {
     final sStorage = FlutterSecureStorage();
     final storage = new MyStorage(sStorage);
     api = API(storage);
@@ -352,7 +350,6 @@ class _UserPageState extends State<UserPage> {
                                 ],
                               ),
                             ),
-
                           ],
                         );
                       }
@@ -386,15 +383,13 @@ class Grid extends StatefulWidget {
 }
 
 class _GridState extends State<Grid> {
-
   late API api;
 
-  _GridState(){
+  _GridState() {
     final sStorage = FlutterSecureStorage();
     final storage = new MyStorage(sStorage);
     api = API(storage);
   }
-
 
   @override
   Widget build(BuildContext context) {
