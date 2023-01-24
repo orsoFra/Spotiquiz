@@ -152,7 +152,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                     height: queryData.size.height * 0.10,
                                     child: Text(
                                       snapshot.data!.question,
-                                      style: TextStyle(color: Colors.white, fontSize: 27.0),
+                                      style: TextStyle(color: Colors.white, fontSize: 25.0),
                                     ),
                                   ),
                                   (snapshot.data!.songURL != null)
@@ -187,7 +187,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                         ),
 
                                   SizedBox(
-                                    height: 25.0,
+                                    height: queryData.size.height * 0.05,
                                   ),
 
                                   // generate 4 bottons for the answers

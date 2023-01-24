@@ -176,7 +176,11 @@ class API {
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     //print(url);
     for (int i = 0; i < 4; i++) {
-      result.add(decodedResponse['tracks'][i]['name']);
+      if (i < decodedResponse['tracks'].length)
+        result.add(decodedResponse['tracks'][i]['name']);
+      else {
+        result.add(randomSongs[Random().nextInt(randomSongs.length)]);
+      }
     }
     //print(result);
     return result;
@@ -234,7 +238,7 @@ class API {
       if (i < decodedResponse['items'].length)
         result.add(decodedResponse['items'][i]['name']);
       else
-        result.add("NOT AVAILABLE");
+        result.add(randomAlbums[Random().nextInt(randomAlbums.length)]);
     }
     //print(result);
     return result;
@@ -386,7 +390,10 @@ class API {
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     List<String> data = [];
     for (int i = 0; i < 4; i++) {
-      data.add(decodedResponse['artists'][i]['name']);
+      if (i < decodedResponse['artists'].length)
+        data.add(decodedResponse['artists'][i]['name']);
+      else
+        data.add('');
     }
     //print(data);
     return data;
