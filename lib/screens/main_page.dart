@@ -21,11 +21,13 @@ class MainPage extends StatelessWidget {
     var test = await storage.read(key: 'access_token');
     if (test != null) {
       //IF there is an access token -> not first login
+
       if (!await api.tryToken()) {
         //if the token is expired
         auth.refresh(); //refresh it
         print('VALID TOKEN! \n');
       }
+      auth.refresh();
       return true;
     }
     return false;

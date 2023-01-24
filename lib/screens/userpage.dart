@@ -1,4 +1,5 @@
 import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,10 +14,11 @@ import '../models/MyStorage.dart';
 import '../services/data.dart';
 import 'package:spotiquiz/services/scalesize.dart';
 
+final sStorage = FlutterSecureStorage();
+final storage = new MyStorage(sStorage);
+
 class UserPage extends StatefulWidget {
   UserPage({super.key}) {
-    final sStorage = FlutterSecureStorage();
-    final storage = new MyStorage(sStorage);
     api = API(storage);
     dApi = Data(api: api);
   }
@@ -24,8 +26,8 @@ class UserPage extends StatefulWidget {
   late API api;
 
   UserPage.test({super.key, required Data dA, required API api}) {
-    dApi = dA;
-    api = api;
+    this.dApi = dA;
+    this.api = api;
   }
 
   @override
@@ -35,17 +37,10 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  late API api;
-
-  _UserPageState() {
-    final sStorage = FlutterSecureStorage();
-    final storage = new MyStorage(sStorage);
-    api = API(storage);
-  }
-
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
+
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 25, 20, 20),
         appBar: AppBar(
@@ -74,14 +69,17 @@ class _UserPageState extends State<UserPage> {
                     txtSize: 40,
                     imgSize: 120,
                     tabFactor: 0.7,
+                    api: widget.api,
                   );
-                } else
+                } else {
                   return Grid(
                     queryData: queryData,
                     txtSize: 20,
                     imgSize: 100,
                     tabFactor: 1,
+                    api: widget.api,
                   );
+                }
               },
             );
           },
@@ -92,9 +90,9 @@ class _UserPageState extends State<UserPage> {
                 child: Column(children: [
                   Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                   FutureBuilder<List>(
-                    future: Future.wait([api.getInfoUser(http.Client()), dApi.getUserData()]), // a Future<String> or null
+                    future: Future.wait([widget.api.getInfoUser(http.Client()), widget.dApi.getUserData()]), // a Future<String> or null
                     builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-                      if (!snapshot.hasData) {
+                      if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
                         return const CircularProgressIndicator(
                           color: Color.fromARGB(255, 49, 45, 45),
                         );
@@ -177,18 +175,20 @@ class _UserPageState extends State<UserPage> {
                                         children: [
                                           const Icon(
                                             Icons.done,
-                                            size: 20,
+                                            size: 18,
                                             color: Colors.white,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              '${snapshot.data![1]['numQuizzes']}',
-                                              textScaleFactor: ScaleSize.textScaleFactor(context),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                          ClipRect(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                '${snapshot.data![1]['numQuizzes']}',
+                                                textScaleFactor: ScaleSize.textScaleFactor(context),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -225,18 +225,20 @@ class _UserPageState extends State<UserPage> {
                                         children: [
                                           const Icon(
                                             Icons.star_rate,
-                                            size: 20,
+                                            size: 18,
                                             color: Colors.white,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              '${snapshot.data![1]['numPerfectQuizzes']}',
-                                              textScaleFactor: ScaleSize.textScaleFactor(context),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                          ClipRect(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                '${snapshot.data![1]['numPerfectQuizzes']}',
+                                                textScaleFactor: ScaleSize.textScaleFactor(context),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -273,18 +275,20 @@ class _UserPageState extends State<UserPage> {
                                         children: [
                                           const Icon(
                                             Icons.emoji_events,
-                                            size: 20,
+                                            size: 18,
                                             color: Colors.white,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              '${snapshot.data![1]['totalScore']}',
-                                              textScaleFactor: ScaleSize.textScaleFactor(context),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                          ClipRect(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                '${snapshot.data![1]['totalScore']}',
+                                                textScaleFactor: ScaleSize.textScaleFactor(context),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -321,18 +325,20 @@ class _UserPageState extends State<UserPage> {
                                         children: [
                                           const Icon(
                                             Icons.bar_chart,
-                                            size: 20,
+                                            size: 18,
                                             color: Colors.white,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              '${snapshot.data![1]['avgScore']}',
-                                              textScaleFactor: ScaleSize.textScaleFactor(context),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
+                                          ClipRect(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                '${snapshot.data![1]['avgScore']}',
+                                                textScaleFactor: ScaleSize.textScaleFactor(context),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -372,25 +378,18 @@ class _UserPageState extends State<UserPage> {
 }
 
 class Grid extends StatefulWidget {
-  const Grid({super.key, required this.queryData, required this.txtSize, required this.imgSize, required this.tabFactor});
+  const Grid({super.key, required this.queryData, required this.txtSize, required this.imgSize, required this.tabFactor, required this.api});
   final MediaQueryData queryData;
   final double txtSize;
   final double imgSize;
   final double tabFactor; //reduce dimension of boxes in tablet
+  final API api;
 
   @override
   State<Grid> createState() => _GridState();
 }
 
 class _GridState extends State<Grid> {
-  late API api;
-
-  _GridState() {
-    final sStorage = FlutterSecureStorage();
-    final storage = new MyStorage(sStorage);
-    api = API(storage);
-  }
-
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -399,7 +398,7 @@ class _GridState extends State<Grid> {
         child: Column(children: [
           Padding(padding: EdgeInsets.symmetric(vertical: 10)),
           FutureBuilder<List>(
-            future: Future.wait([api.getInfoUser(http.Client()), dApi.getUserData()]), // a Future<String> or null
+            future: Future.wait([widget.api.getInfoUser(http.Client()), dApi.getUserData()]), // a Future<String> or null
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (!snapshot.hasData) {
                 return Container(
