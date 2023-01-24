@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -11,6 +12,7 @@ import 'package:mockito/mockito.dart';
 import 'package:spotiquiz/screens/resultpage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/services/auth.dart';
+import 'package:spotiquiz/services/firebase_test_service.dart';
 import 'widget_test.mocks.dart';
 
 Widget buildTestableWidget(Widget widget) {
@@ -18,6 +20,11 @@ Widget buildTestableWidget(Widget widget) {
 }
 
 void main() {
+  setupFirebaseAuthMocks();
+
+  setUpAll(() async {
+    await Firebase.initializeApp();
+  });
   testWidgets('ResultPage', (WidgetTester tester) async {
     await tester.pumpWidget(buildTestableWidget(ResultPage(10)));
     expect(find.byType(Text), findsWidgets);

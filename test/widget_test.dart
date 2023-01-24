@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:network_image_mock/network_image_mock.dart';
@@ -17,6 +18,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:spotiquiz/screens/navigation.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/services/auth.dart';
+import 'package:spotiquiz/services/firebase_test_service.dart';
 
 Widget buildTestableWidget(Widget widget, NavigatorObserver obv) {
   return MediaQuery(
@@ -34,6 +36,11 @@ class MocksAPI extends Mock implements API {}
 class MockAuth extends Mock implements Auth {}
 
 void main() {
+  setupFirebaseAuthMocks();
+
+  setUpAll(() async {
+    await Firebase.initializeApp();
+  });
   testWidgets('Login Page', (WidgetTester tester) async {
     final mockObserver = MockNavigatorObserver();
     final mockAuth = MockAuth();
