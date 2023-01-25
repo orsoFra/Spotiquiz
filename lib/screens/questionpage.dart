@@ -16,12 +16,7 @@ import '../widgets/progress_bar.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:spotiquiz/services/scalesize.dart';
 
-final sStorage = FlutterSecureStorage();
-final storage = new MyStorage(sStorage);
-final api = API(storage);
-final qApi = QuestionAPI();
-final assetsAudioPlayer = AssetsAudioPlayer();
-final dApi = Data(api: api);
+var assetsAudioPlayer;
 
 //bool isPlaying = false;
 void playPauseAudioNetwork(String URL, bool doPlay) async {
@@ -38,8 +33,34 @@ void playPauseAudioNetwork(String URL, bool doPlay) async {
 }
 
 class QuestionPage extends StatefulWidget {
-  QuestionPage({Key? key, required int this.isListening}) : super(key: key);
-  final int isListening;
+  QuestionPage({Key? key, required int this.isListening}) {
+    sStorage = FlutterSecureStorage();
+    storage = new MyStorage(sStorage);
+    api = API(storage);
+    qApi = QuestionAPI();
+    dApi = Data(api: api);
+    assetsAudioPlayer = AssetsAudioPlayer();
+    isTest = false;
+  }
+  late final int isListening;
+  late final sStorage;
+  late final storage;
+  late final api;
+  late final qApi;
+  late final dApi;
+  late final bool isTest;
+
+  QuestionPage.test({required int isL, required MyStorage ms, required API a, required QuestionAPI qA, required Data dA, required bool isT, required AssetsAudioPlayer aap}) {
+    isListening = isL;
+    sStorage = FlutterSecureStorage();
+    storage = ms;
+    api = a;
+    qApi = qA;
+    dApi = dA;
+    isTest = isT;
+    assetsAudioPlayer = aap;
+  }
+
   @override
   _QuestionPageState createState() => _QuestionPageState();
 }
@@ -60,16 +81,23 @@ class _QuestionPageState extends State<QuestionPage> {
     super.initState();
     int numQuestions = 10;
     if (widget.isListening == 1)
-      this.questions = qApi.generateListeningQuestions(http.Client(), numQuestions);
+      this.questions = widget.qApi.generateListeningQuestions(http.Client(), numQuestions);
     else if (widget.isListening == 0)
-      this.questions = qApi.generateRandomQuestions(http.Client(), numQuestions);
+      this.questions = widget.qApi.generateRandomQuestions(http.Client(), numQuestions);
     else
-      this.questions = qApi.generateNonListeningQuestions(http.Client(), numQuestions);
-    _controller = Get.put(QuestionController(this.stopPlaying, numQuestions));
-    timerController = Get.put(TimerController(_controller!));
-    _controller?.setTimerController(timerController);
-    timerController.resetTimerAndStart();
-    _controller?.reset();
+      this.questions = widget.qApi.generateNonListeningQuestions(http.Client(), numQuestions);
+
+    if (widget.isTest) {
+      _controller = Get.put(QuestionController(this.stopPlaying, numQuestions));
+      timerController = Get.put(TimerController(_controller!));
+      timerController.pause();
+    } else {
+      _controller = Get.put(QuestionController(this.stopPlaying, numQuestions));
+      timerController = Get.put(TimerController(_controller!));
+      _controller?.setTimerController(timerController);
+      timerController.resetTimerAndStart();
+      _controller?.reset();
+    }
   }
 
   void stopPlaying() {
@@ -292,6 +320,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                           ),
                                         ),
                                         TextButton(
+                                          key: Key('QUITBUTTON'),
                                           style: TextButton.styleFrom(
                                             foregroundColor: Colors.white,
                                             padding: const EdgeInsets.all(16.0),
