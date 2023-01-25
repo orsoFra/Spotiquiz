@@ -373,8 +373,7 @@ void main() {
     });
   });
 
-  group('test all single audio features', () {
-    /*test('expect a LIST of strings, from getTempoList', () async {
+  /*test('expect a LIST of strings, from getTempoList', () async {
       final responseBody = {
         "audio_features": [
           {
@@ -411,8 +410,8 @@ void main() {
       expect(await api.getTempoList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient), isA<Future<List<String>>>());
       verify(() => mockStorage.read(key: 'access_token')).called(greaterThan(0));
       verify(() => mAPI.getFeaturesTrack(any(), any())).called(greaterThan(0));
-    });*/
-    test('expect a LIST of strings, from getKeysList', () {
+    });
+    test('expect a LIST of strings, from getKeysList', () async {
       final response = {
         "audio_features": [
           {
@@ -445,7 +444,7 @@ void main() {
 
       expect(api.getKeysList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient), isA<Future<List<String>>>());
     });
-  });
+  });*/
 
   test('test get user id', () async {
     final response = {'id': 'alfa'};

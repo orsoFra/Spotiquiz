@@ -313,7 +313,7 @@ class API {
     print(result.toString());
     return result;
   }*/
-
+/*
   Future<List<String>> getKeysList(String track, http.Client http) async {
     Map<dynamic, dynamic> data = await getFeaturesTrack(track, http);
     List<String> result = [];
@@ -330,7 +330,7 @@ class API {
     return result;
   }
 
-/*
+
   Future<List<dynamic>> getUserQuizScores(String userid, http.Client http) async {
     String id = '21q4wwalokcky25op74guvjcq';
     var url = Uri.https('639ad7f8d514150197412361.mockapi.io', '/spotiquiz/quizzes', {"user": id, 'limit': 10}.map((key, value) => MapEntry(key, value.toString())));

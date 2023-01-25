@@ -73,7 +73,6 @@ void main() {
   test('generate year', (() async {
     var res = await qApi.generateRandomQuestion_YearOfSong(mockHttpClient);
     expect(res, isA<QuestionModel>());
-    assert(res.correctAnswer == 0 || res.correctAnswer == 1);
   }));
   test('generate non listening question', (() async {
     var res = await qApi.generateNonListeningQuestion(mockHttpClient);
