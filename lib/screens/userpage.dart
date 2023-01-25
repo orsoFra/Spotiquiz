@@ -64,6 +64,7 @@ class _UserPageState extends State<UserPage> {
                     imgSize: 120,
                     tabFactor: 0.7,
                     api: widget.api,
+                    dApi: widget.dApi,
                   );
                 } else {
                   return Grid(
@@ -72,6 +73,7 @@ class _UserPageState extends State<UserPage> {
                     imgSize: 100,
                     tabFactor: 1,
                     api: widget.api,
+                    dApi: widget.dApi,
                   );
                 }
               },
@@ -372,12 +374,13 @@ class _UserPageState extends State<UserPage> {
 }
 
 class Grid extends StatefulWidget {
-  const Grid({super.key, required this.queryData, required this.txtSize, required this.imgSize, required this.tabFactor, required this.api});
+  const Grid({super.key, required this.queryData, required this.txtSize, required this.imgSize, required this.tabFactor, required this.api, required this.dApi});
   final MediaQueryData queryData;
   final double txtSize;
   final double imgSize;
   final double tabFactor; //reduce dimension of boxes in tablet
   final API api;
+  final Data dApi;
 
   @override
   State<Grid> createState() => _GridState();
@@ -392,7 +395,7 @@ class _GridState extends State<Grid> {
         child: Column(children: [
           Padding(padding: EdgeInsets.symmetric(vertical: 10)),
           FutureBuilder<List>(
-            future: Future.wait([widget.api.getInfoUser(http.Client()), dApi.getUserData()]), // a Future<String> or null
+            future: Future.wait([widget.api.getInfoUser(http.Client()), widget.dApi.getUserData()]), // a Future<String> or null
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (!snapshot.hasData) {
                 return Container(

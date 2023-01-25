@@ -44,7 +44,7 @@ void main() async {
     final response = {'access_token': '', 'refresh_token': ''};
     var uri = Uri.https('accounts.spotify.com', '/api/token');
     when(() => mockStorage.read(key: any(named: 'key'))).thenAnswer((invocation) => Future.value('response'));
-    when(() => mockStorage.write(key: any(named: 'key'), value: any(named: 'value'))).thenAnswer((invocation) => Future.value(Void));
+    when(() => mockStorage.write(key: any(named: 'key'), value: any(named: 'value'))).thenAnswer((invocation) => Future.value());
     when(() => mockHTTPost.post(any(), headers: any(named: 'headers'), body: any(named: 'body'))).thenAnswer((_) async => Future.value(Response(jsonEncode(response), 200)));
     auth.refresh(mockHTTPost);
     //verify(() => mockHTTPost.post(uri, headers: any(named: 'headers'), body: any(named: 'body'))).called(1);

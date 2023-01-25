@@ -86,11 +86,11 @@ class Data {
     });
   }
 
-  Future getScores() async {
+  /*Future getScores() async {
     String id = await api.getIdUser(http.Client());
     var res = db.collection('users').orderBy('totalScore');
     return res.get().then((value) => value.docs.first.data());
-  }
+  }*/
 
   Future<int> getNumQuizzes() async {
     String id = await api.getIdUser(http.Client());
@@ -146,7 +146,7 @@ class Data {
 
     return res.length + 1;
   }
-
+  /*
   Future<List> getMKArtist() async {
     String id = await api.getIdUser(http.Client());
     List<Object> res = [];
@@ -167,5 +167,5 @@ class Data {
     while (res.length < 3) res.add('');
 
     return res;
-  }
+  }*/
 }

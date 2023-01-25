@@ -10,15 +10,17 @@ import '../models/question_model.dart';
 
 enum keys { DO, DO_diesis, RE, RE_diesis, MI, FA, FA_diesis, SOL, SOL_diesis, LA, LA_diesis, SI }
 
+// coverage:ignore-start
 const int TIMEOUT_IN_SECONDS = 300;
 final List randomAlbums = ['The Wall', 'Oysters', 'Mamma Mia Deluxe', 'Bycicle', 'A collection of dance songs', 'Materials', 'Demons'];
 final List randomSongs = ['Another Brick in the Wall', 'Oysters to Drink', 'Mamma Mia Pizzeria', 'Song 4', 'Dance dance revolution', 'Plutonium', 'Birds'];
 
+// coverage:ignore-end
 class API {
   API(this._storage);
   final IStorage _storage;
   //prints all the user's playlists
-  void getPlaylists() async {
+  /*void getPlaylists() async {
     final _storage = FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
     var url = Uri.https('api.spotify.com', '/v1/me/playlists');
@@ -26,18 +28,20 @@ class API {
 
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     print(decodedResponse.toString());
-  }
+  }*/
 
   void flushCredentials() async {
     final _storage = FlutterSecureStorage();
     await _storage.deleteAll();
   }
 
+  // coverage:ignore-start
   //printer for long responses
   void printWrapped(String text) {
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
+  // coverage:ignore-end
 
   //Get a random offset for a track in the saved library
   Future<int> getOffset() async {
@@ -47,7 +51,6 @@ class API {
     var response = await http.get(url, headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'}).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
 
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    //print(JsonEncoder().convert(decodedResponse));
     var numOfTracks = decodedResponse['total'];
     var offset = Random().nextInt(numOfTracks);
     return offset;
@@ -295,7 +298,7 @@ class API {
     //print(data['imageUrl']);
     return data['id'];
   }
-
+/*
   Future<List<String>> getTempoList(String track, http.Client http) async {
     Map<dynamic, dynamic> data = await getFeaturesTrack(track, http);
     List<String> result = [];
@@ -308,7 +311,7 @@ class API {
     }
     print(result.toString());
     return result;
-  }
+  }*/
 
   Future<List<String>> getKeysList(String track, http.Client http) async {
     Map<dynamic, dynamic> data = await getFeaturesTrack(track, http);
@@ -326,6 +329,7 @@ class API {
     return result;
   }
 
+/*
   Future<List<dynamic>> getUserQuizScores(String userid, http.Client http) async {
     String id = '21q4wwalokcky25op74guvjcq';
     var url = Uri.https('639ad7f8d514150197412361.mockapi.io', '/spotiquiz/quizzes', {"user": id, 'limit': 10}.map((key, value) => MapEntry(key, value.toString())));
@@ -374,7 +378,7 @@ class API {
     }
     print(data);
     return data;
-  }
+  }*/
 
   Future<List<String>> getRelatedArtists(String id, http.Client http) async {
     String? value = await _storage.read(key: 'access_token');
@@ -459,7 +463,7 @@ class API {
     Map<dynamic, dynamic> data = Map();
     data.addAll(decodedResponse);
     //print(data.entries);
-    data['imageUrl'] = data['images'][0]['url'];
+    //data['imageUrl'] = data['images'][0]['url'];
     //print(data['imageUrl']);
     return data['display_name'];
   }

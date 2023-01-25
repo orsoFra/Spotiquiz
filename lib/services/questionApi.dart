@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -9,11 +11,17 @@ import 'api.dart';
 import '../models/MyStorage.dart';
 import '../models/question_model.dart';
 
-final sStorage = FlutterSecureStorage();
+const sStorage = FlutterSecureStorage();
 final storage = MyStorage(sStorage);
 
 class QuestionAPI {
-  final api = API(storage);
+  QuestionAPI() {
+    api = API(storage);
+  }
+  late final api;
+  QuestionAPI.test({required API a}) {
+    api = a;
+  }
 
   Future<List<String>> generateHomeSuggestions([http.Client? http]) async {
     List<String> suggestions = [];

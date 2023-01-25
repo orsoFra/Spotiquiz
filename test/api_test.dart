@@ -10,6 +10,7 @@ import 'package:spotiquiz/models/MyStorage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mockito/mockito.dart' as mockito;
+import 'package:http/http.dart' as http;
 
 import 'api_test.mocks.dart';
 //import 'package:test/expect.dart';
@@ -22,6 +23,8 @@ void cannotBeNull(dynamic param) {
 class MockStorage extends Mock implements IStorage {}
 
 class MocksAPI extends Mock implements API {}
+
+class MockClientHTTP extends Mock implements http.Client {}
 
 @GenerateMocks([FlutterSecureStorage])
 @GenerateMocks([API])
@@ -669,4 +672,151 @@ void main() {
       expect(api.getKeysList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient), isA<Future<List<String>>>());
     });
   });
+
+  test('test get user id', () async {
+    final response = {'id': 'alfa'};
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 200);
+    });
+    expect(api.getIdUser(mockHTTPClient), isA<Future<String>>());
+    var res = await api.getIdUser(mockHTTPClient);
+    expect(res, 'alfa');
+  });
+
+  test('test get similar artists', () async {
+    final response = {
+      'artists': [
+        {'name': 'uno'},
+        {'name': 'due'},
+        {'name': 'tre'},
+        {'name': 'quattro'}
+      ]
+    };
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 200);
+    });
+    expect(api.getRelatedArtists('ideasd', mockHTTPClient), isA<Future<List<String>>>());
+    List<String> res = await api.getRelatedArtists('ideasd', mockHTTPClient);
+    expect(res[0], 'uno');
+    expect(res[1], 'due');
+  });
+  test('test get similar artists error', () async {
+    final response = {
+      'artists': [
+        {'name': 'uno'},
+      ]
+    };
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 200);
+    });
+    expect(api.getRelatedArtists('ideasd', mockHTTPClient), isA<Future<List<String>>>());
+    List<String> res = await api.getRelatedArtists('ideasd', mockHTTPClient);
+    expect(res[0], 'uno');
+    expect(res[1], '');
+  });
+
+  test('test get similar artists error', () async {
+    final response = {
+      'artists': [
+        {'name': 'uno'},
+      ]
+    };
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 200);
+    });
+    expect(api.getRelatedArtists('ideasd', mockHTTPClient), isA<Future<List<String>>>());
+    List<int> res = await api.getRandomYears(2000);
+    assert(res[0] < 2030 && res[0] > 1970);
+  });
+
+  test('test get info user', () async {
+    final response = {
+      'display_name': 'ciao',
+      'images': [
+        {'url': 'asd'}
+      ]
+    };
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 200);
+    });
+    expect(api.getInfoOfUser(mockHTTPClient, 'ideasd'), isA<Future<Map<String, dynamic>>>());
+    var res = await api.getInfoOfUser(mockHTTPClient, 'ideasd');
+    expect(res['display_name'], 'ciao');
+  });
+
+  test('test get name of user', () async {
+    final response = {
+      'display_name': 'ciao',
+    };
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 200);
+    });
+    expect(api.getNameOfUser(mockHTTPClient, 'ideasd'), isA<Future<String>>());
+    var res = await api.getNameOfUser(mockHTTPClient, 'ideasd');
+    expect(res, 'ciao');
+  });
+  test('test get name of user error', () async {
+    final response = {
+      'display_name': 'ciao',
+    };
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 400);
+    });
+    expect(api.getNameOfUser(mockHTTPClient, 'ideasd'), isA<Future<String>>());
+    var res = await api.getNameOfUser(mockHTTPClient, 'ideasd');
+    expect(res, 'NO USERNAME');
+  });
+
+  test('test get name of artist', () async {
+    final response = {
+      'name': 'ciao',
+    };
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 200);
+    });
+    expect(api.getNameOfArtist(mockHTTPClient, 'ideasd'), isA<Future<String>>());
+    var res = await api.getNameOfArtist(mockHTTPClient, 'ideasd');
+    expect(res, 'ciao');
+  });
+  test('test get name of artist error', () async {
+    final response = {
+      'name': 'ciao',
+    };
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 400);
+    });
+    expect(api.getNameOfArtist(mockHTTPClient, 'ideasd'), isA<Future<String>>());
+    var res = await api.getNameOfArtist(mockHTTPClient, 'ideasd');
+    expect(res, 'ARTIST NAME');
+  });
+/*
+  test('get random song from library', () async {
+    final response = {
+      'items': [
+        {
+          'track': {'preview_url': 'asd', 'id': 'qwerty'}
+        }
+      ],
+      'total': 1,
+    };
+    final MockClientHTTP mockHTTP = MockClientHTTP();
+    final mockHTTPClient = MockClient((request) async {
+      // Create sample response of the HTTP call //
+      return Response(jsonEncode(response), 200);
+    });
+    when((() => mockHTTP.get(Uri.https('api.spotify.com', '/v1/me/tracks/'), headers: any(named: 'headers')))).thenAnswer((_) => Future.value(Response(jsonEncode(response), 200)));
+    when((() => mockHTTP.get(Uri.https('api.spotify.com', '/v1/tracks/' + 'qwerty'), headers: any(named: 'headers'))))
+        .thenAnswer((_) => Future.value(Response(jsonEncode(response), 200)));
+    expect(api.getRandomSongFromLibraryJSON(mockHTTP), isA<Future<Map<dynamic, dynamic>>>());
+    var res = await api.getRandomSongFromLibraryJSON(mockHTTP);
+  });*/
 }

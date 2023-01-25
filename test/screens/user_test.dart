@@ -150,4 +150,31 @@ void main() {
       },
     );
   });
+
+  //TESTING GRID of USERpage
+  testWidgets('test grid', (tester) async {
+    await mockNetworkImagesFor(
+      () async {
+        await tester.runAsync(() async {
+          when(() => mockAPI.getInfoUser(any())).thenAnswer((invocation) => Future.value(
+                {'imageUrl': '', 'display_name': 'flutterproject', 'email': 'flutterproject@gmail.com', 'product': 'premium'},
+              ));
+          when(() => mocksD.getUserData()).thenAnswer((invocation) => Future.value({'name': 'flutter', 'numPerfectQuizzes': 1, 'numQuizzes': 1, 'totalScore': 1, 'avgScore': 1}));
+          await tester.pumpWidget(buildTestableWidget(Grid(
+            queryData: MediaQueryData(),
+            imgSize: 10,
+            txtSize: 10,
+            tabFactor: 1,
+            api: mockAPI,
+            dApi: mocksD,
+          )));
+
+          await tester.pumpAndSettle();
+          verify(() => mockAPI.getInfoUser(any())).called(1);
+          verify(() => mocksD.getUserData()).called(1);
+          expect(find.byType(GridView), findsWidgets);
+        });
+      },
+    );
+  });
 }

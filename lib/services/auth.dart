@@ -17,12 +17,13 @@ class Auth {
 
   late final FlutterSecureStorage storage;
   //Get info fro making the requests from the .env file
-
+  // coverage:ignore-start
   void printWrapped(String text) {
     final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
+  //SKIPPING COVERAGE SINCE IT?S ONLY A SERVICE USED FROM A PLUGIN
   Future<String?> getCode() async {
     // Present the dialog to the user
     await dotenv.load(fileName: ".env");
@@ -45,6 +46,7 @@ class Auth {
     return code;
   }
 
+  // coverage:ignore-end
   //gets the code and retrievs the auth_token and refresh token
   Future<bool> login(http.Client http, [String? cod]) async {
     await dotenv.load(fileName: ".env");

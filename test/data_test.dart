@@ -7,7 +7,6 @@ import 'package:http/http.dart';
 import 'package:http/testing.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:mockito/mockito.dart' as mockito;
 import 'package:spotiquiz/services/data.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

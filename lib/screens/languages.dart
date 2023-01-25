@@ -11,7 +11,15 @@ class _LanguagesPageState extends State<LanguagesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Languages')),
-    );
+        appBar: AppBar(title: const Text('Languages')),
+        body: Container(
+            child: Center(
+          child: Text('Only English currently supported',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              )),
+        )));
   }
 }
