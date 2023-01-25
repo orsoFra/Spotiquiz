@@ -19,6 +19,7 @@ import 'package:spotiquiz/screens/navigation.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:spotiquiz/services/firebase_test_service.dart';
+import 'package:http/http.dart' as http;
 
 Widget buildTestableWidget(Widget widget, NavigatorObserver obv) {
   return MediaQuery(
@@ -35,17 +36,18 @@ class MocksAPI extends Mock implements API {}
 
 class MockAuth extends Mock implements Auth {}
 
+class MockHttpClient extends Mock implements http.Client {}
+
 void main() {
   setupFirebaseAuthMocks();
-
+  final MockHttpClient mockHttpClient = MockHttpClient();
   setUpAll(() async {
     await Firebase.initializeApp();
+    registerFallbackValue(mockHttpClient);
   });
   testWidgets('Login Page', (WidgetTester tester) async {
     final mockObserver = MockNavigatorObserver();
     final mockAuth = MockAuth();
-    // Build our app and trigger a frame
-    //await tester.pumpWidget(const MyApp());
 
     await tester.runAsync(() async {
       await mockNetworkImagesFor(
