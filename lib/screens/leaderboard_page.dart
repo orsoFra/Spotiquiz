@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -55,7 +53,7 @@ class _LeaderboardState extends State<Leaderboard> {
                           physics: AlwaysScrollableScrollPhysics(),
                           child: Center(
                               child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                            Podium(snapshot: snapshot, queryData: queryData, portrait: true),
+                            Podium(key: Key('Podium'), snapshot: snapshot, queryData: queryData, portrait: true),
                             Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                             Divider(
                               color: Color.fromARGB(255, 49, 45, 45),

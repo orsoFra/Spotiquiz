@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:spotiquiz/models/MyStorage.dart';
-import 'package:spotiquiz/screens/homepage.dart';
-import 'package:spotiquiz/screens/main_page.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'navigation.dart';
 

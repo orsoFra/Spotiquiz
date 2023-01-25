@@ -257,7 +257,8 @@ class API {
       headers: {'Authorization': 'Bearer ' + value!, 'Content-Type': 'application/json'},
     ).timeout(new Duration(seconds: TIMEOUT_IN_SECONDS));
     if (response.statusCode != 200) {
-      throw Exception('Error in method getInfoUser');
+      return getInfoUser(http);
+      //throw Exception('Error in method getInfoUser');
     }
     var decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
     //print(decodedResponse.entries);

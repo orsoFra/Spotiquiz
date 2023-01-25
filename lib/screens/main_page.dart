@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:spotiquiz/services/auth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:spotiquiz/models/MyStorage.dart';

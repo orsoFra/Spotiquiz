@@ -23,11 +23,15 @@ Future main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  FlutterSecureStorage sStorage = FlutterSecureStorage();
+  late final storage = MyStorage(sStorage);
+  late final api = API(storage);
+  late final autha = Auth();
 
   // This widget is the root of your application.
   @override

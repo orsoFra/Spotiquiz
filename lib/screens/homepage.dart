@@ -1,9 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:spotiquiz/screens/historypage.dart';
-import 'package:spotiquiz/screens/leaderboard_page.dart';
-import 'package:spotiquiz/screens/questionpage.dart';
-import 'package:spotiquiz/screens/userpage.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:spotiquiz/services/questionApi.dart';
 import 'package:http/http.dart' as http;

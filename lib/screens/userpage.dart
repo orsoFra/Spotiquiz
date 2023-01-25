@@ -1,12 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:spotiquiz/main.dart';
-import 'package:spotiquiz/screens/loginpage.dart';
 import 'package:spotiquiz/screens/settings.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:http/http.dart' as http;

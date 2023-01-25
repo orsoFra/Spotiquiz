@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:spotiquiz/screens/homepage.dart';
 import 'package:spotiquiz/screens/leaderboard_page.dart';
 import 'package:spotiquiz/screens/userpage.dart';
@@ -45,14 +43,17 @@ class _NavigationState extends State<Navigation> {
           haptic: true,
           tabs: const <GButton>[
             GButton(
+              key: Key('Leaderboard'),
               icon: Icons.leaderboard,
               //text: 'Leaderboard',
             ),
             GButton(
+              key: Key('Home'),
               icon: Icons.home,
               //text: 'Home',
             ),
             GButton(
+              key: Key('Person'),
               icon: Icons.person,
               //text: 'Profile',
             ),
@@ -65,8 +66,10 @@ class _NavigationState extends State<Navigation> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (this.mounted) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 }
