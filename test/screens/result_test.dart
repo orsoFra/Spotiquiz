@@ -13,7 +13,6 @@ import 'package:spotiquiz/screens/resultpage.dart';
 import 'package:spotiquiz/services/api.dart';
 import 'package:spotiquiz/services/auth.dart';
 import 'package:spotiquiz/services/firebase_test_service.dart';
-import 'widget_test.mocks.dart';
 
 Widget buildTestableWidget(Widget widget) {
   return MediaQuery(data: MediaQueryData(), child: MaterialApp(home: widget));

@@ -23,10 +23,10 @@ class MainPage extends StatelessWidget {
 
       if (!await api.tryToken()) {
         //if the token is expired
-        auth.refresh(); //refresh it
+        auth.refresh(http.Client()); //refresh it
         print('VALID TOKEN! \n');
       }
-      auth.refresh();
+      auth.refresh(http.Client());
       return true;
     }
     return false;

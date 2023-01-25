@@ -19,6 +19,7 @@ class SliderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      key: Key(text),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => QuestionPage(
@@ -40,6 +41,7 @@ class SliderCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ElevatedButton(
+                key: Key(text + 'button'),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => QuestionPage(
@@ -48,7 +50,7 @@ class SliderCard extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(primary: Colors.transparent, shadowColor: Colors.transparent),
                 child: Text(text,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 38,
                       fontWeight: FontWeight.bold,

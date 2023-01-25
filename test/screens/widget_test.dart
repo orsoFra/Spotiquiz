@@ -69,7 +69,7 @@ void main() {
       await tester.runAsync(() async {
         await tester.pumpWidget(buildTestableWidget(Login(spotiauth: mockAuth), mockObserver));
         await tester.pumpAndSettle();
-        when(() => mockAuth.login()).thenAnswer((((realInvocation) => Future.value(true))));
+        when(() => mockAuth.login(any())).thenAnswer((((realInvocation) => Future.value(true))));
         await tester.tap(find.byType(InkWell));
         await tester.pump();
         //expect(find.byType(CircularProgressIndicator), findsWidgets);

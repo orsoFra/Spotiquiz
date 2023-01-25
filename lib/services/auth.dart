@@ -7,12 +7,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Auth {
-  final storage = new FlutterSecureStorage();
+  Auth() {
+    storage = new FlutterSecureStorage();
+  }
+
+  Auth.test({required FlutterSecureStorage st}) {
+    storage = st;
+  }
+
+  late final FlutterSecureStorage storage;
   //Get info fro making the requests from the .env file
-  final client_id = dotenv.get('CLIENT_ID');
-  final client_secret = dotenv.get('CLIENT_SECRET');
-  final redirect_uri = dotenv.get('REDIRECT_URI');
-  final callback_scheme = dotenv.get('CALLBACK_URL_SCHEME');
 
   void printWrapped(String text) {
     final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
@@ -22,6 +26,10 @@ class Auth {
   Future<String?> getCode() async {
     // Present the dialog to the user
     await dotenv.load(fileName: ".env");
+    final String client_id = dotenv.get('CLIENT_ID');
+    final String client_secret = dotenv.get('CLIENT_SECRET');
+    final String redirect_uri = dotenv.get('REDIRECT_URI');
+    final String callback_scheme = dotenv.get('CALLBACK_URL_SCHEME');
     //print(client_id);
     final result = await FlutterWebAuth.authenticate(
         url:
@@ -38,9 +46,20 @@ class Auth {
   }
 
   //gets the code and retrievs the auth_token and refresh token
-  Future<bool> login() async {
+  Future<bool> login(http.Client http, [String? cod]) async {
+    await dotenv.load(fileName: ".env");
+    final String client_id = dotenv.get('CLIENT_ID');
+    final String client_secret = dotenv.get('CLIENT_SECRET');
+    final String redirect_uri = dotenv.get('REDIRECT_URI');
+    final String callback_scheme = dotenv.get('CALLBACK_URL_SCHEME');
     try {
-      var code = await getCode(); // this call makes the webview appear
+      String? code;
+      if (cod != null) {
+        code = cod;
+        print(code);
+      } else {
+        code = await getCode();
+      } // this call makes the webview appear
       var url = Uri.https('accounts.spotify.com', '/api/token');
       var response = await http.post(url,
           body: {'code': code, 'redirect_uri': redirect_uri, 'grant_type': 'authorization_code'},
@@ -53,13 +72,19 @@ class Auth {
       var refreshToken = decodedResponse['refresh_token'];
       await storage.write(key: 'refresh_token', value: refreshToken);
     } catch (e) {
+      print(e);
       return false;
     }
     return true;
   }
 
   //refershes the expired token token
-  void refresh() async {
+  void refresh(http.Client http) async {
+    await dotenv.load(fileName: ".env");
+    final String client_id = dotenv.get('CLIENT_ID');
+    final String client_secret = dotenv.get('CLIENT_SECRET');
+    final String redirect_uri = dotenv.get('REDIRECT_URI');
+    final String callback_scheme = dotenv.get('CALLBACK_URL_SCHEME');
     var refreshToken = await storage.read(key: 'refresh_token');
     print(refreshToken);
     var url = Uri.https('accounts.spotify.com', '/api/token');

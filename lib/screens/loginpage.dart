@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:spotiquiz/services/auth.dart';
 import 'navigation.dart';
 
@@ -7,7 +8,7 @@ class Login extends StatelessWidget {
   final Auth spotiauth;
 
   Future<bool> loginZ() async {
-    bool result = await spotiauth.login();
+    bool result = await spotiauth.login(http.Client());
     print('Prompt login' + result.toString());
     return result;
     //accesstoken = await storage.read(key: 'acces_token');
