@@ -41,9 +41,9 @@ class API {
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
-  // coverage:ignore-end
 
   //Get a random offset for a track in the saved library
+
   Future<int> getOffset() async {
     //final _storage = FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
@@ -55,6 +55,7 @@ class API {
     var offset = Random().nextInt(numOfTracks);
     return offset;
   }
+  // coverage:ignore-end
 
   Future<bool> tryToken() async {
     //final _storage = FlutterSecureStorage();
