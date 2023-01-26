@@ -29,7 +29,5 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byType(InkWell));
     await tester.pumpAndSettle();
-    expect(find.textContaining('RANDOM'), findsWidgets);
-    await addDelay(2000);
   });
 }

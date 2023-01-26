@@ -81,4 +81,27 @@ void main() {
       expect(find.text('LEADERBOARD'), findsWidgets);
     });
   });
+
+  testWidgets('testHomepageTablet portrait', (tester) async {
+    tester.binding.window.physicalSizeTestValue = Size(42, 72);
+
+    // resets the screen to its original size after the test end
+    addTearDown(tester.binding.window.clearPhysicalSizeTestValue);
+    await tester.runAsync(() async {
+      when(() => mocksQAPI.generateHomeSuggestions(any())).thenAnswer((invocation) async => ['RANDOM', 'SILENT', 'LISTENING']);
+
+      await tester.pumpWidget(buildTestableWidget(HomeTablet.test(
+        qA: mocksQAPI,
+      )));
+      await tester.pump();
+      verify((() => mocksQAPI.generateHomeSuggestions(any()))).called(1);
+      await tester.pumpAndSettle();
+      expect(find.byType(Text), findsWidgets);
+      expect(find.text('Welcome Back'), findsWidgets);
+      expect(find.byType(Swiper), findsWidgets);
+      expect(find.descendant(of: find.byType(Swiper), matching: find.byType(SliderCard)), findsWidgets);
+      expect(find.text('YOUR PROFILE'), findsWidgets);
+      expect(find.text('LEADERBOARD'), findsWidgets);
+    });
+  });
 }
