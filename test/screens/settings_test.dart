@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:spotiquiz/screens/homepage.dart';
@@ -20,7 +21,7 @@ Widget buildTestableWidget(Widget widget) {
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
-void main(){
+void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setupFirebaseAuthMocks();
 
@@ -37,7 +38,6 @@ void main(){
       expect(find.text('General'), findsOneWidget);
       expect(find.text('Policy & Conditions'), findsOneWidget);
       expect(find.text('Feedback'), findsOneWidget);
-
     });
   });
 
@@ -56,22 +56,19 @@ void main(){
   });
 
   // non torna da rivedere
-  /*
+
   testWidgets('test logout button action', (widgetTester) async {
     await widgetTester.runAsync(() async {
-      await widgetTester.pumpWidget(buildTestableWidget(const SettingPage()));
-      await widgetTester.pump();
-      expect(find.text('Logout'), findsOneWidget);
-      await widgetTester.tap(find.text('Logout'));
-      await widgetTester.pumpAndSettle();
-
-
-      //expect(find.text('Login with Spotify'), findsOneWidget);
-      expect(firstText.data, 'Login with Spotify');
+      await mockNetworkImagesFor(() async {
+        await widgetTester.pumpWidget(buildTestableWidget(const SettingPage()));
+        await widgetTester.pump();
+        expect(find.text('Logout'), findsOneWidget);
+        await widgetTester.tap(find.text('Logout'));
+        await widgetTester.pumpAndSettle();
+      });
+      expect(find.text('Login with Spotify'), findsOneWidget);
     });
   });
-
-   */
 
   testWidgets('test alert dialog when we click on Terms of Service', (widgetTester) async {
     await widgetTester.runAsync(() async {
