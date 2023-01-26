@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiquiz/firebase_options.dart';
 import 'package:spotiquiz/main_test.dart' as app;
 import 'package:spotiquiz/screens/leaderboard_page.dart';
+import 'package:spotiquiz/widgets/policy_conditions_dialog.dart';
 
 addDelay(int millis) async {
   await Future.delayed(Duration(milliseconds: millis));
@@ -151,6 +152,47 @@ void main() {
     await tester.tap(find.byIcon(Icons.settings));
     await tester.pumpAndSettle();
   });
+
+  testWidgets("Test to languages", (tester) async {
+    await dotenv.load(fileName: '.env');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    app.main();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('Person')));
+
+    await tester.pumpAndSettle();
+    expect(find.byType(CircleAvatar), findsWidgets);
+    await addDelay(2000);
+    await tester.tap(find.byIcon(Icons.settings));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Language'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Only English currently supported'), findsWidgets);
+  });
+
+  testWidgets("Test to terms and conditions", (tester) async {
+    await dotenv.load(fileName: '.env');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    app.main();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('Person')));
+
+    await tester.pumpAndSettle();
+    expect(find.byType(CircleAvatar), findsWidgets);
+    await addDelay(2000);
+    await tester.tap(find.byIcon(Icons.settings));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Terms of Service'));
+    await tester.pumpAndSettle();
+    expect(find.byType(PolicyConditionsDialog), findsWidgets);
+  });
+
   testWidgets("Test to logout", (tester) async {
     await dotenv.load(fileName: '.env');
     await Firebase.initializeApp(

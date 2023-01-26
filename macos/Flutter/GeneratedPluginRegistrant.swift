@@ -11,7 +11,7 @@ import cloud_firestore
 import firebase_core
 import flutter_secure_storage_macos
 import flutter_web_auth
-import path_provider_foundation
+import path_provider_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   AssetsAudioPlayerPlugin.register(with: registry.registrar(forPlugin: "AssetsAudioPlayerPlugin"))
