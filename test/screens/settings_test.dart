@@ -95,7 +95,7 @@ void main(){
     });
   });
 
-  testWidgets('test the input text dialog when we clock on Report a bug', (widgetTester) async {
+  testWidgets('test the input text dialog when we click on Report a bug', (widgetTester) async {
     await widgetTester.runAsync(() async {
       await widgetTester.pumpWidget(buildTestableWidget(const SettingPage()));
       await widgetTester.pump();
@@ -104,6 +104,21 @@ void main(){
       await widgetTester.pump();
       expect(find.byType(AlertDialog), findsOneWidget);
     });
-
   });
+
+  // non torna
+  /*
+  testWidgets('test the input text dialog when we click on Send a feedback', (widgetTester) async {
+    await widgetTester.runAsync(() async {
+      await widgetTester.pumpWidget(buildTestableWidget(const SettingPage()));
+      await widgetTester.pump();
+      //var button = find.text('Send Feedback');
+      await widgetTester.ensureVisible(find.text('Send Feedback'));
+      await widgetTester.tap(find.text('Send Feedback'));
+      await widgetTester.pumpAndSettle();
+      expect(find.byType(RatingDialog), findsOneWidget);
+    });
+  });
+   */
+
 }

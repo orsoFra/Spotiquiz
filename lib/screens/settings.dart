@@ -217,7 +217,6 @@ class _SettingPageState extends State<SettingPage> {
                             onSubmitted: (response) {
                               // store feedback
                               dApi.storeFeedbacks(response.rating.toInt(), response.comment);
-                              print('rating: ${response.rating}, comment: ${response.comment}');
                               Fluttertoast.showToast(
                                   msg: "Thank you for the Feedback!",
                                   toastLength: Toast.LENGTH_SHORT,
