@@ -2,11 +2,12 @@ import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiquiz/firebase_options.dart';
-import 'package:spotiquiz/main.dart';
+import 'package:spotiquiz/main.dart' as app;
 
 
 addDelay(int millis) async {
@@ -14,12 +15,7 @@ addDelay(int millis) async {
 }
 
 void main() {
-  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
-  // fullyLive ensures that every frame is shown, suitable for heavy animations and navigation
-  if (binding is LiveTestWidgetsFlutterBinding) {
-    binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
-  }
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets("Test to Check the Complete app flow", (tester) async {
     await dotenv.load(fileName: '.env');
@@ -27,14 +23,13 @@ void main() {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    await tester.pumpWidget(MyApp());
+    app.main();
     await tester.pumpAndSettle();
-    addDelay(2000);
+    expect(find.textContaining('Login'), findsWidgets);
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('Leaderboard')));
+    await tester.tap(find.byType(InkWell));
     await tester.pumpAndSettle();
-    expect(find.byKey(Key('Podium')), findsWidgets);
-    await tester.pumpAndSettle();
-    addDelay(3000);
+    expect(find.textContaining('RANDOM'), findsWidgets);
+    await addDelay(2000);
   });
 }
