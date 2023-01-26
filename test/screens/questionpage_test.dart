@@ -31,6 +31,7 @@ class MockAudioPlayer extends Mock implements AssetsAudioPlayer {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
   setupFirebaseAuthMocks();
   MockMyStorage mockMyStorage = MockMyStorage();
   MockAPI mockAPI = MockAPI();
@@ -60,6 +61,10 @@ void main() {
           Future.value(QuestionModel('question9', ['ans1', 'ans2', 'ans3', 'ans4'], 0)),
           Future.value(QuestionModel('question10', ['ans1', 'ans2', 'ans3', 'ans4'], 0))
         ]);
+    widgetTester.binding.window.physicalSizeTestValue = Size(42, 72);
+
+    // resets the screen to its original size after the test end
+    addTearDown(widgetTester.binding.window.clearPhysicalSizeTestValue);
 
     await widgetTester.runAsync(() async {
       await widgetTester.pumpWidget(TickerMode(
