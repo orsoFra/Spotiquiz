@@ -79,7 +79,6 @@ void main() {
       expect(find.descendant(of: find.byType(Swiper), matching: find.byType(SliderCard)), findsWidgets);
       expect(find.text('YOUR PROFILE'), findsWidgets);
       expect(find.text('LEADERBOARD'), findsWidgets);
-      //verify((() => mocksQAPI.generateHomeSuggestions(http.Client()))).called(1);
     });
   });
 }
