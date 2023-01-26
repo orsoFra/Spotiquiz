@@ -64,20 +64,35 @@ class _MyHomePageState extends State<MyHomePage> {
                       return Swiper(
                         itemBuilder: (BuildContext context, int index) {
                           if (snapshot.data![index] == 'RANDOM') {
-                            return SliderCard(cols: [
-                              Color.fromARGB(255, 128, 5, 195),
-                              Color.fromARGB(255, 182, 80, 245),
-                            ], icon: Icons.question_mark_rounded, text: 'RANDOM QUIZ', isListening: 0);
+                            return SliderCard(
+                                key: Key('RANDOM'),
+                                cols: [
+                                  Color.fromARGB(255, 128, 5, 195),
+                                  Color.fromARGB(255, 182, 80, 245),
+                                ],
+                                icon: Icons.question_mark_rounded,
+                                text: 'RANDOM QUIZ',
+                                isListening: 0);
                           } else if (snapshot.data![index] == 'LISTENING') {
-                            return SliderCard(cols: [
-                              Color.fromARGB(255, 5, 56, 195),
-                              Color.fromARGB(255, 80, 121, 245),
-                            ], icon: Icons.music_note_rounded, text: 'LISTENING QUIZ', isListening: 1);
+                            return SliderCard(
+                                key: Key('LISTENING'),
+                                cols: const [
+                                  Color.fromARGB(255, 5, 56, 195),
+                                  Color.fromARGB(255, 80, 121, 245),
+                                ],
+                                icon: Icons.music_note_rounded,
+                                text: 'LISTENING QUIZ',
+                                isListening: 1);
                           } else {
-                            return SliderCard(cols: [
-                              Color.fromARGB(255, 195, 56, 5),
-                              Color.fromARGB(255, 245, 108, 80),
-                            ], icon: Icons.notifications_off_rounded, text: 'SILENT QUIZ', isListening: 2);
+                            return SliderCard(
+                                key: Key('SILENT'),
+                                cols: [
+                                  Color.fromARGB(255, 195, 56, 5),
+                                  Color.fromARGB(255, 245, 108, 80),
+                                ],
+                                icon: Icons.notifications_off_rounded,
+                                text: 'SILENT QUIZ',
+                                isListening: 2);
                           } //else
                         },
                         itemCount: snapshot.data!.length,

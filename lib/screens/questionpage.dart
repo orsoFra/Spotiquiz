@@ -223,6 +223,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                     Column(
                                       children: [
                                         InkWell(
+                                          key: Key(i.toString()),
                                           onTap: () {
                                             if (i == snapshot.data!.correctAnswer) {
                                               _controller?.score++;
