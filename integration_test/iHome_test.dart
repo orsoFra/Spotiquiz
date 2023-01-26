@@ -7,7 +7,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiquiz/firebase_options.dart';
-import 'package:spotiquiz/main.dart' as app;
+import 'package:spotiquiz/main_test.dart' as app;
 
 addDelay(int millis) async {
   await Future.delayed(Duration(milliseconds: millis));
@@ -23,10 +23,6 @@ void main() {
     );
 
     app.main();
-    await tester.pumpAndSettle();
-    expect(find.textContaining('Login'), findsWidgets);
-    await tester.pumpAndSettle();
-    await tester.tap(find.byType(InkWell));
     await tester.pumpAndSettle();
     expect(find.textContaining('RANDOM'), findsWidgets);
     await addDelay(2000);
