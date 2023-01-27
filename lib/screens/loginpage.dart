@@ -24,11 +24,9 @@ class Login extends StatelessWidget {
           children: [
             Padding(padding: EdgeInsets.symmetric(vertical: queryData.size.height * 0.1)),
             Container(
-                height: 100,
-                child: Image.network(
-                  "https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_CMYK_Green.png",
-                  fit: BoxFit.fill,
-                )),
+                height: 200,
+                child: const Image(image: AssetImage('assets/img/start_screen-transformed.png'))
+            ),
             Container(
               height: 150,
               child: const Center(
