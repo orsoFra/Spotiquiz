@@ -41,7 +41,7 @@ class MainPage extends StatelessWidget {
 
           if (snapshot.data.toString() == 'true') {
             return ResponsiveBuilder(
-              builder: (context, sizingInformation) {
+              builder: (context, SizingInformation sizingInformation) {
                 if (sizingInformation.deviceScreenType == DeviceScreenType.tablet) {
                   return HomeTablet();
                 } else

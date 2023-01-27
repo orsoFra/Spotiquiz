@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:spotiquiz/screens/homepage.dart';
+import 'package:spotiquiz/screens/homepage_tablet.dart';
 import 'package:spotiquiz/screens/main_page.dart';
 import 'package:spotiquiz/screens/navigation.dart';
 import 'package:spotiquiz/services/auth.dart';
@@ -40,9 +42,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Spotiquiz',
-      theme: ThemeData.dark(),
-      home: Navigation(),
-    );
+        title: 'Spotiquiz',
+        theme: ThemeData.dark(),
+        home: ResponsiveBuilder(
+          builder: (context, sizingInformation) {
+            if (sizingInformation.deviceScreenType == DeviceScreenType.tablet) {
+              return HomeTablet();
+            } else
+              return Navigation();
+          },
+        ));
   }
 }

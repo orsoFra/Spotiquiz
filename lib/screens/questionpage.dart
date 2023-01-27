@@ -88,11 +88,11 @@ class _QuestionPageState extends State<QuestionPage> {
       this.questions = widget.qApi.generateNonListeningQuestions(http.Client(), numQuestions);
 
     if (widget.isTest) {
-      _controller = Get.put(QuestionController(this.stopPlaying, numQuestions));
+      _controller = Get.put(QuestionController(stopMusic, numQuestions));
       timerController = Get.put(TimerController(_controller!));
       timerController.pause();
     } else {
-      _controller = Get.put(QuestionController(this.stopPlaying, numQuestions));
+      _controller = Get.put(QuestionController(stopMusic, numQuestions));
       timerController = Get.put(TimerController(_controller!));
       _controller?.setTimerController(timerController);
       timerController.resetTimerAndStart();
@@ -107,10 +107,15 @@ class _QuestionPageState extends State<QuestionPage> {
     });
   }
 
+  void stopMusic() {
+    assetsAudioPlayer.pause();
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
     _controller?.setContext(context);
+    stopPlaying();
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 25, 20, 20),
       body: PageView.builder(
@@ -439,6 +444,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               InkWell(
+                                                key: Key(i.toString()),
                                                 onTap: () {
                                                   if (i == snapshot.data!.correctAnswer) {
                                                     _controller?.score++;
