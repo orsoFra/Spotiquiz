@@ -210,7 +210,7 @@ class _SettingPageState extends State<SettingPage> {
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 15),
                             ),
-                            image: const FlutterLogo(size: 100),
+                            image: const Image(image: AssetImage('assets/img/start_screen_l.png')),
                             submitButtonText: 'Submit',
                             commentHint: 'Set your custom comment hint',
                             onCancelled: () => print('cancelled'),

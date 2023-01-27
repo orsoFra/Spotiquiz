@@ -39,7 +39,6 @@ class QuestionController {
       timerController.pause();
     } else {
       pageController.nextPage(duration: Duration(milliseconds: 400), curve: Curves.easeInExpo);
-
       this.timerController.resetTimerAndStart();
     }
   }
