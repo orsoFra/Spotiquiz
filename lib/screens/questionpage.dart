@@ -439,6 +439,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               InkWell(
+                                                key: Key(i.toString()),
                                                 onTap: () {
                                                   if (i == snapshot.data!.correctAnswer) {
                                                     _controller?.score++;

@@ -225,6 +225,7 @@ class _HomeTabletState extends State<HomeTablet> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InkWell(
+                        key: Key('Person'),
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
                         },
@@ -259,6 +260,7 @@ class _HomeTabletState extends State<HomeTablet> {
                       ),
                       Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                       InkWell(
+                        key: Key('Leaderboard'),
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserPage()));
                         },
