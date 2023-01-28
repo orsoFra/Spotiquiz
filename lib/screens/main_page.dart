@@ -24,7 +24,7 @@ class MainPage extends StatelessWidget {
       if (!await api.tryToken()) {
         //if the token is expired
         auth.refresh(http.Client()); //refresh it
-        print('VALID TOKEN! \n');
+        print('refreshed TOKEN! \n');
       }
       auth.refresh(http.Client());
       return true;
@@ -42,7 +42,7 @@ class MainPage extends StatelessWidget {
           if (snapshot.data.toString() == 'true') {
             return ResponsiveBuilder(
               builder: (context, SizingInformation sizingInformation) {
-                if (sizingInformation.deviceScreenType == DeviceScreenType.tablet) {
+                if (sizingInformation.deviceScreenType != DeviceScreenType.mobile) {
                   return HomeTablet();
                 } else
                   return Navigation();

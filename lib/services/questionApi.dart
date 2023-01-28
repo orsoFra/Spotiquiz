@@ -142,8 +142,24 @@ class QuestionAPI {
   }
 
   Future<QuestionModel> generateRandomQuestion_SongToListen(http.Client http) async {
-    // TODO: sometimes answers are duplicated
-    Map<dynamic, dynamic> song = await api.getRandomSongFromLibraryJSON(http);
+    Map<dynamic, dynamic> song = {
+      'album': {
+        'name': 'disco1',
+        'release_date': '1981-10',
+        'artists': [
+          {'id': 'a', 'name': 'asso'}
+        ]
+      },
+      'name': 'ERROR IN LOADING QUESTION, try a new quiz',
+      'preview_url': '',
+    };
+    try {
+      song = await api.getRandomSongFromLibraryJSON(http);
+    } catch (e) {
+      await Duration(seconds: 3);
+      song = await api.getRandomSongFromLibraryJSON(http);
+    }
+
     String URL = '';
     String correct_answer = song['name'];
     if (song['preview_url'] == Null) {
