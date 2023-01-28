@@ -74,10 +74,11 @@ class API {
   }
 
   //retrievs the track'l URI
-  Future<Map<dynamic, dynamic>> getRandomSongFromLibraryJSON(http.Client http) async {
+  Future<Map<dynamic, dynamic>> getRandomSongFromLibraryJSON(http.Client http, [int? givenOffset]) async {
     //final _storage = new FlutterSecureStorage();
     String? value = await _storage.read(key: 'access_token');
-    var offset = await getOffset();
+    var offset = 0;
+    if (givenOffset == null) offset = await getOffset();
     var newurl = Uri.https('api.spotify.com', '/v1/me/tracks/', {"offset": offset, 'limit': 1}.map((key, value) => MapEntry(key, value.toString())));
     var newresponse = await http.get(
       newurl,

@@ -28,5 +28,8 @@ void main() {
     await tester.pumpWidget(buildTestableWidget(ResultPage(10)));
     expect(find.byType(Text), findsWidgets);
     expect(find.text(10.toString()), findsOneWidget);
+    expect(find.text('BACK TO HOME'), findsOneWidget);
+    await tester.tap(find.text('BACK TO HOME'));
+    await tester.pumpAndSettle();
   });
 }

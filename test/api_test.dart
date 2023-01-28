@@ -12,7 +12,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:mockito/mockito.dart' as mockito;
 import 'package:http/http.dart' as http;
 
-import 'api_test.mocks.dart';
+///import 'api_test.mocks.dart';
 //import 'package:test/expect.dart';
 //import 'package:test/test.dart';
 
@@ -442,7 +442,7 @@ void main() {
         return Response(jsonEncode(response), 200);
       });
 
-      expect(api.getKeysList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClient), isA<Future<List<String>>>());
+      expect(api.getKeysList('7ouMYWpwJ422jRcDASZB7P', mockHTTPClien?t), isA<Future<List<String>>>());
     });
   });*/
 
@@ -571,7 +571,7 @@ void main() {
     var res = await api.getNameOfArtist(mockHTTPClient, 'ideasd');
     expect(res, 'ARTIST NAME');
   });
-/*
+
   test('get random song from library', () async {
     final response = {
       'items': [
@@ -580,16 +580,33 @@ void main() {
         }
       ],
       'total': 1,
+      'available_markets': '',
     };
+    final response_two = {
+      "album": [
+        {
+          "album_type": "compilation",
+          "total_tracks": 9,
+          "available_markets": ["CA", "BR", "IT"],
+        }
+      ],
+      "name": "string",
+      "popularity": 0,
+      "preview_url": "string",
+      "track_number": 0,
+      "type": "string",
+    };
+
     final MockClientHTTP mockHTTP = MockClientHTTP();
     final mockHTTPClient = MockClient((request) async {
       // Create sample response of the HTTP call //
       return Response(jsonEncode(response), 200);
     });
-    when((() => mockHTTP.get(Uri.https('api.spotify.com', '/v1/me/tracks/'), headers: any(named: 'headers')))).thenAnswer((_) => Future.value(Response(jsonEncode(response), 200)));
+    when((() => mockHTTP.get(Uri.https('api.spotify.com', '/v1/me/tracks/', {"offset": 0, 'limit': 1}.map((key, value) => MapEntry(key, value.toString()))),
+        headers: any(named: 'headers')))).thenAnswer((_) => Future.value(Response(jsonEncode(response), 200)));
     when((() => mockHTTP.get(Uri.https('api.spotify.com', '/v1/tracks/' + 'qwerty'), headers: any(named: 'headers'))))
-        .thenAnswer((_) => Future.value(Response(jsonEncode(response), 200)));
-    expect(api.getRandomSongFromLibraryJSON(mockHTTP), isA<Future<Map<dynamic, dynamic>>>());
-    var res = await api.getRandomSongFromLibraryJSON(mockHTTP);
-  });*/
+        .thenAnswer((_) => Future.value(Response(jsonEncode(response_two), 200)));
+    expect(api.getRandomSongFromLibraryJSON(mockHTTP, 0), isA<Future<Map<dynamic, dynamic>>>());
+    var res = await api.getRandomSongFromLibraryJSON(mockHTTP, 0);
+  });
 }

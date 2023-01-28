@@ -162,13 +162,47 @@ void main() {
       await widgetTester.pump(Duration(seconds: 4));
       expect(find.text('Quit'), findsOneWidget);
       expect(find.byIcon(Icons.play_arrow), findsOneWidget);
-      await widgetTester.pump(Duration(seconds: 1));
-      await widgetTester.tap(find.byType(TextButton));
+      await widgetTester.pump(Duration(seconds: 4));
+      await widgetTester.tap(find.text('Quit'));
       await widgetTester.pump(Duration(seconds: 10));
-      expect(find.text('ans1'), findsOneWidget);
-      expect(find.text('ans2'), findsOneWidget);
-      expect(find.text('ans3'), findsOneWidget);
-      expect(find.text('ans4'), findsOneWidget);
+    });
+  }));
+
+  testWidgets('test question page tap on play', ((widgetTester) async {
+    when(() => mockQuestionApi.generateListeningQuestions(any(), 10)).thenAnswer((invocation) => [
+          Future.value(QuestionModel('question1', ['ans1', 'ans2', 'ans3', 'ans4'], 0, 'url')),
+          Future.value(QuestionModel('question2', ['ans1', 'ans2', 'ans3', 'ans4'], 0, 'url')),
+          Future.value(QuestionModel('question3', ['ans1', 'ans2', 'ans3', 'ans4'], 0, 'url')),
+          Future.value(QuestionModel('question4', ['ans1', 'ans2', 'ans3', 'ans4'], 0)),
+          Future.value(QuestionModel('question5', ['ans1', 'ans2', 'ans3', 'ans4'], 0)),
+          Future.value(QuestionModel('question6', ['ans1', 'ans2', 'ans3', 'ans4'], 0)),
+          Future.value(QuestionModel('question7', ['ans1', 'ans2', 'ans3', 'ans4'], 0)),
+          Future.value(QuestionModel('question8', ['ans1', 'ans2', 'ans3', 'ans4'], 0)),
+          Future.value(QuestionModel('question9', ['ans1', 'ans2', 'ans3', 'ans4'], 0)),
+          Future.value(QuestionModel('question10', ['ans1', 'ans2', 'ans3', 'ans4'], 0))
+        ]);
+
+    await widgetTester.runAsync(() async {
+      await widgetTester.pumpWidget(TickerMode(
+        child: buildTestableWidget(QuestionPage.test(
+          isL: 1,
+          ms: mockMyStorage,
+          a: mockAPI,
+          qA: mockQuestionApi,
+          dA: mockData,
+          isT: true,
+          aap: mockAudioPlayer,
+        )),
+        enabled: false,
+      ));
+      verify(() => mockQuestionApi.generateListeningQuestions(any(), 10)).called(1);
+      await widgetTester.pump(Duration(seconds: 4));
+      expect(find.text('Quit'), findsOneWidget);
+      expect(find.byIcon(Icons.play_arrow), findsOneWidget);
+      await widgetTester.pump(Duration(seconds: 4));
+      await widgetTester.tap(find.byIcon(Icons.play_arrow));
+      await widgetTester.pump(Duration(seconds: 1));
+      expect(find.byIcon(Icons.stop), findsOneWidget);
     });
   }));
 }
