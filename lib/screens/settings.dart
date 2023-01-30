@@ -39,6 +39,7 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 25, 20, 20),
       appBar: AppBar(
@@ -67,7 +68,25 @@ class _SettingPageState extends State<SettingPage> {
                   leading: const Icon(Icons.info),
                   title: const Text('Info App'),
                   onPressed: (BuildContext context) {
-                    //
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Spotiquiz'),
+                            content: SizedBox(
+                              height: queryData.size.height * 0.08,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('version 0.1.0'),
+                                  Text('Developed by Giulia and Francesco')
+                                ],
+                              ),
+                            )
+                          );
+
+                        });
                   },
                 ),
                 // language

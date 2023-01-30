@@ -1,9 +1,12 @@
+import 'package:flutter/widgets.dart';
 import 'package:spotiquiz/controllers/question_controller.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spotiquiz/controllers/timer_controller.dart';
 
 class MockTimerController extends Mock implements TimerController {}
+class MockPageController extends Mock implements PageController {}
+
 
 void main(){
   test('test initialization', (){
@@ -28,6 +31,7 @@ void main(){
     qa.reset();
     expect(qa.score, 0);
   });
+
 
 }
 
