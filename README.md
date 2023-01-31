@@ -1,4 +1,4 @@
-# spotiquiz
+# Spotiquiz
 
 A new Flutter project.
 
